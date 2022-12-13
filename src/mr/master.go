@@ -35,7 +35,7 @@ func (m *Master) AskForJob(request *JobRequest, job *JobResponse) error {
 	m.lock.L.Lock();
 	defer func(){m.lock.L.Unlock();m.lock.Broadcast()}()
 	fmt.Println(m,len(m.mapJobs),len(m.reduceJobs))
-
+	
 	if m.mapRemain>0{
 		select  {
 
@@ -49,15 +49,16 @@ func (m *Master) AskForJob(request *JobRequest, job *JobResponse) error {
 			go func(){
 				m.lock.L.Lock()
 				defer func(){delete(m.jobMonitor,jobName);m.lock.L.Unlock();m.lock.Broadcast()}()
+				terminate:=time.After(10*time.Second)
 				for{
 					select{
 					case <-m.jobMonitor[jobName]:
 						m.mapRemain-=1
 						fmt.Println("Map done")
 						return
-					case <-time.After(10*time.Second):	
-						m.mapJobs<-fileTask{mapJob.file,mapJob.task}
+					case <-terminate:	
 						fmt.Println("Timedout worker")
+						m.mapJobs<-fileTask{mapJob.file,mapJob.task}
 						return
 					default:
 						m.lock.Broadcast()
@@ -84,15 +85,16 @@ func (m *Master) AskForJob(request *JobRequest, job *JobResponse) error {
 			go func(){
 				m.lock.L.Lock()
 				defer func(){delete(m.jobMonitor,jobName);m.lock.L.Unlock();m.lock.Broadcast()}()
+				terminate:=time.After(10*time.Second)
 				for{
 					select{
 					case <-m.jobMonitor[jobName]:
 						m.reduceRemain-=1
 						fmt.Println("Reduce done")
 						return
-					case <-time.After(10*time.Second):	
-						m.reduceJobs<-reduceJob
+					case <-terminate:
 						fmt.Println("Timedout worker")
+						m.reduceJobs<-reduceJob
 						return
 					default:
 						m.lock.Broadcast()
@@ -117,7 +119,9 @@ func (m *Master) ReportDone(report *JobDone, job *JobResponse) error {
 	m.lock.L.Lock()
 	defer func(){m.lock.L.Unlock();m.lock.Broadcast()}()
 	jobName:=fmt.Sprintf("%s-%d",report.JobType,report.TaskDone)
-	m.jobMonitor[jobName]<-true
+	if _,ok:=m.jobMonitor[jobName];ok{
+		m.jobMonitor[jobName]<-true
+	}
 	return nil
 }
 

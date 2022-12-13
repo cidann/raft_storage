@@ -70,20 +70,18 @@ func Worker(mapf func(string, string) []KeyValue,
 
 			for r:=0;r<nReduce;r++{
 				oname := fmt.Sprintf("mr-%d-%d",taskNum,r)
-				os.Create(oname)
+				file,_:=os.Create(oname)
+				enc := json.NewEncoder(file)
 				if _,ok:=intermediate[r];!ok{
 					continue
 				}
-
-				b,jsonErr:=json.Marshal(intermediate[r])
-				if jsonErr!=nil{
-					panic("Json error")
+				for _,kvs:=range intermediate[r]{
+					if writeErr := enc.Encode(&kvs); writeErr != nil {
+						fmt.Println("writeErr")
+						return
+					}
 				}
-
-				writeErr:=ioutil.WriteFile(oname, b, 0644)
-				if writeErr != nil {
-					panic("Write err")
-				}
+				
 			}
 
 			TellDone("map",taskNum)
@@ -99,19 +97,17 @@ func Worker(mapf func(string, string) []KeyValue,
 				if openErr != nil {
 					log.Fatalf("cannot open %v", filename)
 				}
-				content, readErr := ioutil.ReadAll(file)
-				if readErr != nil {
-					log.Fatalf("cannot read %v", filename)
+				dec := json.NewDecoder(file)
+				for{
+					var kv KeyValue
+					if readErr := dec.Decode(&kv); readErr != nil {
+						break
+					}
+					
+					intermediate = append(intermediate, kv)
 				}
 				file.Close()
 
-				var kva []KeyValue
-				decodeErr := json.Unmarshal(content, &kva)
-				if decodeErr != nil {
-					fmt.Println("cannot decode")
-					return
-				}
-				intermediate = append(intermediate, kva...)
 			}
 			sort.Sort(ByKey(intermediate))
 			oname := fmt.Sprintf("mr-out-%d",reduceNum)
