@@ -85,7 +85,15 @@ func TestReElection2A(t *testing.T) {
 
 	cfg.end()
 }
-
+/*
+func TestManyElection2A(t *testing.T) {
+	for i:=0;i<10;i++{
+		fmt.Printf("^^^^^^^^^^^^Repeat %d^^^^^^^^^^^^/n",i)
+		TestReElection2A(t)
+	}
+	
+}
+*/
 func TestBasicAgree2B(t *testing.T) {
 	servers := 3
 	cfg := make_config(t, servers, false)
