@@ -13,7 +13,7 @@ import (
 	"encoding/gob"
 )
 
-const Debug = 0
+const Debug = 1
 
 func DPrintf(format string, a ...interface{}) (n int, err error) {
 	if Debug > 0 {
@@ -114,6 +114,7 @@ func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
 			kv.me,
 		}
 		kv.rf.TryRead(op)
+		go kv.Compaction()
 		DPrintf("[%d] Try to apply read",kv.me)
 		kv.mu.Unlock()
 
@@ -160,6 +161,7 @@ func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 			kv.me,
 		}
 		kv.rf.Start(op)
+		go kv.Compaction()
 		DPrintf("[%d] Try to apply write",kv.me)
 		kv.mu.Unlock()
 

@@ -6,7 +6,7 @@ const (
 	ErrWrongLeader = "ErrWrongLeader"
 )
 
-type Err string
+type Err bool
 
 // Put or Append
 type PutAppendArgs struct {
@@ -16,18 +16,20 @@ type PutAppendArgs struct {
 	// You'll have to add definitions here.
 	// Field names must start with capital letters,
 	// otherwise RPC will break.
+	Serial string
 }
 
 type PutAppendReply struct {
-	Err Err
+	Ok bool
 }
 
 type GetArgs struct {
 	Key string
 	// You'll have to add definitions here.
+	Serial string
 }
 
 type GetReply struct {
-	Err   Err
+	Ok   bool
 	Value string
 }
