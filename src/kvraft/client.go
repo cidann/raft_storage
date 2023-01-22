@@ -3,11 +3,18 @@ package kvraft
 import "../labrpc"
 import "crypto/rand"
 import "math/big"
+import "../raft"
+import (
+	"time"
+	"fmt"
+)
 
 
 type Clerk struct {
 	servers []*labrpc.ClientEnd
 	// You will have to modify this struct.
+	leader int
+	serial int
 }
 
 func nrand() int64 {
@@ -21,6 +28,7 @@ func MakeClerk(servers []*labrpc.ClientEnd) *Clerk {
 	ck := new(Clerk)
 	ck.servers = servers
 	// You'll have to add code here.
+	DPrintf("NewNewNewNewNewNewNewNewNewNewNewNew")
 	return ck
 }
 
@@ -37,9 +45,38 @@ func MakeClerk(servers []*labrpc.ClientEnd) *Clerk {
 // arguments. and reply must be passed as a pointer.
 //
 func (ck *Clerk) Get(key string) string {
-
 	// You will have to modify this function.
-	return ""
+	ck.serial+=1
+	serial:=fmt.Sprintf("%p-%d",ck,ck.serial)
+	DPrintf("Client Get Request (%v) Serial[%v]======================================\n",key,serial)
+	val:=""
+	args:=&GetArgs{key,serial}
+	reply:=&GetReply{}
+	successAll:=ck.servers[ck.leader].Call("KVServer.Get", args, reply)
+	for !reply.Ok{
+		for i:=range ck.servers{
+			args:=&GetArgs{key,serial}
+			reply:=&GetReply{}
+			success:=ck.servers[i].Call("KVServer.Get", args, reply)
+			if !success{
+				successAll=false
+			}
+			if reply.Ok{
+				ck.leader=i
+				DPrintf("Client got Read (%v) Serial[%v]\n",key,serial)
+				val=reply.Value
+				return val
+			}
+		}
+		DPrintf("Retry%v\n","+++++++++++++++++++++++++")
+		if successAll{
+			time.Sleep(raft.GetMaxEletionTime())
+		}
+	}
+	val=reply.Value
+	DPrintf("Client got Read (%v) Serial[%v]\n",key,serial)
+
+	return val
 }
 
 //
@@ -54,6 +91,32 @@ func (ck *Clerk) Get(key string) string {
 //
 func (ck *Clerk) PutAppend(key string, value string, op string) {
 	// You will have to modify this function.
+	ck.serial+=1
+	serial:=fmt.Sprintf("%p-%d",ck,ck.serial)
+	DPrintf("Client PutAppend Request [%v] (%v)/(%v) Serial[%v]]======================================\n",op,key,value,serial)
+	args:=&PutAppendArgs{key,value,op,serial}
+	reply:=&PutAppendReply{}
+	successAll:=ck.servers[ck.leader].Call("KVServer.PutAppend", args, reply)
+	for !reply.Ok{
+		for i:=range ck.servers{
+			args:=&PutAppendArgs{key,value,op,serial}
+			reply:=&PutAppendReply{}
+			success:=ck.servers[i].Call("KVServer.PutAppend", args, reply)
+			if !success{
+				successAll=false
+			}
+			if reply.Ok{
+				ck.leader=i
+				DPrintf("Client got [%v] (%v)/(%v) Serial[%v]\n",op,key,value,serial)
+				return
+			}
+		}
+		DPrintf("Retry%v\n","+++++++++++++++++++++++++")
+		if successAll{
+			time.Sleep(raft.GetMaxEletionTime())
+		}
+	}
+	DPrintf("Client got [%v] (%v)/(%v) Serial[%v]\n",op,key,value,serial)
 }
 
 func (ck *Clerk) Put(key string, value string) {
