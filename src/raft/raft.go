@@ -15,7 +15,7 @@ import (
 import "bytes"
 import "../labgob"
 
-func HoldFMT(){fmt.Println()}
+func HoldFMT(){fmt.Println();log.Fatalf("12")}
 
 //Command wrapper
 type ApplyMsg struct {
@@ -160,13 +160,7 @@ func (rf *Raft) SetSnapshot(snapshot *Snapshot){
 func (rf *Raft) GetLogIndex(index int)int{
 	logIndex:=index-rf.snapshot.LastIndex-1
 	if logIndex<0{
-		log.Fatalf(
-			"[%d] snapshot last index (%d) log length (%d) invalid index (%d)",
-			rf.me,
-			rf.snapshot.LastIndex,
-			len(rf.log),
-			index,
-		)
+		return -1
 	}
 	return logIndex
 }
@@ -220,8 +214,11 @@ safe get for Term at index
 */
 
 func (rf *Raft)getIndexTerm(index int)int{
-	if index<0||index>=rf.GetFullLen()-1{
+	if index>=rf.GetFullLen()-1{
 		return -1
+	}
+	if index<0{
+		return rf.snapshot.LastTerm
 	}
 	return rf.log[rf.GetLogIndex(index)].CommandTerm
 }
@@ -264,9 +261,9 @@ func (rf *Raft)NextToPrevTerm(server int){
 	if prevIndex>=rf.GetFullLen(){
 		prevIndex=rf.GetFullLen()-1
 	}
-	curTerm:=rf.log[rf.GetLogIndex(prevIndex)].CommandTerm
+	curTerm:=rf.getIndexTerm(prevIndex)
 	newIndex:=prevIndex
-	for ;newIndex>0&&rf.log[rf.GetLogIndex(newIndex)].CommandTerm==curTerm;newIndex--{}
+	for ;newIndex>0&&rf.getIndexTerm(rf.GetLogIndex(prevIndex))==curTerm;newIndex--{}
 	rf.nextIndex[server]=newIndex
 }
 
@@ -423,7 +420,7 @@ func (rf *Raft) RequestAppend(args *AppendEntriesArgs, reply *AppendEntriesReply
 	if rf.getIndexTerm(args.PrevLogIndex)==args.PrevLogTerm{
 		i:=0
 		for ;i+args.PrevLogIndex+1<rf.GetFullLen()&&i<len(args.Entries);i++{
-			if rf.log[i+args.PrevLogIndex+1].CommandTerm!=args.Entries[i].CommandTerm{
+			if rf.getIndexTerm(i+args.PrevLogIndex+1)!=args.Entries[i].CommandTerm{
 				break
 			}
 		}
@@ -521,7 +518,7 @@ func (rf *Raft) sendAppendEntries(server int, arg *AppendEntriesArgs, reply *App
 	} else if ok&&!rf.killed()&&arg.Term==rf.currentTerm&&arg.PrevLogIndex+len(arg.Entries)>rf.matchIndex[server]{
 		rf.matchIndex[server]=arg.PrevLogIndex+len(arg.Entries)
 		rf.nextIndex[server]=rf.matchIndex[server]+1
-		if rf.log[rf.matchIndex[server]].CommandTerm==rf.currentTerm{
+		if rf.getIndexTerm(rf.matchIndex[server])==rf.currentTerm{
 			count:=1
 
 			for _,appliedIndex:=range rf.matchIndex{
@@ -652,7 +649,7 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 		isLeader=false
 		return index, term, isLeader
 	}
-	index=rf.GetFullLen()+1
+	index=rf.GetFullLen()
 	term=rf.currentTerm
 	newCommand:=ApplyMsg{
 		CommandValid:false,
@@ -681,7 +678,7 @@ func (rf *Raft) TryRead(command interface{}) (int, int, bool) {
 		isLeader=false
 		return index, term, isLeader
 	}
-	index=rf.GetFullLen()+1
+	index=rf.GetFullLen()
 	term=rf.currentTerm
 	newCommand:=ApplyMsg{
 		CommandValid:false,
