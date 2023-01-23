@@ -9,13 +9,12 @@ import (
 	"math/rand"
 	"runtime"
 	"fmt"
-	"log"
 )
 
 import "bytes"
 import "../labgob"
 
-func HoldFMT(){fmt.Println();log.Fatalf("12")}
+func HoldFMT(){fmt.Println()}
 
 //Command wrapper
 type ApplyMsg struct {
@@ -61,14 +60,8 @@ type Raft struct {
 	applicationChan chan ApplyMsg
 	committing bool
 
-	snapshot *Snapshot
 }
 
-type Snapshot struct{
-	LastIndex int
-	LastTerm int
-	SnapBytes []byte
-}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -141,34 +134,11 @@ func (rf *Raft) SetState(state int){
 	rf.state=state
 }
 
-func (rf *Raft) SetSnapshot(snapshot *Snapshot){
-	rf.mu.Lock()
-	defer rf.mu.Unlock()
-	if rf.snapshot.LastIndex<snapshot.LastIndex{
-		rf.snapshot=snapshot
-		rf.log=rf.log[rf.snapshot.LastIndex+1:]
-	}
-}
-
 //endregion
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 //region Getters 
-
-//get entry at index with consideration of snapshot
-func (rf *Raft) GetLogIndex(index int)int{
-	logIndex:=index-rf.snapshot.LastIndex-1
-	if logIndex<0{
-		return -1
-	}
-	return logIndex
-}
-
-func (rf *Raft) GetFullLen()int{
-	length:=len(rf.log)+rf.snapshot.LastIndex+1
-	return length
-}
 
 // return currentTerm and whether this server
 // believes it is the leader.
@@ -214,13 +184,10 @@ safe get for Term at index
 */
 
 func (rf *Raft)getIndexTerm(index int)int{
-	if index>=rf.GetFullLen()-1{
+	if index<0||index>=len(rf.log){
 		return -1
 	}
-	if index<0{
-		return rf.snapshot.LastTerm
-	}
-	return rf.log[rf.GetLogIndex(index)].CommandTerm
+	return rf.log[index].CommandTerm
 }
 
 
@@ -242,7 +209,7 @@ change the state of raft to leader and startLeader timer
 func (rf *Raft)changeToLeader(){
 	rf.SetState(1)
 	for i:=range rf.nextIndex{
-		rf.nextIndex[i]=rf.GetFullLen()
+		rf.nextIndex[i]=len(rf.log)
 		rf.matchIndex[i]=-1
 	}
 	go rf.StartLeader()
@@ -258,12 +225,12 @@ Move NextIndex of server to first found index with previous term
 
 func (rf *Raft)NextToPrevTerm(server int){
 	prevIndex:=rf.nextIndex[server]
-	if prevIndex>=rf.GetFullLen(){
-		prevIndex=rf.GetFullLen()-1
+	if prevIndex>=len(rf.log){
+		prevIndex=len(rf.log)-1
 	}
-	curTerm:=rf.getIndexTerm(prevIndex)
+	curTerm:=rf.log[prevIndex].CommandTerm
 	newIndex:=prevIndex
-	for ;newIndex>0&&rf.getIndexTerm(rf.GetLogIndex(prevIndex))==curTerm;newIndex--{}
+	for ;newIndex>0&&rf.log[newIndex].CommandTerm==curTerm;newIndex--{}
 	rf.nextIndex[server]=newIndex
 }
 
@@ -273,13 +240,13 @@ compare raft's latest log with otherIndex and otherTerm to see if otherIndex and
 */
 
 func (rf *Raft) upToDate(otherIndex,otherTerm int)bool{
-	term:=rf.getIndexTerm(rf.GetFullLen()-1)
+	term:=rf.getIndexTerm(len(rf.log)-1)
 	if term>otherTerm{
 		return false
 	} else if term<otherTerm{
 		return true
 	} else{
-		return otherIndex>=rf.GetFullLen()-1
+		return otherIndex>=len(rf.log)-1
 	}
 }
 
@@ -315,8 +282,8 @@ func (rf *Raft) VoteArgReply() ([]*RequestVoteArgs,[]*RequestVoteReply){
 		args[i]=&RequestVoteArgs{
 			Term:rf.currentTerm,
 			CandidateId:rf.me,
-			LastLogIndex:rf.GetFullLen()-1,
-			LastLogTerm:rf.getIndexTerm(rf.GetFullLen()-1),
+			LastLogIndex:len(rf.log)-1,
+			LastLogTerm:rf.getIndexTerm(len(rf.log)-1),
 		}
 		replies[i]=&RequestVoteReply{}
 	}
@@ -419,8 +386,8 @@ func (rf *Raft) RequestAppend(args *AppendEntriesArgs, reply *AppendEntriesReply
 
 	if rf.getIndexTerm(args.PrevLogIndex)==args.PrevLogTerm{
 		i:=0
-		for ;i+args.PrevLogIndex+1<rf.GetFullLen()&&i<len(args.Entries);i++{
-			if rf.getIndexTerm(i+args.PrevLogIndex+1)!=args.Entries[i].CommandTerm{
+		for ;i+args.PrevLogIndex+1<len(rf.log)&&i<len(args.Entries);i++{
+			if rf.log[i+args.PrevLogIndex+1].CommandTerm!=args.Entries[i].CommandTerm{
 				break
 			}
 		}
@@ -518,7 +485,7 @@ func (rf *Raft) sendAppendEntries(server int, arg *AppendEntriesArgs, reply *App
 	} else if ok&&!rf.killed()&&arg.Term==rf.currentTerm&&arg.PrevLogIndex+len(arg.Entries)>rf.matchIndex[server]{
 		rf.matchIndex[server]=arg.PrevLogIndex+len(arg.Entries)
 		rf.nextIndex[server]=rf.matchIndex[server]+1
-		if rf.getIndexTerm(rf.matchIndex[server])==rf.currentTerm{
+		if rf.log[rf.matchIndex[server]].CommandTerm==rf.currentTerm{
 			count:=1
 
 			for _,appliedIndex:=range rf.matchIndex{
@@ -623,7 +590,7 @@ func (rf *Raft)commit(){
 		rf.committing=false
 		rf.mu.Unlock()
 	}()
-	for rf.lastApplied<rf.commitIndex&&rf.lastApplied+1<rf.GetFullLen(){
+	for rf.lastApplied<rf.commitIndex&&rf.lastApplied+1<len(rf.log){
 		rf.lastApplied++
 		DPrintf("[%d] Commit entry %d\n",rf.me,rf.lastApplied)
 		rf.log[rf.lastApplied].CommandValid=true
@@ -649,7 +616,7 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 		isLeader=false
 		return index, term, isLeader
 	}
-	index=rf.GetFullLen()
+	index=len(rf.log)+1
 	term=rf.currentTerm
 	newCommand:=ApplyMsg{
 		CommandValid:false,
@@ -658,7 +625,7 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 		CommandTerm:term,
 		Modify:true,
 	}
-	rf.SetLog(append(rf.log,newCommand),rf.GetFullLen())
+	rf.SetLog(append(rf.log,newCommand),len(rf.log))
 	DPrintf("*[%d]Leader gets new entry\n",rf.me)
 	return index, term, isLeader
 }
@@ -678,7 +645,7 @@ func (rf *Raft) TryRead(command interface{}) (int, int, bool) {
 		isLeader=false
 		return index, term, isLeader
 	}
-	index=rf.GetFullLen()
+	index=len(rf.log)+1
 	term=rf.currentTerm
 	newCommand:=ApplyMsg{
 		CommandValid:false,
@@ -687,7 +654,7 @@ func (rf *Raft) TryRead(command interface{}) (int, int, bool) {
 		CommandTerm:term,
 		Modify:false,
 	}
-	rf.SetLog(append(rf.log,newCommand),rf.GetFullLen())
+	rf.SetLog(append(rf.log,newCommand),len(rf.log))
 	DPrintf("*[%d]Leader gets new entry\n",rf.me)
 	return index, term, isLeader
 }
@@ -761,7 +728,6 @@ func (rf *Raft) persist() {
 	e.Encode(rf.currentTerm)
 	e.Encode(rf.votedFor)
 	e.Encode(rf.log)
-	e.Encode(rf.snapshot)
 	data := w.Bytes()
 	rf.persister.SaveRaftState(data)
 }
@@ -774,7 +740,6 @@ func (rf *Raft) readPersist(data []byte) {
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
 	if data == nil || len(data) < 1 { // bootstrap without any state?
-		rf.snapshot=&Snapshot{-1,-1,[]byte{}}
 		return
 	}
 	// Your code here (2C).
@@ -783,14 +748,12 @@ func (rf *Raft) readPersist(data []byte) {
 	var currentTerm int
 	var votedFor int
 	var log []ApplyMsg
-	var snapshot Snapshot
-	if d.Decode(&currentTerm) != nil ||d.Decode(&votedFor) != nil ||d.Decode(&log) != nil||d.Decode(&snapshot) != nil{
+	if d.Decode(&currentTerm) != nil ||d.Decode(&votedFor) != nil ||d.Decode(&log) != nil{
 		DPrintf("Loading Error\n")
 	} else {
 	  	rf.currentTerm = currentTerm
 	  	rf.votedFor = votedFor
 	  	rf.log=log
-		rf.snapshot=&snapshot
 	}
 }
 
