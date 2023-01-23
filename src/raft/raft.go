@@ -41,7 +41,7 @@ type Raft struct {
 	// state a Raft server must maintain.
 	currentTerm int //latest term server has seen (initialized to 0 on first boot, increases monotonically)
 	votedFor int //candidateId that received vote in current term (or null if none)
-	log [] ApplyMsg //each entry contains command for state machine, and term when entry was received by leader (first index is 1)
+	logState *LogState
 
 	//Volatile state on all servers:
 	commitIndex int //index of highest log entry known to be committed (initialized to 0, increases monotonically)
@@ -61,7 +61,6 @@ type Raft struct {
 	committing bool
 
 }
-
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
