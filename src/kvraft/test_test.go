@@ -580,7 +580,7 @@ func TestManyPartitionsManyClients3A(t *testing.T) {
 	GenericTest(t, "3A", 5, false, false, true, -1)
 }
 
-func TestPersistOneClient3AA(t *testing.T) {
+func TestPersistOneClient3A(t *testing.T) {
 	// Test: restarts, one client (3A) ...
 	GenericTest(t, "3A", 1, false, true, false, -1)
 }

@@ -815,18 +815,15 @@ func (rf *Raft) readPersist(data []byte) {
 	rState := bytes.NewBuffer(data)
 	dState := labgob.NewDecoder(rState)
 	
-	rSnapshot := bytes.NewBuffer(rf.persister.ReadSnapshot())
-	dSnapshot := labgob.NewDecoder(rSnapshot)
 	var currentTerm,votedFor,lastIndex,lastTerm int
 	var log []*ApplyMsg
-	var snapByte []byte
+	snapByte:=rf.persister.ReadSnapshot()
 
 	if dState.Decode(&currentTerm) != nil ||
 	dState.Decode(&votedFor) != nil ||
 	dState.Decode(&lastIndex) != nil||
 	dState.Decode(&lastTerm) != nil ||
-	dState.Decode(&log) != nil||
-	dSnapshot.Decode(&snapByte) != nil {
+	dState.Decode(&log) != nil{
 		panic("Loading Error\n")
 	} else {
 	  	rf.currentTerm = currentTerm
