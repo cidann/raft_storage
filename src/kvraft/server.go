@@ -13,7 +13,7 @@ import (
 	"encoding/gob"
 )
 
-const Debug = 1
+const Debug = 0
 
 func DPrintf(format string, a ...interface{}) (n int, err error) {
 	if Debug > 0 {
@@ -22,7 +22,7 @@ func DPrintf(format string, a ...interface{}) (n int, err error) {
 	return
 }
 
-
+//Type 0 is read 1 is put 2 is append
 type Op struct {
 	// Your definitions here.
 	// Field names must start with capital letters,
@@ -78,13 +78,12 @@ func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persiste
 	kv.me = me
 	kv.maxraftstate = maxraftstate
 
-	// You may need initialization code here.
-
+	//start raft instance
 	kv.applyCh = make(chan raft.ApplyMsg)
 	kv.rf = raft.Make(servers, me, persister, kv.applyCh)
-
-	// You may need initialization code here.
 	kv.store=map[string]string{}
+	kv.LoadSnapshot()
+
 	kv.applied=map[string]bool{}
 	kv.waiting=map[string]chan bool{}
 	kv.waitingNum=0
@@ -114,7 +113,6 @@ func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
 			kv.me,
 		}
 		kv.rf.TryRead(op)
-		go kv.Compaction()
 		DPrintf("[%d] Try to apply read",kv.me)
 		kv.mu.Unlock()
 
@@ -161,7 +159,6 @@ func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 			kv.me,
 		}
 		kv.rf.Start(op)
-		go kv.Compaction()
 		DPrintf("[%d] Try to apply write",kv.me)
 		kv.mu.Unlock()
 
@@ -215,6 +212,8 @@ func (kv *KVServer)ProcessCommits(){
 			DPrintf("[%d] signal channel(%v) to respond to client\n",kv.me,command.WaitId)
 			delete(kv.waiting,command.WaitId)
 		}
+		
+		go kv.Compaction()
 	}
 	kv.mu.Unlock()
 }
@@ -238,6 +237,8 @@ func (kv *KVServer) GetUniqueWaitNum() string {
 }
 
 func (kv *KVServer) Compaction(){
+	kv.mu.Lock()
+	defer kv.mu.Unlock()
 	if kv.maxraftstate<=0{
 		return
 	}
@@ -246,8 +247,21 @@ func (kv *KVServer) Compaction(){
 		e := gob.NewEncoder(w)
 		e.Encode(kv.store)
 		data := w.Bytes()
-		newSnapshot:=raft.Snapshot{LastIndex:kv.latestIndex,LastTerm:kv.latestTerm,SnapBytes:data}
-		kv.rf.SetSnapshot(&newSnapshot)
+		kv.rf.SetSnapshot(kv.latestIndex,kv.latestTerm,data)
 	}
 }
 
+func (kv *KVServer) LoadSnapshot(){
+	snapshot:=kv.rf.GetLogState().GetSnapshot()
+	r:=bytes.NewBuffer(snapshot.SnapBytes)
+	d:=gob.NewDecoder(r)
+	var store map[string]string
+	
+	if d.Decode(&store) != nil {
+		DPrintf("Loading Error\n")
+	} else {
+	  	kv.latestIndex=snapshot.LastIndex
+		kv.latestTerm=snapshot.LastTerm
+		kv.store=store
+	}
+}
