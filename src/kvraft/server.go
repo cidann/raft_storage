@@ -13,7 +13,7 @@ import (
 	"encoding/gob"
 )
 
-const Debug = 1
+const Debug = 0
 
 func DPrintf(format string, a ...interface{}) (n int, err error) {
 	if Debug > 0 {
@@ -272,16 +272,22 @@ func (kv *KVServer) Compaction(){
 }
 
 func (kv *KVServer) LoadSnapshot(snapshot *raft.Snapshot){
-	r:=bytes.NewBuffer(snapshot.SnapBytes)
-	d:=gob.NewDecoder(r)
+	snapBytes:=snapshot.SnapBytes
+	appliedBytes:=snapshot.AppliedBytes
+	rSnap:=bytes.NewBuffer(snapBytes)
+	dSnap:=gob.NewDecoder(rSnap)
+	rApplied:=bytes.NewBuffer(appliedBytes)
+	dApplied:=gob.NewDecoder(rApplied)
 	var store map[string]string
+	var applied map[string]bool
 	
-	if d.Decode(&store) != nil {
+	if dSnap.Decode(&store) != nil || dApplied.Decode(&applied) != nil {
 		DPrintf("Loading Error\n")
 	} else {
 	  	kv.latestIndex=snapshot.LastIndex
 		kv.latestTerm=snapshot.LastTerm
 		kv.store=store
+		kv.applied=applied
 	}
 	DPrintf("[%d] loaded snapshot from rpc %v",kv.me,kv.store)
 }
@@ -292,3 +298,4 @@ func Encode(item interface{})[]byte{
 	e.Encode(item)
 	return w.Bytes()
 }
+
