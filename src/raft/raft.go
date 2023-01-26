@@ -74,7 +74,7 @@ setter for currentTerm and write to persister
 
 func (rf *Raft) SetCurrentTerm(currentTerm int){
 	rf.currentTerm=currentTerm
-	rf.persist()
+	rf.persistState()
 }
 
 /*
@@ -84,7 +84,7 @@ setter for votedFor and write to persister
 
 func (rf *Raft) SetVoteFor(votedFor int){
 	rf.votedFor=votedFor
-	rf.persist()
+	rf.persistState()
 }
 
 /*
@@ -102,7 +102,7 @@ func (rf *Raft) SetLog(log []*ApplyMsg, newIndex int){
 		}
 	}
 	if writeExist{
-		rf.persist()
+		rf.persistState()
 	}
 }
 
@@ -114,7 +114,7 @@ setter for both currentTerm and votedFor at same time to reduce write to persist
 func (rf *Raft) SetTermAndVote(currentTerm int,votedFor int){
 	rf.currentTerm=currentTerm
 	rf.votedFor=votedFor
-	rf.persist()
+	rf.persistState()
 }
 
 
@@ -127,7 +127,7 @@ func (rf *Raft) trySetSnapshot(lastIndex,lastTerm int,snapBytes []byte,appliedBy
 	DPrintf("[%d] state after snapshot log length %d snapshot index %d",rf.me,len(rf.logState.GetLog()),rf.logState.snapshot.LastIndex)
 	rf.lastApplied=lastIndex
 	rf.commitIndex=lastIndex
-	rf.persist()
+	rf.persistSnapshot()
 }
 
 func (rf *Raft) TryApplicationSetSnapshot(lastIndex,lastTerm int,snapBytes []byte,appliedBytes []byte){
@@ -141,7 +141,7 @@ func (rf *Raft) TryApplicationSetSnapshot(lastIndex,lastTerm int,snapBytes []byt
 	DPrintf("[%d] state after snapshot log length %d snapshot index %d",rf.me,len(rf.logState.GetLog()),rf.logState.snapshot.LastIndex)
 	rf.lastApplied=lastIndex
 	rf.commitIndex=lastIndex
-	rf.persist()
+	rf.persistSnapshot()
 }
 
 /*
@@ -204,6 +204,7 @@ func GetElectionTime()time.Duration{
 	return time.Duration(r)*time.Millisecond
 }
 
+//lowering this makes application layer faster
 func GetMaxEletionTime()time.Duration{
 	r := 800
 	return time.Duration(r)*time.Millisecond
@@ -427,20 +428,22 @@ func (rf *Raft) RequestAppend(args *AppendEntriesArgs, reply *AppendEntriesReply
 	}
 
 	behindBy:=rf.logState.snapshot.LastIndex-args.PrevLogIndex
+	logIndex:=args.PrevLogIndex+1
+	sentEntries:=args.Entries
 	if behindBy>0{
-		args.PrevLogIndex+=behindBy
-		args.Entries=SafeSlice(args.Entries,behindBy,len(args.Entries))
+		logIndex+=behindBy
+		sentEntries=SafeSlice(args.Entries,behindBy,len(args.Entries))
 	}
 	if rf.logState.GetEntry(args.PrevLogIndex).CommandTerm==args.PrevLogTerm{
 		i:=0
-		for ;i+args.PrevLogIndex+1<rf.logState.Len()&&i<len(args.Entries);i++{
-			if rf.logState.GetEntry(i+args.PrevLogIndex+1).CommandTerm!=args.Entries[i].CommandTerm{
+		for ;i+logIndex<rf.logState.Len()&&i<len(sentEntries);i++{
+			if rf.logState.GetEntry(i+logIndex).CommandTerm!=sentEntries[i].CommandTerm{
 				break
 			}
 		}
-		if i<len(args.Entries){
+		if i<len(sentEntries){
 			
-			rf.SetLog(append(rf.logState.SliceLog(0,i+args.PrevLogIndex+1),args.Entries[i:]...),i+args.PrevLogIndex+1)
+			rf.SetLog(append(rf.logState.SliceLog(0,i+logIndex),sentEntries[i:]...),i+logIndex)
 		}
 
 		if rf.commitIndex<args.LeaderCommit{
@@ -840,7 +843,23 @@ func Make(peers []*labrpc.ClientEnd, me int,
 /*
 Save raft state to persistent storage
 */
-func (rf *Raft) persist() {
+func (rf *Raft) persistState() {
+	// Your code here (2C).
+	w := new(bytes.Buffer)
+	e := labgob.NewEncoder(w)
+	snapshot:=rf.logState.GetSnapshot()
+
+	e.Encode(rf.currentTerm)
+	e.Encode(rf.votedFor)
+	e.Encode(snapshot.LastIndex)
+	e.Encode(snapshot.LastTerm)
+	e.Encode(rf.logState.GetLog())
+
+	data := w.Bytes()
+	rf.persister.SaveRaftState(data)
+}
+
+func (rf *Raft) persistSnapshot(){
 	// Your code here (2C).
 	w := new(bytes.Buffer)
 	e := labgob.NewEncoder(w)
@@ -855,7 +874,6 @@ func (rf *Raft) persist() {
 	data := w.Bytes()
 	rf.persister.SaveStateAndSnapshot(data,ZipBytes(snapshot.SnapBytes,snapshot.AppliedBytes))
 }
-
 
 /*
 Restore state from persistent storage

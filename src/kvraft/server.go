@@ -83,10 +83,11 @@ func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persiste
 	kv.applyCh = make(chan raft.ApplyMsg)
 	kv.rf = raft.Make(servers, me, persister, kv.applyCh)
 	kv.store=map[string]string{}
-	kv.LoadSnapshot(kv.rf.GetLogState().GetSnapshot())
-	DPrintf("[%d] persited store %v\n",kv.me,kv.store)
-
 	kv.applied=map[string]map[string]bool{}
+	kv.LoadSnapshot(kv.rf.GetLogState().GetSnapshot())
+	DPrintf("[%d] persisted store %v\n",kv.me,kv.store)
+	DPrintf("[%d] persisted applied %v\n",kv.me,kv.applied)
+
 	kv.waiting=map[string]chan bool{}
 	kv.waitingNum=0
 	go kv.ProcessCommits()
@@ -194,8 +195,9 @@ func (kv *KVServer)ProcessCommits(){
 		if commit.Type==raft.READ||commit.Type==raft.WRITE{
 			command:=commit.Command.(Op)
 			DPrintf(
-				"[%d] commited command| Serial(%v),Type(%v),Key(%v),Value(%v),Index(%v)\n",
+				"[%d] commited command| Sender(%v) Serial(%v),Type(%v),Key(%v),Value(%v),Index(%v)\n",
 				kv.me,
+				command.Sender,
 				command.Serial,
 				command.Type,
 				command.Key,
@@ -241,8 +243,8 @@ func (kv *KVServer) processWriteCommand(command Op){
 		} else if command.Type==2{
 			kv.store[command.Key]+=command.Value
 		}
-		DPrintf("[%d] applied command %v:(%v)/(%v) Serial[%s]\n",kv.me,command.Type,command.Key,command.Value,command.Serial)
-		kv.applied[command.Sender][command.Serial]=true
+		DPrintf("[%d] applied command %v:(%v)/(%v) Sender[%s] Serial[%s]\n",kv.me,command.Type,command.Key,command.Value,command.Sender,command.Serial)
+		kv.applied[command.Sender]=map[string]bool{command.Serial:true}
 	}
 }
 
@@ -294,7 +296,6 @@ func (kv *KVServer) LoadSnapshot(snapshot *raft.Snapshot){
 		kv.store=store
 		kv.applied=applied
 	}
-	DPrintf("[%d] loaded snapshot from rpc %v",kv.me,kv.store)
 }
 
 func Encode(item interface{})[]byte{
