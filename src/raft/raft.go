@@ -118,26 +118,26 @@ func (rf *Raft) SetTermAndVote(currentTerm int,votedFor int){
 }
 
 
-func (rf *Raft) trySetSnapshot(lastIndex,lastTerm int,snapBytes []byte){
+func (rf *Raft) trySetSnapshot(lastIndex,lastTerm int,snapBytes []byte,appliedBytes []byte){
 	if lastIndex<rf.commitIndex||lastIndex<=rf.logState.snapshot.LastIndex{
 		return
 	}
 	DPrintf("[%d] setsnapshot latestIndex %d latestTerm %d",rf.me,lastIndex,lastTerm)
-	rf.logState.SetSnapshot(lastIndex,lastTerm,snapBytes)
+	rf.logState.SetSnapshot(lastIndex,lastTerm,snapBytes,appliedBytes)
 	DPrintf("[%d] state after snapshot log length %d snapshot index %d",rf.me,len(rf.logState.GetLog()),rf.logState.snapshot.LastIndex)
 	rf.lastApplied=lastIndex
 	rf.commitIndex=lastIndex
 	rf.persist()
 }
 
-func (rf *Raft) TryApplicationSetSnapshot(lastIndex,lastTerm int,snapBytes []byte){
+func (rf *Raft) TryApplicationSetSnapshot(lastIndex,lastTerm int,snapBytes []byte,appliedBytes []byte){
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
 	if lastIndex<rf.commitIndex||lastIndex<=rf.logState.snapshot.LastIndex{
 		return
 	}
 	DPrintf("[%d] setsnapshot latestIndex %d latestTerm %d",rf.me,lastIndex,lastTerm)
-	rf.logState.SetSnapshot(lastIndex,lastTerm,snapBytes)
+	rf.logState.SetSnapshot(lastIndex,lastTerm,snapBytes,appliedBytes)
 	DPrintf("[%d] state after snapshot log length %d snapshot index %d",rf.me,len(rf.logState.GetLog()),rf.logState.snapshot.LastIndex)
 	rf.lastApplied=lastIndex
 	rf.commitIndex=lastIndex
@@ -372,7 +372,8 @@ type InstallSnapshotArgs struct{
 	LeaderId int //so follower can redirect clients
 	LastIncludedIndex int //the snapshot replaces all entries up through and including this index
 	LastIncludedTerm int //term of lastIncludedIndex offset byte offset where chunk is positioned in the snapshot file
-	Data []byte //raw bytes of the snapshot chunk, starting at offset
+	SnapBytes []byte //snapshotdata
+	AppliedBytes []byte //applied data
 }
 
 type InstallSnapshotReply struct{
@@ -481,7 +482,7 @@ func (rf *Raft) RequestInstallSnapshot(args *InstallSnapshotArgs, reply *Install
 		reply.Term=args.Term
 	}
 
-	rf.trySetSnapshot(args.LastIncludedIndex,args.LastIncludedTerm,args.Data)
+	rf.trySetSnapshot(args.LastIncludedIndex,args.LastIncludedTerm,args.SnapBytes,args.AppliedBytes)
 	rf.applicationChan<-ApplyMsg{
 		CommandValid:false,
 		Type:LOAD,
@@ -565,7 +566,8 @@ func (rf *Raft) sendAppendEntries(server int, arg *AppendEntriesArgs, reply *App
 				LeaderId:rf.me,
 				LastIncludedIndex:rf.logState.snapshot.LastIndex,
 				LastIncludedTerm:rf.logState.snapshot.LastTerm,
-				Data:rf.logState.snapshot.SnapBytes,
+				SnapBytes:rf.logState.snapshot.SnapBytes,
+				AppliedBytes:rf.logState.snapshot.AppliedBytes,
 			}
 			installReply:=&InstallSnapshotReply{}
 			go rf.sendInstallSnapshot(server,installArgs,installReply)
@@ -851,7 +853,7 @@ func (rf *Raft) persist() {
 	e.Encode(rf.logState.GetLog())
 
 	data := w.Bytes()
-	rf.persister.SaveStateAndSnapshot(data,snapshot.SnapBytes)
+	rf.persister.SaveStateAndSnapshot(data,ZipBytes(snapshot.SnapBytes,snapshot.AppliedBytes))
 }
 
 
@@ -864,13 +866,18 @@ func (rf *Raft) readPersist(data []byte) {
 	if data == nil || len(data) < 1 { // bootstrap without any state?
 		return
 	}
-	// Your code here (2C).
+	
 	rState := bytes.NewBuffer(data)
 	dState := labgob.NewDecoder(rState)
 	
 	var currentTerm,votedFor,lastIndex,lastTerm int
 	var log []*ApplyMsg
-	snapByte:=rf.persister.ReadSnapshot()
+
+	zipped:=rf.persister.ReadSnapshot()
+	parts:=UnzipBytes(zipped,2)
+	snapByte:=parts[0]
+	appliedBytes:=parts[1]
+	
 
 	if dState.Decode(&currentTerm) != nil ||
 	dState.Decode(&votedFor) != nil ||
@@ -886,6 +893,7 @@ func (rf *Raft) readPersist(data []byte) {
 			lastIndex,
 			lastTerm,
 			snapByte,
+			appliedBytes,
 		}
 		rf.logState=NewLogState(log,snapshot)
 	}

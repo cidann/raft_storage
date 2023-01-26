@@ -265,11 +265,9 @@ func (kv *KVServer) Compaction(){
 	kv.mu.Lock()
 	defer kv.mu.Unlock()
 	if kv.rf.GetPersister().RaftStateSize()>=kv.maxraftstate{
-		w := new(bytes.Buffer)
-		e := gob.NewEncoder(w)
-		e.Encode(kv.store)
-		data := w.Bytes()
-		kv.rf.TryApplicationSetSnapshot(kv.latestIndex,kv.latestTerm,data)
+		snapByte := Encode(kv.store)
+		appliedByte:=Encode(kv.applied)
+		kv.rf.TryApplicationSetSnapshot(kv.latestIndex,kv.latestTerm,snapByte,appliedByte)
 	}
 }
 
@@ -288,3 +286,9 @@ func (kv *KVServer) LoadSnapshot(snapshot *raft.Snapshot){
 	DPrintf("[%d] loaded snapshot from rpc %v",kv.me,kv.store)
 }
 
+func Encode(item interface{})[]byte{
+	w := new(bytes.Buffer)
+	e := gob.NewEncoder(w)
+	e.Encode(item)
+	return w.Bytes()
+}
