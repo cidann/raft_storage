@@ -721,7 +721,7 @@ func TestSnapshotUnreliable3B(t *testing.T) {
 	GenericTest(t, "3B", 5, true, false, false, 1000)
 }
 
-func TestSnapshotUnreliableRecover3B(t *testing.T) {
+func TestSnapshotUnreliableRecover3BB(t *testing.T) {
 	// Test: unreliable net, restarts, snapshots, many clients (3B) ...
 	GenericTest(t, "3B", 5, true, true, false, 1000)
 }

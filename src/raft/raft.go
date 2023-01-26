@@ -17,7 +17,7 @@ import "../labgob"
 func HoldFMT(){fmt.Println()}
 
 //Command wrapper
-const READ,WRITE="r","w"
+const READ,WRITE,LOAD="r","w","l"
 type ApplyMsg struct {
 	CommandValid bool
 	Command      interface{}
@@ -93,14 +93,14 @@ setter for log entry and write to persister
 */
 
 func (rf *Raft) SetLog(log []*ApplyMsg, newIndex int){
+	rf.logState.SetLog(log)
 	writeExist:=false
-	for i:=newIndex;i<len(log);i++{
-		if log[i].Type==WRITE{
+	for i:=newIndex;i<rf.logState.Len();i++{
+		if rf.logState.GetEntry(i).Type==WRITE{
 			writeExist=true
 			break
 		}
 	}
-	rf.logState.SetLog(log)
 	if writeExist{
 		rf.persist()
 	}
@@ -118,10 +118,29 @@ func (rf *Raft) SetTermAndVote(currentTerm int,votedFor int){
 }
 
 
-func (rf *Raft) SetSnapshot(latestIndex,latestTerm int,snapBytes []byte){
+func (rf *Raft) trySetSnapshot(lastIndex,lastTerm int,snapBytes []byte){
+	if lastIndex<rf.commitIndex||lastIndex<=rf.logState.snapshot.LastIndex{
+		return
+	}
+	DPrintf("[%d] setsnapshot latestIndex %d latestTerm %d",rf.me,lastIndex,lastTerm)
+	rf.logState.SetSnapshot(lastIndex,lastTerm,snapBytes)
+	DPrintf("[%d] state after snapshot log length %d snapshot index %d",rf.me,len(rf.logState.GetLog()),rf.logState.snapshot.LastIndex)
+	rf.lastApplied=lastIndex
+	rf.commitIndex=lastIndex
+	rf.persist()
+}
+
+func (rf *Raft) TryApplicationSetSnapshot(lastIndex,lastTerm int,snapBytes []byte){
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
-	rf.logState.SetSnapshot(latestIndex,latestTerm,snapBytes)
+	if lastIndex<rf.commitIndex||lastIndex<=rf.logState.snapshot.LastIndex{
+		return
+	}
+	DPrintf("[%d] setsnapshot latestIndex %d latestTerm %d",rf.me,lastIndex,lastTerm)
+	rf.logState.SetSnapshot(lastIndex,lastTerm,snapBytes)
+	DPrintf("[%d] state after snapshot log length %d snapshot index %d",rf.me,len(rf.logState.GetLog()),rf.logState.snapshot.LastIndex)
+	rf.lastApplied=lastIndex
+	rf.commitIndex=lastIndex
 	rf.persist()
 }
 
@@ -131,10 +150,13 @@ setter for state and start waiting clock if previous state was 1
 */
 
 func (rf *Raft) SetState(state int){
-	DPrintf("SetState from %d to %d\n",rf.state,state)
+	DPrintf("[%d] SetState from %d to %d\n",rf.me,rf.state,state)
 	if rf.state==1&&state!=1{
 		go rf.WaitForResponse()
 		rf.lastAppend=time.Now()
+	}
+	if rf.state!=1&&state==1{
+		rf.changeToLeader()
 	}
 	if state==1{
 		rf.leader=rf.me
@@ -148,7 +170,16 @@ func (rf *Raft) SetState(state int){
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 //region Getters 
+func (msg *ApplyMsg) String()string{
+	return fmt.Sprintf("Command(%v)",msg.Command)
+}
 
+func (rf *Raft) Isleader() bool {
+	rf.mu.Lock()
+	isleader:=rf.state==1
+	rf.mu.Unlock()
+	return isleader
+}
 // return currentTerm and whether this server
 // believes it is the leader.
 func (rf *Raft) GetState() (int, bool) {
@@ -207,7 +238,6 @@ change the state of raft to leader and startLeader timer
 */
 
 func (rf *Raft)changeToLeader(){
-	rf.SetState(1)
 	for i:=range rf.nextIndex{
 		rf.nextIndex[i]=rf.logState.Len()
 		rf.matchIndex[i]=-1
@@ -227,10 +257,12 @@ func (rf *Raft)NextToPrevTerm(server int){
 	prevIndex:=rf.nextIndex[server]
 	if prevIndex>=rf.logState.Len(){
 		prevIndex=rf.logState.Len()-1
+	} else if prevIndex<rf.logState.snapshot.LastIndex{
+		prevIndex=rf.logState.snapshot.LastIndex
 	}
 	curTerm:=rf.logState.GetEntry(prevIndex).CommandTerm
 	newIndex:=prevIndex
-	for ;newIndex>0&&rf.logState.GetEntry(newIndex).CommandTerm==curTerm;newIndex--{}
+	for ;newIndex>rf.logState.snapshot.LastIndex&&rf.logState.GetEntry(newIndex).CommandTerm==curTerm;newIndex--{}
 	rf.nextIndex[server]=newIndex
 }
 
@@ -261,7 +293,7 @@ func (rf *Raft) AppendArgReply() ([]*AppendEntriesArgs,[]*AppendEntriesReply){
 		args[i]=&AppendEntriesArgs{
 			Term:rf.currentTerm,
 			LeaderId:rf.me,
-			PrevLogIndex:rf.nextIndex[i]-1,
+			PrevLogIndex:rf.logState.GetEntry(rf.nextIndex[i]-1).CommandIndex,
 			PrevLogTerm:rf.logState.GetEntry(rf.nextIndex[i]-1).CommandTerm,
 			Entries:DeepCopyLog(rf.logState.SliceLog(rf.nextIndex[i],rf.logState.Len())),
 			LeaderCommit:rf.commitIndex,
@@ -393,6 +425,11 @@ func (rf *Raft) RequestAppend(args *AppendEntriesArgs, reply *AppendEntriesReply
 		reply.Term=args.Term
 	}
 
+	behindBy:=rf.logState.snapshot.LastIndex-args.PrevLogIndex
+	if behindBy>0{
+		args.PrevLogIndex+=behindBy
+		args.Entries=SafeSlice(args.Entries,behindBy,len(args.Entries))
+	}
 	if rf.logState.GetEntry(args.PrevLogIndex).CommandTerm==args.PrevLogTerm{
 		i:=0
 		for ;i+args.PrevLogIndex+1<rf.logState.Len()&&i<len(args.Entries);i++{
@@ -400,7 +437,7 @@ func (rf *Raft) RequestAppend(args *AppendEntriesArgs, reply *AppendEntriesReply
 				break
 			}
 		}
-		if i<len(args.Entries)&&args.PrevLogIndex+1>rf.commitIndex{
+		if i<len(args.Entries){
 			
 			rf.SetLog(append(rf.logState.SliceLog(0,i+args.PrevLogIndex+1),args.Entries[i:]...),i+args.PrevLogIndex+1)
 		}
@@ -428,9 +465,9 @@ func (rf *Raft) RequestAppend(args *AppendEntriesArgs, reply *AppendEntriesReply
 //
 //RequestInstallSnapShot RPC handler.
 //
-func (rf *Raft) RequestInstallSnapShot(args *InstallSnapshotArgs, reply *InstallSnapshotReply) {
+func (rf *Raft) RequestInstallSnapshot(args *InstallSnapshotArgs, reply *InstallSnapshotReply) {
 	rf.mu.Lock()
-	DPrintf("[%d]Received install snapshot request from %d \n",rf.me,args.LeaderId)
+	DPrintf("+[%d]Received install snapshot request from %d +\n",rf.me,args.LeaderId)
 	defer rf.mu.Unlock()
 	// Your code here (2A, 2B).
 	if args.Term>rf.currentTerm{
@@ -444,9 +481,15 @@ func (rf *Raft) RequestInstallSnapShot(args *InstallSnapshotArgs, reply *Install
 		reply.Term=args.Term
 	}
 
-	if rf.logState.GetSnapshot().LastIndex<args.LastIncludedIndex{
-		
+	rf.trySetSnapshot(args.LastIncludedIndex,args.LastIncludedTerm,args.Data)
+	rf.applicationChan<-ApplyMsg{
+		CommandValid:false,
+		Type:LOAD,
+		Command:*rf.logState.snapshot,
+		CommandIndex:rf.logState.Len(),
+		CommandTerm:rf.currentTerm,
 	}
+	
 }
 
 
@@ -480,7 +523,7 @@ func (rf *Raft) sendRequestVote(server int, arg *RequestVoteArgs, reply *Request
 				}
 			}
 			if count>len(rf.peers)/2{
-				rf.changeToLeader()
+				rf.SetState(1)
 			}
 		}
 	}
@@ -516,6 +559,17 @@ func (rf *Raft) sendAppendEntries(server int, arg *AppendEntriesArgs, reply *App
 	}
 
 	if ok&&!reply.Success&&rf.nextIndex[server]>0{
+		if arg.PrevLogIndex<=rf.logState.snapshot.LastIndex{
+			installArgs:=&InstallSnapshotArgs{
+				Term:rf.currentTerm,
+				LeaderId:rf.me,
+				LastIncludedIndex:rf.logState.snapshot.LastIndex,
+				LastIncludedTerm:rf.logState.snapshot.LastTerm,
+				Data:rf.logState.snapshot.SnapBytes,
+			}
+			installReply:=&InstallSnapshotReply{}
+			go rf.sendInstallSnapshot(server,installArgs,installReply)
+		}
 		rf.NextToPrevTerm(server)
 	} else if ok&&!rf.killed()&&arg.Term==rf.currentTerm&&arg.PrevLogIndex+len(arg.Entries)>rf.matchIndex[server]{
 		rf.matchIndex[server]=arg.PrevLogIndex+len(arg.Entries)
@@ -542,7 +596,7 @@ func (rf *Raft) sendAppendEntries(server int, arg *AppendEntriesArgs, reply *App
 /*
 Request vote from server
 */
-func (rf *Raft) sendInstallSnapshot(server int, arg *RequestVoteArgs, reply *RequestVoteReply) {
+func (rf *Raft) sendInstallSnapshot(server int, arg *InstallSnapshotArgs, reply *InstallSnapshotReply) {
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
 
@@ -577,7 +631,7 @@ func (rf *Raft)StartLeader(){
 	defer rf.mu.Unlock()
 
 	for rf.state==1&&!rf.killed(){
-		DPrintf("%v next index\n",rf.nextIndex)
+		DPrintf("[%d] %v next index\n",rf.me,rf.nextIndex)
 		
 		args,replies:=rf.AppendArgReply()
 
@@ -651,14 +705,13 @@ func (rf *Raft)commit(){
 		rf.committing=false
 		rf.mu.Unlock()
 	}()
-	
+	if rf.lastApplied<=rf.logState.snapshot.LastIndex{
+		rf.lastApplied=rf.logState.snapshot.LastIndex
+	}
 	for rf.lastApplied<rf.commitIndex&&rf.lastApplied+1<rf.logState.Len(){
 		rf.lastApplied++
 		DPrintf("[%d] Commit entry %d\n",rf.me,rf.lastApplied)
 		entry:=rf.logState.GetEntry(rf.lastApplied)
-		if !entry.CommandValid{
-			break
-		}
 		rf.mu.Unlock()
 		rf.applicationChan<-*entry
 		rf.mu.Lock()
@@ -826,16 +879,15 @@ func (rf *Raft) readPersist(data []byte) {
 	dState.Decode(&log) != nil{
 		panic("Loading Error\n")
 	} else {
+		DPrintf("[%d] the log that is recovered %v",rf.me,log)
 	  	rf.currentTerm = currentTerm
 	  	rf.votedFor = votedFor
-	  	rf.logState=&LogState{
-			log,
-			&Snapshot{
-				lastIndex,
-				lastTerm,
-				snapByte,
-			},
+		snapshot:=&Snapshot{
+			lastIndex,
+			lastTerm,
+			snapByte,
 		}
+		rf.logState=NewLogState(log,snapshot)
 	}
 }
 

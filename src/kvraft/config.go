@@ -4,7 +4,7 @@ import "../labrpc"
 import "testing"
 import "os"
 
-// import "log"
+//import "log"
 import crand "crypto/rand"
 import "math/big"
 import "math/rand"
@@ -57,6 +57,12 @@ type config struct {
 	t0    time.Time // time at which test_test.go called cfg.begin()
 	rpcs0 int       // rpcTotal() at start of test
 	ops   int32     // number of clerk get/put/append method calls
+}
+
+func (cfg *config) PrintServerStates(){
+	for _,kv:=range cfg.kvservers{
+		fmt.Printf("[%d] storage %v\n\n",kv.me,kv.store)
+	}
 }
 
 func (cfg *config) checkTimeout() {

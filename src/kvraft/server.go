@@ -13,7 +13,7 @@ import (
 	"encoding/gob"
 )
 
-const Debug = 0
+const Debug = 1
 
 func DPrintf(format string, a ...interface{}) (n int, err error) {
 	if Debug > 0 {
@@ -22,7 +22,7 @@ func DPrintf(format string, a ...interface{}) (n int, err error) {
 	return
 }
 
-//Type 0 is read 1 is put 2 is append
+//Type 0 is read 1 is put 2 is append 3 is load snapshot
 type Op struct {
 	// Your definitions here.
 	// Field names must start with capital letters,
@@ -82,7 +82,8 @@ func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persiste
 	kv.applyCh = make(chan raft.ApplyMsg)
 	kv.rf = raft.Make(servers, me, persister, kv.applyCh)
 	kv.store=map[string]string{}
-	kv.LoadSnapshot()
+	kv.LoadSnapshot(kv.rf.GetLogState().GetSnapshot())
+	DPrintf("[%d] persited store %v\n",kv.me,kv.store)
 
 	kv.applied=map[string]bool{}
 	kv.waiting=map[string]chan bool{}
@@ -183,46 +184,67 @@ func (kv *KVServer)ProcessCommits(){
 	for !kv.killed(){
 		kv.mu.Unlock()
 		commit:=<-kv.applyCh
-		command:=commit.Command.(Op)
 		kv.mu.Lock()
-		DPrintf(
-			"[%d] commited command| Serial(%v),Type(%v),Key(%v),Value(%v),WaitId(%v)\n",
-			kv.me,
-			command.Serial,
-			command.Type,
-			command.Key,
-			command.Value,
-			command.WaitId,
-		)
-		kv.latestIndex=commit.CommandIndex
-		kv.latestTerm=commit.CommandTerm
-
-		if !kv.applied[command.Serial]{
-			if command.Type==1{
-				kv.store[command.Key]=command.Value
-			} else if command.Type==2{
-				kv.store[command.Key]+=command.Value
-			}
-			DPrintf("[%d] applied command %v:(%v)/(%v) Serial[%s]\n",kv.me,command.Type,command.Key,command.Value,command.Serial)
-			kv.applied[command.Serial]=true
+		if commit.CommandIndex<=kv.latestIndex{
+			continue
 		}
+		if commit.Type==raft.READ||commit.Type==raft.WRITE{
+			command:=commit.Command.(Op)
+			DPrintf(
+				"[%d] commited command| Serial(%v),Type(%v),Key(%v),Value(%v),Index(%v)\n",
+				kv.me,
+				command.Serial,
+				command.Type,
+				command.Key,
+				command.Value,
+				commit.CommandIndex,
+			)
 
-		if c,ok:=kv.waiting[command.WaitId];ok{
-			c<-true
-			DPrintf("[%d] signal channel(%v) to respond to client\n",kv.me,command.WaitId)
-			delete(kv.waiting,command.WaitId)
+			if commit.Type==raft.READ{
+
+			} else if commit.Type==raft.WRITE{
+				kv.processWriteCommand(command)
+			}
+
+			if c,ok:=kv.waiting[command.WaitId];ok{
+				c<-true
+				DPrintf("[%d] signal channel(%v) to respond to client\n",kv.me,command.WaitId)
+				delete(kv.waiting,command.WaitId)
+			}
+		} else if commit.Type==raft.LOAD{
+			command:=commit.Command.(raft.Snapshot)
+			kv.LoadSnapshot(&command)
 		}
 		
-		go kv.Compaction()
+
+		if commit.CommandValid{
+			kv.latestIndex=commit.CommandIndex
+			kv.latestTerm=commit.CommandTerm
+			go kv.Compaction()
+		}
+
 	}
 	kv.mu.Unlock()
 }
 
 
+
+func (kv *KVServer) processWriteCommand(command Op){
+	if !kv.applied[command.Serial]{
+		if command.Type==1{
+			kv.store[command.Key]=command.Value
+		} else if command.Type==2{
+			kv.store[command.Key]+=command.Value
+		}
+		DPrintf("[%d] applied command %v:(%v)/(%v) Serial[%s]\n",kv.me,command.Type,command.Key,command.Value,command.Serial)
+		kv.applied[command.Serial]=true
+	}
+}
+
 func (kv *KVServer) Kill() {
 	atomic.StoreInt32(&kv.dead, 1)
 	kv.rf.Kill()
-	DPrintf("[%d] %v\n\n\n",kv.me,kv.store)
+	//DPrintf("[%d] %v\n\n\n",kv.me,kv.store)
 	// Your code here, if desired.
 }
 
@@ -237,22 +259,21 @@ func (kv *KVServer) GetUniqueWaitNum() string {
 }
 
 func (kv *KVServer) Compaction(){
-	kv.mu.Lock()
-	defer kv.mu.Unlock()
 	if kv.maxraftstate<=0{
 		return
 	}
+	kv.mu.Lock()
+	defer kv.mu.Unlock()
 	if kv.rf.GetPersister().RaftStateSize()>=kv.maxraftstate{
 		w := new(bytes.Buffer)
 		e := gob.NewEncoder(w)
 		e.Encode(kv.store)
 		data := w.Bytes()
-		kv.rf.SetSnapshot(kv.latestIndex,kv.latestTerm,data)
+		kv.rf.TryApplicationSetSnapshot(kv.latestIndex,kv.latestTerm,data)
 	}
 }
 
-func (kv *KVServer) LoadSnapshot(){
-	snapshot:=kv.rf.GetLogState().GetSnapshot()
+func (kv *KVServer) LoadSnapshot(snapshot *raft.Snapshot){
 	r:=bytes.NewBuffer(snapshot.SnapBytes)
 	d:=gob.NewDecoder(r)
 	var store map[string]string
@@ -264,4 +285,6 @@ func (kv *KVServer) LoadSnapshot(){
 		kv.latestTerm=snapshot.LastTerm
 		kv.store=store
 	}
+	DPrintf("[%d] loaded snapshot from rpc %v",kv.me,kv.store)
 }
+

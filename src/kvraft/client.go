@@ -52,15 +52,13 @@ func (ck *Clerk) Get(key string) string {
 	val:=""
 	args:=&GetArgs{key,serial}
 	reply:=&GetReply{}
-	successAll:=ck.servers[ck.leader].Call("KVServer.Get", args, reply)
+	ck.servers[ck.leader].Call("KVServer.Get", args, reply)
 	for !reply.Ok{
 		for i:=range ck.servers{
 			args:=&GetArgs{key,serial}
 			reply:=&GetReply{}
-			success:=ck.servers[i].Call("KVServer.Get", args, reply)
-			if !success{
-				successAll=false
-			}
+			ck.servers[i].Call("KVServer.Get", args, reply)
+			
 			if reply.Ok{
 				ck.leader=i
 				DPrintf("Client got Read (%v) Serial[%v]\n",key,serial)
@@ -68,10 +66,8 @@ func (ck *Clerk) Get(key string) string {
 				return val
 			}
 		}
+		time.Sleep(raft.GetMaxEletionTime())
 		DPrintf("Retry%v\n","+++++++++++++++++++++++++")
-		if successAll{
-			time.Sleep(raft.GetMaxEletionTime())
-		}
 	}
 	val=reply.Value
 	DPrintf("Client got Read (%v) Serial[%v]\n",key,serial)
@@ -96,25 +92,20 @@ func (ck *Clerk) PutAppend(key string, value string, op string) {
 	DPrintf("Client PutAppend Request [%v] (%v)/(%v) Serial[%v]]======================================\n",op,key,value,serial)
 	args:=&PutAppendArgs{key,value,op,serial}
 	reply:=&PutAppendReply{}
-	successAll:=ck.servers[ck.leader].Call("KVServer.PutAppend", args, reply)
+	ck.servers[ck.leader].Call("KVServer.PutAppend", args, reply)
 	for !reply.Ok{
 		for i:=range ck.servers{
 			args:=&PutAppendArgs{key,value,op,serial}
 			reply:=&PutAppendReply{}
-			success:=ck.servers[i].Call("KVServer.PutAppend", args, reply)
-			if !success{
-				successAll=false
-			}
+			ck.servers[i].Call("KVServer.PutAppend", args, reply)
+
 			if reply.Ok{
 				ck.leader=i
 				DPrintf("Client got [%v] (%v)/(%v) Serial[%v]\n",op,key,value,serial)
 				return
 			}
 		}
-		DPrintf("Retry%v\n","+++++++++++++++++++++++++")
-		if successAll{
-			time.Sleep(raft.GetMaxEletionTime())
-		}
+		time.Sleep(raft.GetMaxEletionTime())
 	}
 	DPrintf("Client got [%v] (%v)/(%v) Serial[%v]\n",op,key,value,serial)
 }
