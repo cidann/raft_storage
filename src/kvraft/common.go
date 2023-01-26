@@ -10,6 +10,7 @@ type Err bool
 
 // Put or Append
 type PutAppendArgs struct {
+	Sender string
 	Key   string
 	Value string
 	Op    string // "Put" or "Append"
@@ -24,6 +25,7 @@ type PutAppendReply struct {
 }
 
 type GetArgs struct {
+	Sender string
 	Key string
 	// You'll have to add definitions here.
 	Serial string

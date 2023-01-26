@@ -27,6 +27,7 @@ type Op struct {
 	// Your definitions here.
 	// Field names must start with capital letters,
 	// otherwise RPC will break.
+	Sender string
 	Serial string
 	Type int
 	Key string
@@ -44,9 +45,9 @@ type KVServer struct {
 
 	maxraftstate int // snapshot if log grows this big
 
-	// Your definitions here.
 	store map[string]string
-	applied map[string]bool
+	//since clerks are synchronous when a newer request is commited the older request detection can be deleted 
+	applied map[string]map[string]bool 
 	waiting map[string]chan bool
 
 	waitingNum int
@@ -85,7 +86,7 @@ func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persiste
 	kv.LoadSnapshot(kv.rf.GetLogState().GetSnapshot())
 	DPrintf("[%d] persited store %v\n",kv.me,kv.store)
 
-	kv.applied=map[string]bool{}
+	kv.applied=map[string]map[string]bool{}
 	kv.waiting=map[string]chan bool{}
 	kv.waitingNum=0
 	go kv.ProcessCommits()
@@ -106,6 +107,7 @@ func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
 		wait:=make(chan bool,1)
 		kv.waiting[waitNum]=wait
 		op:=Op{
+			args.Sender,
 			args.Serial,
 			0,
 			args.Key,
@@ -152,6 +154,7 @@ func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 		wait:=make(chan bool,1)
 		kv.waiting[waitNum]=wait
 		op:=Op{
+			args.Sender,
 			args.Serial,
 			action,
 			args.Key,
@@ -205,7 +208,9 @@ func (kv *KVServer)ProcessCommits(){
 			} else if commit.Type==raft.WRITE{
 				kv.processWriteCommand(command)
 			}
-
+			if _,ok:=kv.applied[command.Sender][command.Serial];len(kv.applied[command.Sender])>0&&!ok{
+				kv.applied[command.Sender]=map[string]bool{command.Serial:true}
+			}
 			if c,ok:=kv.waiting[command.WaitId];ok{
 				c<-true
 				DPrintf("[%d] signal channel(%v) to respond to client\n",kv.me,command.WaitId)
@@ -230,14 +235,14 @@ func (kv *KVServer)ProcessCommits(){
 
 
 func (kv *KVServer) processWriteCommand(command Op){
-	if !kv.applied[command.Serial]{
+	if !kv.applied[command.Sender][command.Serial]{
 		if command.Type==1{
 			kv.store[command.Key]=command.Value
 		} else if command.Type==2{
 			kv.store[command.Key]+=command.Value
 		}
 		DPrintf("[%d] applied command %v:(%v)/(%v) Serial[%s]\n",kv.me,command.Type,command.Key,command.Value,command.Serial)
-		kv.applied[command.Serial]=true
+		kv.applied[command.Sender][command.Serial]=true
 	}
 }
 
@@ -279,7 +284,7 @@ func (kv *KVServer) LoadSnapshot(snapshot *raft.Snapshot){
 	rApplied:=bytes.NewBuffer(appliedBytes)
 	dApplied:=gob.NewDecoder(rApplied)
 	var store map[string]string
-	var applied map[string]bool
+	var applied map[string]map[string]bool
 	
 	if dSnap.Decode(&store) != nil || dApplied.Decode(&applied) != nil {
 		DPrintf("Loading Error\n")

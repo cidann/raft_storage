@@ -47,10 +47,11 @@ func MakeClerk(servers []*labrpc.ClientEnd) *Clerk {
 func (ck *Clerk) Get(key string) string {
 	// You will have to modify this function.
 	ck.serial+=1
-	serial:=fmt.Sprintf("%p-%d",ck,ck.serial)
+	sender:=fmt.Sprintf("%p",ck)
+	serial:=fmt.Sprintf("%d-%d",time.Now(),ck.serial)
 	DPrintf("Client Get Request (%v) Serial[%v]======================================\n",key,serial)
 	val:=""
-	args:=&GetArgs{key,serial}
+	args:=&GetArgs{sender,key,serial}
 	reply:=&GetReply{}
 	ck.servers[ck.leader].Call("KVServer.Get", args, reply)
 	for !reply.Ok{
@@ -88,14 +89,15 @@ func (ck *Clerk) Get(key string) string {
 func (ck *Clerk) PutAppend(key string, value string, op string) {
 	// You will have to modify this function.
 	ck.serial+=1
-	serial:=fmt.Sprintf("%p-%d",ck,ck.serial)
+	sender:=fmt.Sprintf("%p",ck)
+	serial:=fmt.Sprintf("%d-%d",time.Now(),ck.serial)
 	DPrintf("Client PutAppend Request [%v] (%v)/(%v) Serial[%v]]======================================\n",op,key,value,serial)
 	args:=&PutAppendArgs{key,value,op,serial}
 	reply:=&PutAppendReply{}
 	ck.servers[ck.leader].Call("KVServer.PutAppend", args, reply)
 	for !reply.Ok{
 		for i:=range ck.servers{
-			args:=&PutAppendArgs{key,value,op,serial}
+			args:=&PutAppendArgs{sender,key,value,op,serial}
 			reply:=&PutAppendReply{}
 			ck.servers[i].Call("KVServer.PutAppend", args, reply)
 
