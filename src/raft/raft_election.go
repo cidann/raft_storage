@@ -32,11 +32,12 @@ func (rf *Raft) startWaitForResponse() {
 		for rf.state == LEADER {
 			rf.stateCond.Wait()
 		}
-		if rf.lastRecord.HasElapsed(GetElectionTime()) {
+		election_time := GetElectionTime()
+		if rf.lastRecord.HasElapsed(election_time) {
 			DPrintf("[%d term %d] Goroutine awake and election timed out", rf.me, rf.currentTerm)
 			rf.startElection()
 		}
-		rf.UnlockAndSleepFor(GetMaxElectionTime() / 2)
+		rf.UnlockAndSleepFor(election_time)
 	}
 }
 
