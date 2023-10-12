@@ -64,7 +64,7 @@ func (rf *Raft) startLeader() {
 	}
 
 	rf.state = LEADER
-	DPrintf("[** %d term %d] %v is now leader!", rf.me, rf.currentTerm, rf.nextIndex)
+	DPrintf("[** %d term %d] %v is now leader!", rf.me, rf.getTerm(), rf.nextIndex)
 
 	for rf.state == LEADER && !rf.killed() {
 		for i := range rf.peers {
@@ -73,7 +73,7 @@ func (rf *Raft) startLeader() {
 			}
 			go rf.sendAppendEntry(i, rf.makeAppendEntryArgs(i), rf.makeAppendEntryReply())
 		}
-		DPrintf("[** %d term %d] sent a new wave of appends!", rf.me, rf.currentTerm)
+		DPrintf("[** %d term %d] sent a new wave of appends!", rf.me, rf.getTerm())
 		rf.UnlockAndSleepFor(GetSendTime())
 	}
 }
@@ -82,12 +82,12 @@ func (rf *Raft) checkValidAppendReply(args *AppendEntryArgs, reply *AppendEntryR
 	if reply.Term == -1 {
 		return false
 	}
-	return args.Term == rf.currentTerm
+	return args.Term == rf.getTerm()
 }
 
 func (rf *Raft) handleValidAppendReply(server int, args *AppendEntryArgs, reply *AppendEntryReply) {
-	if reply.Term > rf.currentTerm {
-		rf.currentTerm = reply.Term
+	if reply.Term > rf.getTerm() {
+		rf.setTerm(reply.Term)
 		rf.toFollower()
 		return
 	}
@@ -97,7 +97,7 @@ func (rf *Raft) handleValidAppendReply(server int, args *AppendEntryArgs, reply 
 		rf.nextIndex[server] = replicated_up_to + 1
 		rf.leaderCheckAndUpdateCommit(rf.matchIndex[server])
 		rf.commitCond.Broadcast()
-		DPrintf("[** %d term %d] replicated on [%d] total replicated [%v] next [%v]", rf.me, rf.currentTerm, server, rf.matchIndex, rf.nextIndex)
+		DPrintf("[** %d term %d] replicated on [%d] total replicated [%v] next [%v]", rf.me, rf.getTerm(), server, rf.matchIndex, rf.nextIndex)
 	} else {
 		//can be optimized
 		rf.nextIndex[server] = rf.log.getLastTermIndex(args.PrevLogIndex) + 1
@@ -105,25 +105,25 @@ func (rf *Raft) handleValidAppendReply(server int, args *AppendEntryArgs, reply 
 }
 
 func (rf *Raft) checkAppendRequest(args *AppendEntryArgs, reply *AppendEntryReply) bool {
-	if args.Term < rf.currentTerm {
+	if args.Term < rf.getTerm() {
 		reply.Success = false
-		reply.Term = rf.currentTerm
+		reply.Term = rf.getTerm()
 		return false
 	}
-	if args.Term > rf.currentTerm {
-		rf.currentTerm = args.Term
+	if args.Term > rf.getTerm() {
+		rf.setTerm(args.Term)
 		rf.toFollower()
 	}
 	return true
 }
 
 func (rf *Raft) handleValidAppendRequest(args *AppendEntryArgs, reply *AppendEntryReply) {
+	defer rf.lastRecord.RecordTime()
 	if rf.log.checkMatch(args.PrevLogIndex, args.PrevLogTerm) {
 		reply.Success = true
 		rf.log.replace(args.PrevLogIndex+1, args.Entries...)
-		rf.lastRecord.RecordTime()
 		rf.toFollower()
-		rf.currentTerm = args.Term
+		rf.setTerm(args.Term)
 		rf.leader = args.LeaderId
 		if args.LeaderCommit < rf.log.length() {
 			rf.commitIndex = args.LeaderCommit
@@ -131,18 +131,18 @@ func (rf *Raft) handleValidAppendRequest(args *AppendEntryArgs, reply *AppendEnt
 			rf.commitIndex = rf.log.length()
 		}
 		rf.commitCond.Broadcast()
-		DPrintf("[%d term %d] Received append[len %d] from leader[%d commit %d] [index %d term %d]==[index %d term %d]", rf.me, rf.currentTerm, len(args.Entries), args.LeaderId, args.LeaderCommit, args.PrevLogIndex, args.PrevLogTerm, rf.log.get(args.PrevLogIndex).Index(), rf.log.get(args.PrevLogIndex).Term())
+		DPrintf("[%d term %d] Received append[len %d] from leader[%d commit %d] [index %d term %d]==[index %d term %d]", rf.me, rf.getTerm(), len(args.Entries), args.LeaderId, args.LeaderCommit, args.PrevLogIndex, args.PrevLogTerm, rf.log.get(args.PrevLogIndex).Index(), rf.log.get(args.PrevLogIndex).Term())
 	} else {
 		reply.Success = false
 	}
 
-	reply.Term = rf.currentTerm
+	reply.Term = rf.getTerm()
 }
 
 //Only update commit index for now
 func (rf *Raft) leaderCheckAndUpdateCommit(new_commit_index int) {
 	count := 0
-	if new_commit_index <= rf.commitIndex || rf.log.get(new_commit_index).Term() != rf.currentTerm {
+	if new_commit_index <= rf.commitIndex || rf.log.get(new_commit_index).Term() < rf.getTerm() {
 		return
 	}
 	for i, replicatedIndex := range rf.matchIndex {
@@ -172,7 +172,7 @@ func (rf *Raft) commitDaemon() {
 func (rf *Raft) makeAppendEntryArgs(server int) *AppendEntryArgs {
 	prevEntry := rf.log.get(rf.nextIndex[server] - 1)
 	return &AppendEntryArgs{
-		Term:         rf.currentTerm,
+		Term:         rf.getTerm(),
 		LeaderId:     rf.me,
 		PrevLogIndex: prevEntry.Index(),
 		PrevLogTerm:  prevEntry.Term(),

@@ -15,7 +15,8 @@ type RaftEntry interface {
 }
 
 type RaftLog struct {
-	log []RaftEntry
+	log   []RaftEntry
+	owner *Raft
 }
 
 func (rf *Raft) intializeRaftLog() {
@@ -23,21 +24,24 @@ func (rf *Raft) intializeRaftLog() {
 		CommandIndex: 0,
 		CommandTerm:  0,
 	}
-	rf.log = NewRaftLog(pad)
+	rf.log = NewRaftLog(rf, pad)
 }
 
-func NewRaftLog(entries ...RaftEntry) *RaftLog {
+func NewRaftLog(owner *Raft, entries ...RaftEntry) *RaftLog {
 	return &RaftLog{
-		log: append([]RaftEntry{}, entries...),
+		log:   append([]RaftEntry{}, entries...),
+		owner: owner,
 	}
 }
 
 func (rl *RaftLog) append(msg ...RaftEntry) {
 	rl.log = append(rl.log, msg...)
+	rl.owner.persist()
 }
 
 func (rl *RaftLog) replace(start int, msg ...RaftEntry) {
 	rl.log = append(rl.log[:start], msg...)
+	rl.owner.persist()
 }
 
 func (rl *RaftLog) get(index int) RaftEntry {

@@ -34,7 +34,7 @@ func (rf *Raft) startWaitForResponse() {
 		}
 		election_time := GetElectionTime()
 		if rf.lastRecord.HasElapsed(election_time) {
-			DPrintf("[%d term %d] Goroutine awake and election timed out", rf.me, rf.currentTerm)
+			DPrintf("[%d term %d] Goroutine awake and election timed out", rf.me, rf.getTerm())
 			rf.startElection()
 		}
 		rf.UnlockAndSleepFor(election_time)
@@ -52,9 +52,9 @@ func (rf *Raft) startElection() {
 }
 
 func (rf *Raft) initCandidateState() {
-	rf.currentTerm += 1
+	rf.setTerm(rf.getTerm() + 1)
 	rf.voteCount = 1
-	rf.votedFor = rf.me
+	rf.setVotedFor(rf.me)
 	rf.state = CANDIDATE
 
 	for i := 0; i < len(rf.peers); i++ {
@@ -120,7 +120,7 @@ func (rf *Raft) sendRequestVote(server int, args *RequestVoteArgs, reply *Reques
 		return false
 	}
 	rf.handleValidVoteReply(args, reply)
-	DPrintf("[%d term %d] Goroutine to collect vote. Current count: %d", rf.me, rf.currentTerm, rf.voteCount)
+	DPrintf("[%d term %d] Goroutine to collect vote. Current count: %d", rf.me, rf.getTerm(), rf.voteCount)
 
 	return ok
 }
@@ -128,8 +128,8 @@ func (rf *Raft) sendRequestVote(server int, args *RequestVoteArgs, reply *Reques
 func (rf *Raft) makeRequestVoteArg() *RequestVoteArgs {
 	lastEntry := rf.log.last()
 	return &RequestVoteArgs{
-		Term:           rf.currentTerm, //candidate’s term
-		CandidateId:    rf.me,          //candidate requesting vote
+		Term:           rf.getTerm(), //candidate’s term
+		CandidateId:    rf.me,        //candidate requesting vote
 		LastEntryIndex: lastEntry.Index(),
 		LastEntryTerm:  lastEntry.Term(),
 	}
@@ -146,12 +146,12 @@ func (rf *Raft) checkValidVoteReply(args *RequestVoteArgs, reply *RequestVoteRep
 	if reply.Term == -1 {
 		return false
 	}
-	return args.Term == rf.currentTerm
+	return args.Term == rf.getTerm()
 }
 
 func (rf *Raft) handleValidVoteReply(args *RequestVoteArgs, reply *RequestVoteReply) {
-	if reply.Term > rf.currentTerm {
-		rf.currentTerm = reply.Term
+	if reply.Term > rf.getTerm() {
+		rf.setTerm(reply.Term)
 		rf.toFollower()
 		return
 	}
@@ -164,34 +164,34 @@ func (rf *Raft) handleValidVoteReply(args *RequestVoteArgs, reply *RequestVoteRe
 }
 
 func (rf *Raft) checkVoteRequest(args *RequestVoteArgs, reply *RequestVoteReply) bool {
-	if args.Term < rf.currentTerm {
+	if args.Term < rf.getTerm() {
 		reply.VoteGranted = false
-		reply.Term = rf.currentTerm
+		reply.Term = rf.getTerm()
 		return false
 	}
-	if args.Term > rf.currentTerm {
-		rf.currentTerm = args.Term
+	if args.Term > rf.getTerm() {
+		rf.setTerm(args.Term)
 		rf.toFollower()
 	}
 	return true
 }
 
 func (rf *Raft) handleValidVoteRequest(args *RequestVoteArgs, reply *RequestVoteReply) {
-	if (rf.votedFor == -1 || rf.votedFor == args.CandidateId) && rf.log.isUpToDate(args.LastEntryIndex, args.LastEntryTerm) {
+	if (rf.getVotedFor() == -1 || rf.getVotedFor() == args.CandidateId) && rf.log.isUpToDate(args.LastEntryIndex, args.LastEntryTerm) {
 		reply.VoteGranted = true
 		rf.lastRecord.RecordTime()
-		rf.votedFor = args.CandidateId
-		DPrintf("[%d term %d] Received vote from more up to date server [index %d term %d]>[index %d term %d]", rf.me, rf.currentTerm, args.LastEntryIndex, args.LastEntryTerm, rf.log.last().Index(), rf.log.last().Term())
+		rf.setVotedFor(args.CandidateId)
+		DPrintf("[%d term %d] Received vote from more up to date server [index %d term %d]>[index %d term %d]", rf.me, rf.getTerm(), args.LastEntryIndex, args.LastEntryTerm, rf.log.last().Index(), rf.log.last().Term())
 	} else {
 		reply.VoteGranted = false
 	}
 
-	reply.Term = rf.currentTerm
+	reply.Term = rf.getTerm()
 }
 
 func (rf *Raft) toFollower() {
-	DPrintf("[%d term %d] converted to follower", rf.me, rf.currentTerm)
-	rf.votedFor = -1
+	DPrintf("[%d term %d] converted to follower", rf.me, rf.getTerm())
+	rf.setVotedFor(-1)
 	if rf.state == FOLLOWER {
 		return
 	}

@@ -11,6 +11,7 @@ package raft
 import (
 	"fmt"
 	"math/rand"
+	"runtime"
 	"sync"
 	"sync/atomic"
 	"testing"
@@ -20,6 +21,7 @@ import (
 // The tester generously allows solutions to complete elections in one second
 // (much more than the paper's range of timeouts).
 const RaftElectionTimeout = 1000 * time.Millisecond
+const MyTest = 0 //1 is repeat 2 is repeat + my own test 0 is only default tests
 
 func TestInitialElection2A(t *testing.T) {
 	servers := 3
@@ -89,6 +91,9 @@ func TestReElection2A(t *testing.T) {
 }
 
 func TestRepeat2AR(t *testing.T) {
+	if MyTest <= 0 {
+		return
+	}
 	for i := 0; i < 10; i++ {
 		TestInitialElection2A(t)
 		TestReElection2A(t)
@@ -449,81 +454,6 @@ func TestBackup2B(t *testing.T) {
 	cfg.end()
 }
 
-func TestElectionUpToDate2B(t *testing.T) {
-	for i := 0; i < 10; i++ {
-
-		servers := 5
-		cfg := make_config(t, servers, false)
-		defer cfg.cleanup()
-
-		cfg.begin("Test (2B): Make sure server with out of date log don't get elected")
-
-		cfg.one(rand.Int(), servers, true)
-
-		// put leader and one follower in a partition
-		leader1 := cfg.checkOneLeader()
-		cfg.disconnect((leader1 + 2) % servers)
-		cfg.disconnect((leader1 + 3) % servers)
-		cfg.disconnect((leader1 + 4) % servers)
-
-		// submit lots of commands that won't commit
-		for i := 0; i < 1; i++ {
-			cfg.rafts[leader1].Start(rand.Int())
-		}
-
-		time.Sleep(RaftElectionTimeout / 2)
-
-		cfg.disconnect((leader1 + 0) % servers)
-		cfg.disconnect((leader1 + 1) % servers)
-
-		// allow other partition to recover
-		cfg.connect((leader1 + 2) % servers)
-		cfg.connect((leader1 + 3) % servers)
-		cfg.connect((leader1 + 4) % servers)
-
-		// lots of successful commands to new group.
-		for i := 0; i < 1; i++ {
-			cfg.one(rand.Int(), 3, true)
-		}
-
-		// now another partitioned leader and one follower
-		leader2 := cfg.checkOneLeader()
-		other := (leader1 + 2) % servers
-		if leader2 == other {
-			other = (leader2 + 1) % servers
-		}
-		cfg.disconnect(other)
-
-		// lots more commands that won't commit
-		for i := 0; i < 1; i++ {
-			cfg.rafts[leader2].Start(rand.Int())
-		}
-
-		time.Sleep(RaftElectionTimeout / 2)
-
-		// bring original leader back to life,
-		for i := 0; i < servers; i++ {
-			cfg.disconnect(i)
-		}
-		cfg.connect((leader1 + 0) % servers)
-		cfg.connect((leader1 + 1) % servers)
-		cfg.connect(other)
-
-		// lots of successful commands to new group.
-		for i := 0; i < 5; i++ {
-			cfg.one(rand.Int(), 3, true)
-		}
-
-		// now everyone
-		for i := 0; i < servers; i++ {
-			cfg.connect(i)
-		}
-		cfg.one(rand.Int(), servers, true)
-
-		cfg.end()
-	}
-}
-
 func TestCount2B(t *testing.T) {
 	servers := 3
 	cfg := make_config(t, servers, false)
@@ -634,7 +564,88 @@ loop:
 	cfg.end()
 }
 
+func TestElectionUpToDate2B(t *testing.T) {
+	if MyTest <= 1 {
+		return
+	}
+	for i := 0; i < 10; i++ {
+
+		servers := 5
+		cfg := make_config(t, servers, false)
+		defer cfg.cleanup()
+
+		cfg.begin("Test (2B): Make sure server with out of date log don't get elected")
+
+		cfg.one(rand.Int(), servers, true)
+
+		// put leader and one follower in a partition
+		leader1 := cfg.checkOneLeader()
+		cfg.disconnect((leader1 + 2) % servers)
+		cfg.disconnect((leader1 + 3) % servers)
+		cfg.disconnect((leader1 + 4) % servers)
+
+		// submit lots of commands that won't commit
+		for i := 0; i < 1; i++ {
+			cfg.rafts[leader1].Start(rand.Int())
+		}
+
+		time.Sleep(RaftElectionTimeout / 2)
+
+		cfg.disconnect((leader1 + 0) % servers)
+		cfg.disconnect((leader1 + 1) % servers)
+
+		// allow other partition to recover
+		cfg.connect((leader1 + 2) % servers)
+		cfg.connect((leader1 + 3) % servers)
+		cfg.connect((leader1 + 4) % servers)
+
+		// lots of successful commands to new group.
+		for i := 0; i < 1; i++ {
+			cfg.one(rand.Int(), 3, true)
+		}
+
+		// now another partitioned leader and one follower
+		leader2 := cfg.checkOneLeader()
+		other := (leader1 + 2) % servers
+		if leader2 == other {
+			other = (leader2 + 1) % servers
+		}
+		cfg.disconnect(other)
+
+		// lots more commands that won't commit
+		for i := 0; i < 1; i++ {
+			cfg.rafts[leader2].Start(rand.Int())
+		}
+
+		time.Sleep(RaftElectionTimeout / 2)
+
+		// bring original leader back to life,
+		for i := 0; i < servers; i++ {
+			cfg.disconnect(i)
+		}
+		cfg.connect((leader1 + 0) % servers)
+		cfg.connect((leader1 + 1) % servers)
+		cfg.connect(other)
+
+		// lots of successful commands to new group.
+		for i := 0; i < 5; i++ {
+			cfg.one(rand.Int(), 3, true)
+		}
+
+		// now everyone
+		for i := 0; i < servers; i++ {
+			cfg.connect(i)
+		}
+		cfg.one(rand.Int(), servers, true)
+
+		cfg.end()
+	}
+}
+
 func TestRepeat2BR(t *testing.T) {
+	if MyTest <= 0 {
+		return
+	}
 	for i := 0; i < 10; i++ {
 		TestBasicAgree2B(t)
 		TestRPCBytes2B(t)
@@ -644,6 +655,7 @@ func TestRepeat2BR(t *testing.T) {
 		TestRejoin2B(t)
 		TestBackup2B(t)
 		TestCount2B(t)
+		fmt.Printf("Number of Goroutine remaining %d\n", runtime.NumGoroutine())
 	}
 }
 
@@ -1070,4 +1082,17 @@ func TestReliableChurn2C(t *testing.T) {
 
 func TestUnreliableChurn2C(t *testing.T) {
 	internalChurn(t, true)
+}
+
+func Test2CR(t *testing.T) {
+	if MyTest <= 0 {
+		return
+	}
+	for i := 0; i < 5; i++ {
+
+		TestFigure82C(t)
+	}
+	for i := 0; i < 5; i++ {
+		TestFigure8Unreliable2C(t)
+	}
 }

@@ -18,6 +18,7 @@ package raft
 //
 
 import (
+	"bytes"
 	"dsys/labgob"
 	"dsys/labrpc"
 	"sync"
@@ -112,12 +113,13 @@ func (rf *Raft) GetState() (int, bool) {
 func (rf *Raft) persist() {
 	// Your code here (2C).
 	// Example:
-	// w := new(bytes.Buffer)
-	// e := labgob.NewEncoder(w)
-	// e.Encode(rf.xxx)
-	// e.Encode(rf.yyy)
-	// data := w.Bytes()
-	// rf.persister.SaveRaftState(data)
+	w := new(bytes.Buffer)
+	e := labgob.NewEncoder(w)
+	e.Encode(rf.currentTerm)
+	e.Encode(rf.votedFor)
+	e.Encode(rf.log.log)
+	data := w.Bytes()
+	rf.persister.SaveRaftState(data)
 }
 
 //
@@ -127,19 +129,12 @@ func (rf *Raft) readPersist(data []byte) {
 	if data == nil || len(data) < 1 { // bootstrap without any state?
 		return
 	}
-	// Your code here (2C).
-	// Example:
-	// r := bytes.NewBuffer(data)
-	// d := labgob.NewDecoder(r)
-	// var xxx
-	// var yyy
-	// if d.Decode(&xxx) != nil ||
-	//    d.Decode(&yyy) != nil {
-	//   error...
-	// } else {
-	//   rf.xxx = xxx
-	//   rf.yyy = yyy
-	// }
+
+	r := bytes.NewBuffer(data)
+	d := labgob.NewDecoder(r)
+	d.Decode(&rf.currentTerm)
+	d.Decode(&rf.votedFor)
+	d.Decode(&rf.log.log)
 }
 
 //
@@ -175,6 +170,9 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 		}
 		rf.log.append(entry)
 		DPrintf("[** %d term %d] Got new entry[%d] to replicate", rf.me, rf.currentTerm, index)
+	} else {
+
+		DPrintf("[** %d term %d] not leader", rf.me, rf.currentTerm)
 	}
 
 	return index, term, isLeader
@@ -251,4 +249,34 @@ func Make(peers []*labrpc.ClientEnd, me int,
 
 func (rf *Raft) initializeStructEncode() {
 	labgob.Register(ApplyMsg{})
+}
+
+func (rf *Raft) getTerm() int {
+	return rf.currentTerm
+}
+
+func (rf *Raft) getVotedFor() int {
+	return rf.votedFor
+}
+
+func (rf *Raft) setTerm(term int) {
+	if term != rf.currentTerm {
+		rf.currentTerm = term
+		rf.persist()
+	}
+}
+
+func (rf *Raft) setVotedFor(vote int) {
+	if vote != rf.votedFor {
+		rf.votedFor = vote
+		rf.persist()
+	}
+}
+
+func (rf *Raft) setTermAndVote(term, vote int) {
+	if term != rf.currentTerm && vote != rf.votedFor {
+		rf.currentTerm = term
+		rf.votedFor = vote
+		rf.persist()
+	}
 }
