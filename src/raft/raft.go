@@ -17,14 +17,23 @@ package raft
 //   in the same server.
 //
 
-import "sync"
-import "sync/atomic"
-import "../labrpc"
+import (
+	"dsys/labgob"
+	"dsys/labrpc"
+	"sync"
+	"sync/atomic"
+)
 
 // import "bytes"
 // import "../labgob"
 
+type RaftState int
 
+const (
+	LEADER RaftState = iota
+	FOLLOWER
+	CANDIDATE
+)
 
 //
 // as each Raft peer becomes aware that successive log entries are
@@ -41,6 +50,7 @@ type ApplyMsg struct {
 	CommandValid bool
 	Command      interface{}
 	CommandIndex int
+	CommandTerm  int
 }
 
 //
@@ -56,16 +66,41 @@ type Raft struct {
 	// Your data here (2A, 2B, 2C).
 	// Look at the paper's Figure 2 for a description of what
 	// state a Raft server must maintain.
+	leader int
 
+	//Persistent state(persist through server failure)
+	currentTerm int      //latest term server has seen (initialized to 0 on first boot, increases monotonically)
+	votedFor    int      //candidateId that received vote in current term (or null if none)
+	log         *RaftLog //log entries; each entry contains command for state machine, and term when entry was received by leader (first index is 1)
+
+	//Volatile state all server(reinitialized after startup)
+	commitIndex int //index of highest log entry known to be committed (initialized to 0, increases monotonically)
+	lastApplied int //index of highest log entry applied to state machine (initialized to 0, increases monotonically)
+
+	//Volatile state leader(reinitialized after election)
+	nextIndex  []int // for each server, index of the next log entry to send to that server (initialized to leader last log index + 1)
+	matchIndex []int // for each server, index of highest log entry known to be replicated on server (initialized to 0, increases monotonically)
+	voteCount  int
+
+	lastRecord *RaftTimer
+	state      RaftState
+	stateCond  sync.Cond
+	commitCond sync.Cond
+
+	applyCh chan ApplyMsg
 }
 
 // return currentTerm and whether this server
 // believes it is the leader.
 func (rf *Raft) GetState() (int, bool) {
-
+	rf.mu.Lock()
+	defer rf.mu.Unlock()
 	var term int
 	var isleader bool
 	// Your code here (2A).
+	term = rf.currentTerm
+	isleader = rf.state == LEADER
+
 	return term, isleader
 }
 
@@ -84,7 +119,6 @@ func (rf *Raft) persist() {
 	// data := w.Bytes()
 	// rf.persister.SaveRaftState(data)
 }
-
 
 //
 // restore previously persisted state.
@@ -108,67 +142,6 @@ func (rf *Raft) readPersist(data []byte) {
 	// }
 }
 
-
-
-
-//
-// example RequestVote RPC arguments structure.
-// field names must start with capital letters!
-//
-type RequestVoteArgs struct {
-	// Your data here (2A, 2B).
-}
-
-//
-// example RequestVote RPC reply structure.
-// field names must start with capital letters!
-//
-type RequestVoteReply struct {
-	// Your data here (2A).
-}
-
-//
-// example RequestVote RPC handler.
-//
-func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
-	// Your code here (2A, 2B).
-}
-
-//
-// example code to send a RequestVote RPC to a server.
-// server is the index of the target server in rf.peers[].
-// expects RPC arguments in args.
-// fills in *reply with RPC reply, so caller should
-// pass &reply.
-// the types of the args and reply passed to Call() must be
-// the same as the types of the arguments declared in the
-// handler function (including whether they are pointers).
-//
-// The labrpc package simulates a lossy network, in which servers
-// may be unreachable, and in which requests and replies may be lost.
-// Call() sends a request and waits for a reply. If a reply arrives
-// within a timeout interval, Call() returns true; otherwise
-// Call() returns false. Thus Call() may not return for a while.
-// A false return can be caused by a dead server, a live server that
-// can't be reached, a lost request, or a lost reply.
-//
-// Call() is guaranteed to return (perhaps after a delay) *except* if the
-// handler function on the server side does not return.  Thus there
-// is no need to implement your own timeouts around Call().
-//
-// look at the comments in ../labrpc/labrpc.go for more details.
-//
-// if you're having trouble getting RPC to work, check that you've
-// capitalized all field names in structs passed over RPC, and
-// that the caller passes the address of the reply struct with &, not
-// the struct itself.
-//
-func (rf *Raft) sendRequestVote(server int, args *RequestVoteArgs, reply *RequestVoteReply) bool {
-	ok := rf.peers[server].Call("Raft.RequestVote", args, reply)
-	return ok
-}
-
-
 //
 // the service using Raft (e.g. a k/v server) wants to start
 // agreement on the next command to be appended to Raft's log. if this
@@ -184,12 +157,25 @@ func (rf *Raft) sendRequestVote(server int, args *RequestVoteArgs, reply *Reques
 // the leader.
 //
 func (rf *Raft) Start(command interface{}) (int, int, bool) {
+	rf.mu.Lock()
+	defer rf.mu.Unlock()
 	index := -1
 	term := -1
-	isLeader := true
-
+	isLeader := false
 	// Your code here (2B).
-
+	if rf.state == LEADER {
+		index = rf.log.length()
+		term = rf.currentTerm
+		isLeader = true
+		entry := ApplyMsg{
+			CommandValid: true,
+			Command:      command,
+			CommandIndex: index,
+			CommandTerm:  term,
+		}
+		rf.log.append(entry)
+		DPrintf("[** %d term %d] Got new entry[%d] to replicate", rf.me, rf.currentTerm, index)
+	}
 
 	return index, term, isLeader
 }
@@ -226,18 +212,39 @@ func (rf *Raft) killed() bool {
 // Make() must return quickly, so it should start goroutines
 // for any long-running work.
 //
+
 func Make(peers []*labrpc.ClientEnd, me int,
 	persister *Persister, applyCh chan ApplyMsg) *Raft {
 	rf := &Raft{}
 	rf.peers = peers
 	rf.persister = persister
 	rf.me = me
-
+	rf.currentTerm = 0
+	rf.lastRecord = &RaftTimer{}
+	rf.votedFor = -1
+	rf.state = CANDIDATE
+	rf.stateCond = *sync.NewCond(&rf.mu)
+	rf.nextIndex = make([]int, len(rf.peers))
+	rf.matchIndex = make([]int, len(rf.peers))
+	rf.commitIndex = 0
+	rf.lastApplied = 0
+	rf.commitCond = *sync.NewCond(&rf.mu)
+	rf.applyCh = applyCh
+	rf.intializeRaftLog()
+	rf.initializeStructEncode()
 	// Your initialization code here (2A, 2B, 2C).
 
 	// initialize from state persisted before a crash
 	rf.readPersist(persister.ReadRaftState())
 
+	go rf.startWaitForResponse()
+	go rf.commitDaemon()
+
+	DPrintf("[%d] Start goroutine to start the election process", rf.me)
 
 	return rf
+}
+
+func (rf *Raft) initializeStructEncode() {
+	labgob.Register(ApplyMsg{})
 }

@@ -1,0 +1,2268 @@
+2023/10/11 19:58:59 [0] Start goroutine to start the election process
+2023/10/11 19:58:59 [1] Start goroutine to start the election process
+2023/10/11 19:58:59 [0 term 0] Goroutine awake and election timed out
+2023/10/11 19:58:59 [2 term 0] Goroutine awake and election timed out
+2023/10/11 19:58:59 [2] Start goroutine to start the election process
+2023/10/11 19:58:59 [1 term 0] Goroutine awake and election timed out
+2023/10/11 19:58:59 [3] Start goroutine to start the election process
+2023/10/11 19:58:59 [3 term 0] Goroutine awake and election timed out
+2023/10/11 19:58:59 [4] Start goroutine to start the election process
+2023/10/11 19:58:59 [4 term 0] Goroutine awake and election timed out
+Test (2B): leader backs up quickly over incorrect follower logs ...
+2023/10/11 19:58:59 [4 term 1] Goroutine to collect vote. Current count: 1
+2023/10/11 19:58:59 [4 term 1] Goroutine to collect vote. Current count: 1
+2023/10/11 19:58:59 [4 term 1] Goroutine to collect vote. Current count: 1
+2023/10/11 19:58:59 [4 term 1] Goroutine to collect vote. Current count: 1
+2023/10/11 19:59:00 [0 term 1] Goroutine awake and election timed out
+2023/10/11 19:59:00 [4 term 2] converted to follower
+2023/10/11 19:59:00 [4 term 2] Received vote from more up to date server [index 0 term 0]>[index 0 term 0]
+2023/10/11 19:59:00 [3 term 1] Goroutine awake and election timed out
+2023/10/11 19:59:00 [2 term 2] converted to follower
+2023/10/11 19:59:00 [2 term 2] Received vote from more up to date server [index 0 term 0]>[index 0 term 0]
+2023/10/11 19:59:00 [0 term 2] Goroutine to collect vote. Current count: 2
+2023/10/11 19:59:00 [1 term 2] converted to follower
+2023/10/11 19:59:00 [1 term 2] Received vote from more up to date server [index 0 term 0]>[index 0 term 0]
+2023/10/11 19:59:00 [0 term 2] Goroutine to collect vote. Current count: 2
+2023/10/11 19:59:00 [0 term 2] Goroutine to collect vote. Current count: 3
+2023/10/11 19:59:00 [** 0 term 2] [-1 1 1 1 1] is now leader!
+2023/10/11 19:59:00 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:00 [3 term 2] Goroutine to collect vote. Current count: 1
+2023/10/11 19:59:00 [3 term 2] Goroutine to collect vote. Current count: 1
+2023/10/11 19:59:00 [0 term 2] Goroutine to collect vote. Current count: 4
+2023/10/11 19:59:00 [4 term 2] converted to follower
+2023/10/11 19:59:00 [4 term 2] Received append[len 0] from leader[0 commit 0] [index 0 term 0]==[index 0 term 0]
+2023/10/11 19:59:00 [3 term 2] Goroutine to collect vote. Current count: 1
+2023/10/11 19:59:00 [1 term 2] converted to follower
+2023/10/11 19:59:00 [1 term 2] Received append[len 0] from leader[0 commit 0] [index 0 term 0]==[index 0 term 0]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [4] total replicated [[-1 0 0 0 0]] next [[-1 1 1 1 1]]
+2023/10/11 19:59:00 [3 term 2] Goroutine to collect vote. Current count: 1
+2023/10/11 19:59:00 [** 0 term 2] replicated on [1] total replicated [[-1 0 0 0 0]] next [[-1 1 1 1 1]]
+2023/10/11 19:59:00 [2 term 2] converted to follower
+2023/10/11 19:59:00 [3 term 2] converted to follower
+2023/10/11 19:59:00 [3 term 2] Received append[len 0] from leader[0 commit 0] [index 0 term 0]==[index 0 term 0]
+2023/10/11 19:59:00 [2 term 2] Received append[len 0] from leader[0 commit 0] [index 0 term 0]==[index 0 term 0]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [3] total replicated [[-1 0 0 0 0]] next [[-1 1 1 1 1]]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [2] total replicated [[-1 0 0 0 0]] next [[-1 1 1 1 1]]
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[1] to replicate
+2023/10/11 19:59:00 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:00 [4 term 2] converted to follower
+2023/10/11 19:59:00 [4 term 2] Received append[len 1] from leader[0 commit 0] [index 0 term 0]==[index 0 term 0]
+2023/10/11 19:59:00 [2 term 2] converted to follower
+2023/10/11 19:59:00 [2 term 2] Received append[len 1] from leader[0 commit 0] [index 0 term 0]==[index 0 term 0]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [4] total replicated [[-1 0 0 0 1]] next [[-1 1 1 1 2]]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [2] total replicated [[-1 0 1 0 1]] next [[-1 1 2 1 2]]
+2023/10/11 19:59:00 [3 term 2] converted to follower
+2023/10/11 19:59:00 [3 term 2] Received append[len 1] from leader[0 commit 0] [index 0 term 0]==[index 0 term 0]
+2023/10/11 19:59:00 [1 term 2] converted to follower
+2023/10/11 19:59:00 [1 term 2] Received append[len 1] from leader[0 commit 0] [index 0 term 0]==[index 0 term 0]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [3] total replicated [[-1 0 1 1 1]] next [[-1 1 2 2 2]]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [1] total replicated [[-1 1 1 1 1]] next [[-1 2 2 2 2]]
+2023/10/11 19:59:00 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:00 [1 term 2] converted to follower
+2023/10/11 19:59:00 [3 term 2] converted to follower
+2023/10/11 19:59:00 [3 term 2] Received append[len 0] from leader[0 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [3] total replicated [[-1 1 1 1 1]] next [[-1 2 2 2 2]]
+2023/10/11 19:59:00 [1 term 2] Received append[len 0] from leader[0 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:00 [4 term 2] converted to follower
+2023/10/11 19:59:00 [4 term 2] Received append[len 0] from leader[0 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [1] total replicated [[-1 1 1 1 1]] next [[-1 2 2 2 2]]
+2023/10/11 19:59:00 [2 term 2] converted to follower
+2023/10/11 19:59:00 [2 term 2] Received append[len 0] from leader[0 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [4] total replicated [[-1 1 1 1 1]] next [[-1 2 2 2 2]]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [2] total replicated [[-1 1 1 1 1]] next [[-1 2 2 2 2]]
+2023/10/11 19:59:00 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:00 [4 term 2] converted to follower
+2023/10/11 19:59:00 [4 term 2] Received append[len 0] from leader[0 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:00 [3 term 2] converted to follower
+2023/10/11 19:59:00 [** 0 term 2] replicated on [4] total replicated [[-1 1 1 1 1]] next [[-1 2 2 2 2]]
+2023/10/11 19:59:00 [3 term 2] Received append[len 0] from leader[0 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:00 [2 term 2] converted to follower
+2023/10/11 19:59:00 [2 term 2] Received append[len 0] from leader[0 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:00 [1 term 2] converted to follower
+2023/10/11 19:59:00 [** 0 term 2] replicated on [3] total replicated [[-1 1 1 1 1]] next [[-1 2 2 2 2]]
+2023/10/11 19:59:00 [1 term 2] Received append[len 0] from leader[0 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [2] total replicated [[-1 1 1 1 1]] next [[-1 2 2 2 2]]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [1] total replicated [[-1 1 1 1 1]] next [[-1 2 2 2 2]]
+2023/10/11 19:59:00 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:00 [4 term 2] converted to follower
+2023/10/11 19:59:00 [4 term 2] Received append[len 0] from leader[0 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:00 [3 term 2] converted to follower
+2023/10/11 19:59:00 [3 term 2] Received append[len 0] from leader[0 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:00 [1 term 2] converted to follower
+2023/10/11 19:59:00 [2 term 2] converted to follower
+2023/10/11 19:59:00 [2 term 2] Received append[len 0] from leader[0 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [4] total replicated [[-1 1 1 1 1]] next [[-1 2 2 2 2]]
+2023/10/11 19:59:00 [1 term 2] Received append[len 0] from leader[0 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [3] total replicated [[-1 1 1 1 1]] next [[-1 2 2 2 2]]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [2] total replicated [[-1 1 1 1 1]] next [[-1 2 2 2 2]]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [1] total replicated [[-1 1 1 1 1]] next [[-1 2 2 2 2]]
+2023/10/11 19:59:00 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:00 [4 term 2] converted to follower
+2023/10/11 19:59:00 [4 term 2] Received append[len 0] from leader[0 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:00 [2 term 2] converted to follower
+2023/10/11 19:59:00 [2 term 2] Received append[len 0] from leader[0 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [4] total replicated [[-1 1 1 1 1]] next [[-1 2 2 2 2]]
+2023/10/11 19:59:00 [1 term 2] converted to follower
+2023/10/11 19:59:00 [** 0 term 2] replicated on [2] total replicated [[-1 1 1 1 1]] next [[-1 2 2 2 2]]
+2023/10/11 19:59:00 [3 term 2] converted to follower
+2023/10/11 19:59:00 [3 term 2] Received append[len 0] from leader[0 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:00 [1 term 2] Received append[len 0] from leader[0 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [3] total replicated [[-1 1 1 1 1]] next [[-1 2 2 2 2]]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [1] total replicated [[-1 1 1 1 1]] next [[-1 2 2 2 2]]
+2023/10/11 19:59:00 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:00 [4 term 2] converted to follower
+2023/10/11 19:59:00 [4 term 2] Received append[len 0] from leader[0 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:00 [2 term 2] converted to follower
+2023/10/11 19:59:00 [2 term 2] Received append[len 0] from leader[0 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [4] total replicated [[-1 1 1 1 1]] next [[-1 2 2 2 2]]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [2] total replicated [[-1 1 1 1 1]] next [[-1 2 2 2 2]]
+2023/10/11 19:59:00 [3 term 2] converted to follower
+2023/10/11 19:59:00 [3 term 2] Received append[len 0] from leader[0 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [3] total replicated [[-1 1 1 1 1]] next [[-1 2 2 2 2]]
+2023/10/11 19:59:00 [1 term 2] converted to follower
+2023/10/11 19:59:00 [1 term 2] Received append[len 0] from leader[0 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [1] total replicated [[-1 1 1 1 1]] next [[-1 2 2 2 2]]
+2023/10/11 19:59:00 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:00 [4 term 2] converted to follower
+2023/10/11 19:59:00 [4 term 2] Received append[len 0] from leader[0 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:00 [2 term 2] converted to follower
+2023/10/11 19:59:00 [2 term 2] Received append[len 0] from leader[0 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [4] total replicated [[-1 1 1 1 1]] next [[-1 2 2 2 2]]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [2] total replicated [[-1 1 1 1 1]] next [[-1 2 2 2 2]]
+2023/10/11 19:59:00 [3 term 2] converted to follower
+2023/10/11 19:59:00 [3 term 2] Received append[len 0] from leader[0 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [3] total replicated [[-1 1 1 1 1]] next [[-1 2 2 2 2]]
+2023/10/11 19:59:00 [1 term 2] converted to follower
+2023/10/11 19:59:00 [1 term 2] Received append[len 0] from leader[0 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [1] total replicated [[-1 1 1 1 1]] next [[-1 2 2 2 2]]
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[2] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[3] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[4] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[5] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[6] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[7] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[8] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[9] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[10] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[11] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[12] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[13] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[14] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[15] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[16] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[17] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[18] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[19] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[20] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[21] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[22] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[23] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[24] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[25] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[26] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[27] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[28] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[29] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[30] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[31] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[32] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[33] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[34] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[35] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[36] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[37] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[38] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[39] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[40] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[41] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[42] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[43] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[44] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[45] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[46] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[47] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[48] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[49] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[50] to replicate
+2023/10/11 19:59:00 [** 0 term 2] Got new entry[51] to replicate
+2023/10/11 19:59:00 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:00 [1 term 2] converted to follower
+2023/10/11 19:59:00 [1 term 2] Received append[len 50] from leader[0 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [1] total replicated [[-1 51 1 1 1]] next [[-1 52 2 2 2]]
+2023/10/11 19:59:00 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:00 [1 term 2] converted to follower
+2023/10/11 19:59:00 [1 term 2] Received append[len 0] from leader[0 commit 1] [index 51 term 2]==[index 51 term 2]
+2023/10/11 19:59:00 [** 0 term 2] replicated on [1] total replicated [[-1 51 1 1 1]] next [[-1 52 2 2 2]]
+2023/10/11 19:59:01 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:01 [1 term 2] converted to follower
+2023/10/11 19:59:01 [1 term 2] Received append[len 0] from leader[0 commit 1] [index 51 term 2]==[index 51 term 2]
+2023/10/11 19:59:01 [** 0 term 2] replicated on [1] total replicated [[-1 51 1 1 1]] next [[-1 52 2 2 2]]
+2023/10/11 19:59:01 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:01 [1 term 2] converted to follower
+2023/10/11 19:59:01 [1 term 2] Received append[len 0] from leader[0 commit 1] [index 51 term 2]==[index 51 term 2]
+2023/10/11 19:59:01 [** 0 term 2] replicated on [1] total replicated [[-1 51 1 1 1]] next [[-1 52 2 2 2]]
+2023/10/11 19:59:01 [2 term 2] Goroutine awake and election timed out
+2023/10/11 19:59:01 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:01 [1 term 2] converted to follower
+2023/10/11 19:59:01 [1 term 2] Received append[len 0] from leader[0 commit 1] [index 51 term 2]==[index 51 term 2]
+2023/10/11 19:59:01 [** 0 term 2] replicated on [1] total replicated [[-1 51 1 1 1]] next [[-1 52 2 2 2]]
+2023/10/11 19:59:01 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:01 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:01 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:01 [2 term 3] Goroutine awake and election timed out
+2023/10/11 19:59:01 [4 term 2] Goroutine awake and election timed out
+2023/10/11 19:59:01 [3 term 2] Goroutine awake and election timed out
+2023/10/11 19:59:01 [3 term 4] converted to follower
+2023/10/11 19:59:01 [3 term 4] Received vote from more up to date server [index 1 term 2]>[index 1 term 2]
+2023/10/11 19:59:01 [4 term 4] converted to follower
+2023/10/11 19:59:01 [4 term 4] Received vote from more up to date server [index 1 term 2]>[index 1 term 2]
+2023/10/11 19:59:01 [2 term 4] Goroutine to collect vote. Current count: 2
+2023/10/11 19:59:01 [4 term 4] Goroutine to collect vote. Current count: 1
+2023/10/11 19:59:01 [2 term 4] Goroutine to collect vote. Current count: 3
+2023/10/11 19:59:01 [** 2 term 4] [2 2 -1 2 2] is now leader!
+2023/10/11 19:59:01 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:01 [3 term 4] Goroutine to collect vote. Current count: 1
+2023/10/11 19:59:01 [3 term 4] Goroutine to collect vote. Current count: 1
+2023/10/11 19:59:01 [4 term 4] converted to follower
+2023/10/11 19:59:01 [4 term 4] Received append[len 0] from leader[2 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:01 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 0 1]] next [[2 2 -1 2 2]]
+2023/10/11 19:59:01 [3 term 4] converted to follower
+2023/10/11 19:59:01 [3 term 4] Received append[len 0] from leader[2 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:01 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 1 1]] next [[2 2 -1 2 2]]
+2023/10/11 19:59:01 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:01 [** 2 term 4] Got new entry[2] to replicate
+2023/10/11 19:59:01 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:01 [3 term 4] converted to follower
+2023/10/11 19:59:01 [3 term 4] Received append[len 1] from leader[2 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:01 [4 term 4] converted to follower
+2023/10/11 19:59:01 [4 term 4] Received append[len 1] from leader[2 commit 1] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:01 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 2 1]] next [[2 2 -1 3 2]]
+2023/10/11 19:59:01 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 2 2]] next [[2 2 -1 3 3]]
+2023/10/11 19:59:01 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:01 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:01 [4 term 4] converted to follower
+2023/10/11 19:59:01 [4 term 4] Received append[len 0] from leader[2 commit 2] [index 2 term 4]==[index 2 term 4]
+2023/10/11 19:59:01 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 2 2]] next [[2 2 -1 3 3]]
+2023/10/11 19:59:01 [3 term 4] converted to follower
+2023/10/11 19:59:01 [3 term 4] Received append[len 0] from leader[2 commit 2] [index 2 term 4]==[index 2 term 4]
+2023/10/11 19:59:01 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 2 2]] next [[2 2 -1 3 3]]
+2023/10/11 19:59:01 [** 2 term 4] Got new entry[3] to replicate
+2023/10/11 19:59:01 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:01 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:01 [4 term 4] converted to follower
+2023/10/11 19:59:01 [4 term 4] Received append[len 1] from leader[2 commit 2] [index 2 term 4]==[index 2 term 4]
+2023/10/11 19:59:01 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 2 3]] next [[2 2 -1 3 4]]
+2023/10/11 19:59:01 [3 term 4] converted to follower
+2023/10/11 19:59:01 [3 term 4] Received append[len 1] from leader[2 commit 2] [index 2 term 4]==[index 2 term 4]
+2023/10/11 19:59:01 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 3 3]] next [[2 2 -1 4 4]]
+2023/10/11 19:59:01 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:02 [1 term 2] Goroutine awake and election timed out
+2023/10/11 19:59:02 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:02 [4 term 4] converted to follower
+2023/10/11 19:59:02 [4 term 4] Received append[len 0] from leader[2 commit 3] [index 3 term 4]==[index 3 term 4]
+2023/10/11 19:59:02 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 3 3]] next [[2 2 -1 4 4]]
+2023/10/11 19:59:02 [3 term 4] converted to follower
+2023/10/11 19:59:02 [3 term 4] Received append[len 0] from leader[2 commit 3] [index 3 term 4]==[index 3 term 4]
+2023/10/11 19:59:02 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 3 3]] next [[2 2 -1 4 4]]
+2023/10/11 19:59:02 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:02 [** 2 term 4] Got new entry[4] to replicate
+2023/10/11 19:59:02 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:02 [4 term 4] converted to follower
+2023/10/11 19:59:02 [4 term 4] Received append[len 1] from leader[2 commit 3] [index 3 term 4]==[index 3 term 4]
+2023/10/11 19:59:02 [3 term 4] converted to follower
+2023/10/11 19:59:02 [3 term 4] Received append[len 1] from leader[2 commit 3] [index 3 term 4]==[index 3 term 4]
+2023/10/11 19:59:02 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 3 4]] next [[2 2 -1 4 5]]
+2023/10/11 19:59:02 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 4 4]] next [[2 2 -1 5 5]]
+2023/10/11 19:59:02 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:02 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:02 [4 term 4] converted to follower
+2023/10/11 19:59:02 [4 term 4] Received append[len 0] from leader[2 commit 4] [index 4 term 4]==[index 4 term 4]
+2023/10/11 19:59:02 [3 term 4] converted to follower
+2023/10/11 19:59:02 [3 term 4] Received append[len 0] from leader[2 commit 4] [index 4 term 4]==[index 4 term 4]
+2023/10/11 19:59:02 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 4 4]] next [[2 2 -1 5 5]]
+2023/10/11 19:59:02 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 4 4]] next [[2 2 -1 5 5]]
+2023/10/11 19:59:02 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:02 [** 2 term 4] Got new entry[5] to replicate
+2023/10/11 19:59:02 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:02 [4 term 4] converted to follower
+2023/10/11 19:59:02 [4 term 4] Received append[len 1] from leader[2 commit 4] [index 4 term 4]==[index 4 term 4]
+2023/10/11 19:59:02 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 4 5]] next [[2 2 -1 5 6]]
+2023/10/11 19:59:02 [3 term 4] converted to follower
+2023/10/11 19:59:02 [3 term 4] Received append[len 1] from leader[2 commit 4] [index 4 term 4]==[index 4 term 4]
+2023/10/11 19:59:02 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 5 5]] next [[2 2 -1 6 6]]
+2023/10/11 19:59:02 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:02 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:02 [4 term 4] converted to follower
+2023/10/11 19:59:02 [4 term 4] Received append[len 0] from leader[2 commit 5] [index 5 term 4]==[index 5 term 4]
+2023/10/11 19:59:02 [3 term 4] converted to follower
+2023/10/11 19:59:02 [3 term 4] Received append[len 0] from leader[2 commit 5] [index 5 term 4]==[index 5 term 4]
+2023/10/11 19:59:02 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 5 5]] next [[2 2 -1 6 6]]
+2023/10/11 19:59:02 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 5 5]] next [[2 2 -1 6 6]]
+2023/10/11 19:59:02 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:02 [** 2 term 4] Got new entry[6] to replicate
+2023/10/11 19:59:02 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:02 [4 term 4] converted to follower
+2023/10/11 19:59:02 [4 term 4] Received append[len 1] from leader[2 commit 5] [index 5 term 4]==[index 5 term 4]
+2023/10/11 19:59:02 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 5 6]] next [[2 2 -1 6 7]]
+2023/10/11 19:59:02 [3 term 4] converted to follower
+2023/10/11 19:59:02 [3 term 4] Received append[len 1] from leader[2 commit 5] [index 5 term 4]==[index 5 term 4]
+2023/10/11 19:59:02 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 6 6]] next [[2 2 -1 7 7]]
+2023/10/11 19:59:02 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:02 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:02 [4 term 4] converted to follower
+2023/10/11 19:59:02 [3 term 4] converted to follower
+2023/10/11 19:59:02 [3 term 4] Received append[len 0] from leader[2 commit 6] [index 6 term 4]==[index 6 term 4]
+2023/10/11 19:59:02 [4 term 4] Received append[len 0] from leader[2 commit 6] [index 6 term 4]==[index 6 term 4]
+2023/10/11 19:59:02 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 6 6]] next [[2 2 -1 7 7]]
+2023/10/11 19:59:02 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 6 6]] next [[2 2 -1 7 7]]
+2023/10/11 19:59:02 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:02 [** 2 term 4] Got new entry[7] to replicate
+2023/10/11 19:59:02 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:02 [4 term 4] converted to follower
+2023/10/11 19:59:02 [4 term 4] Received append[len 1] from leader[2 commit 6] [index 6 term 4]==[index 6 term 4]
+2023/10/11 19:59:02 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 6 7]] next [[2 2 -1 7 8]]
+2023/10/11 19:59:02 [3 term 4] converted to follower
+2023/10/11 19:59:02 [3 term 4] Received append[len 1] from leader[2 commit 6] [index 6 term 4]==[index 6 term 4]
+2023/10/11 19:59:02 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 7 7]] next [[2 2 -1 8 8]]
+2023/10/11 19:59:02 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:02 [1 term 3] Goroutine awake and election timed out
+2023/10/11 19:59:02 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:02 [4 term 4] converted to follower
+2023/10/11 19:59:02 [4 term 4] Received append[len 0] from leader[2 commit 7] [index 7 term 4]==[index 7 term 4]
+2023/10/11 19:59:02 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 7 7]] next [[2 2 -1 8 8]]
+2023/10/11 19:59:02 [3 term 4] converted to follower
+2023/10/11 19:59:02 [3 term 4] Received append[len 0] from leader[2 commit 7] [index 7 term 4]==[index 7 term 4]
+2023/10/11 19:59:02 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 7 7]] next [[2 2 -1 8 8]]
+2023/10/11 19:59:02 [** 2 term 4] Got new entry[8] to replicate
+2023/10/11 19:59:02 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:02 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:02 [4 term 4] converted to follower
+2023/10/11 19:59:02 [4 term 4] Received append[len 1] from leader[2 commit 7] [index 7 term 4]==[index 7 term 4]
+2023/10/11 19:59:02 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 7 8]] next [[2 2 -1 8 9]]
+2023/10/11 19:59:02 [3 term 4] converted to follower
+2023/10/11 19:59:02 [3 term 4] Received append[len 1] from leader[2 commit 7] [index 7 term 4]==[index 7 term 4]
+2023/10/11 19:59:02 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 8 8]] next [[2 2 -1 9 9]]
+2023/10/11 19:59:03 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:03 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:03 [4 term 4] converted to follower
+2023/10/11 19:59:03 [4 term 4] Received append[len 0] from leader[2 commit 8] [index 8 term 4]==[index 8 term 4]
+2023/10/11 19:59:03 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 8 8]] next [[2 2 -1 9 9]]
+2023/10/11 19:59:03 [3 term 4] converted to follower
+2023/10/11 19:59:03 [3 term 4] Received append[len 0] from leader[2 commit 8] [index 8 term 4]==[index 8 term 4]
+2023/10/11 19:59:03 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 8 8]] next [[2 2 -1 9 9]]
+2023/10/11 19:59:03 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:03 [** 2 term 4] Got new entry[9] to replicate
+2023/10/11 19:59:03 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:03 [4 term 4] converted to follower
+2023/10/11 19:59:03 [4 term 4] Received append[len 1] from leader[2 commit 8] [index 8 term 4]==[index 8 term 4]
+2023/10/11 19:59:03 [3 term 4] converted to follower
+2023/10/11 19:59:03 [3 term 4] Received append[len 1] from leader[2 commit 8] [index 8 term 4]==[index 8 term 4]
+2023/10/11 19:59:03 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 8 9]] next [[2 2 -1 9 10]]
+2023/10/11 19:59:03 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 9 9]] next [[2 2 -1 10 10]]
+2023/10/11 19:59:03 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:03 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:03 [4 term 4] converted to follower
+2023/10/11 19:59:03 [4 term 4] Received append[len 0] from leader[2 commit 9] [index 9 term 4]==[index 9 term 4]
+2023/10/11 19:59:03 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 9 9]] next [[2 2 -1 10 10]]
+2023/10/11 19:59:03 [3 term 4] converted to follower
+2023/10/11 19:59:03 [3 term 4] Received append[len 0] from leader[2 commit 9] [index 9 term 4]==[index 9 term 4]
+2023/10/11 19:59:03 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 9 9]] next [[2 2 -1 10 10]]
+2023/10/11 19:59:03 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:03 [** 2 term 4] Got new entry[10] to replicate
+2023/10/11 19:59:03 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:03 [4 term 4] converted to follower
+2023/10/11 19:59:03 [4 term 4] Received append[len 1] from leader[2 commit 9] [index 9 term 4]==[index 9 term 4]
+2023/10/11 19:59:03 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 9 10]] next [[2 2 -1 10 11]]
+2023/10/11 19:59:03 [3 term 4] converted to follower
+2023/10/11 19:59:03 [3 term 4] Received append[len 1] from leader[2 commit 9] [index 9 term 4]==[index 9 term 4]
+2023/10/11 19:59:03 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 10 10]] next [[2 2 -1 11 11]]
+2023/10/11 19:59:03 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:03 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:03 [4 term 4] converted to follower
+2023/10/11 19:59:03 [4 term 4] Received append[len 0] from leader[2 commit 10] [index 10 term 4]==[index 10 term 4]
+2023/10/11 19:59:03 [3 term 4] converted to follower
+2023/10/11 19:59:03 [3 term 4] Received append[len 0] from leader[2 commit 10] [index 10 term 4]==[index 10 term 4]
+2023/10/11 19:59:03 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 10 10]] next [[2 2 -1 11 11]]
+2023/10/11 19:59:03 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 10 10]] next [[2 2 -1 11 11]]
+2023/10/11 19:59:03 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:03 [** 2 term 4] Got new entry[11] to replicate
+2023/10/11 19:59:03 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:03 [4 term 4] converted to follower
+2023/10/11 19:59:03 [4 term 4] Received append[len 1] from leader[2 commit 10] [index 10 term 4]==[index 10 term 4]
+2023/10/11 19:59:03 [3 term 4] converted to follower
+2023/10/11 19:59:03 [3 term 4] Received append[len 1] from leader[2 commit 10] [index 10 term 4]==[index 10 term 4]
+2023/10/11 19:59:03 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 10 11]] next [[2 2 -1 11 12]]
+2023/10/11 19:59:03 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 11 11]] next [[2 2 -1 12 12]]
+2023/10/11 19:59:03 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:03 [1 term 4] Goroutine awake and election timed out
+2023/10/11 19:59:03 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:03 [4 term 4] converted to follower
+2023/10/11 19:59:03 [4 term 4] Received append[len 0] from leader[2 commit 11] [index 11 term 4]==[index 11 term 4]
+2023/10/11 19:59:03 [3 term 4] converted to follower
+2023/10/11 19:59:03 [3 term 4] Received append[len 0] from leader[2 commit 11] [index 11 term 4]==[index 11 term 4]
+2023/10/11 19:59:03 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 11 11]] next [[2 2 -1 12 12]]
+2023/10/11 19:59:03 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 11 11]] next [[2 2 -1 12 12]]
+2023/10/11 19:59:03 [** 2 term 4] Got new entry[12] to replicate
+2023/10/11 19:59:03 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:03 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:03 [4 term 4] converted to follower
+2023/10/11 19:59:03 [4 term 4] Received append[len 1] from leader[2 commit 11] [index 11 term 4]==[index 11 term 4]
+2023/10/11 19:59:03 [3 term 4] converted to follower
+2023/10/11 19:59:03 [3 term 4] Received append[len 1] from leader[2 commit 11] [index 11 term 4]==[index 11 term 4]
+2023/10/11 19:59:03 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 11 12]] next [[2 2 -1 12 13]]
+2023/10/11 19:59:03 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 12 12]] next [[2 2 -1 13 13]]
+2023/10/11 19:59:03 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:03 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:03 [3 term 4] converted to follower
+2023/10/11 19:59:03 [3 term 4] Received append[len 0] from leader[2 commit 12] [index 12 term 4]==[index 12 term 4]
+2023/10/11 19:59:03 [4 term 4] converted to follower
+2023/10/11 19:59:03 [4 term 4] Received append[len 0] from leader[2 commit 12] [index 12 term 4]==[index 12 term 4]
+2023/10/11 19:59:03 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 12 12]] next [[2 2 -1 13 13]]
+2023/10/11 19:59:03 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 12 12]] next [[2 2 -1 13 13]]
+2023/10/11 19:59:03 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:03 [** 2 term 4] Got new entry[13] to replicate
+2023/10/11 19:59:04 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:04 [4 term 4] converted to follower
+2023/10/11 19:59:04 [4 term 4] Received append[len 1] from leader[2 commit 12] [index 12 term 4]==[index 12 term 4]
+2023/10/11 19:59:04 [3 term 4] converted to follower
+2023/10/11 19:59:04 [3 term 4] Received append[len 1] from leader[2 commit 12] [index 12 term 4]==[index 12 term 4]
+2023/10/11 19:59:04 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 12 13]] next [[2 2 -1 13 14]]
+2023/10/11 19:59:04 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 13 13]] next [[2 2 -1 14 14]]
+2023/10/11 19:59:04 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:04 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:04 [4 term 4] converted to follower
+2023/10/11 19:59:04 [4 term 4] Received append[len 0] from leader[2 commit 13] [index 13 term 4]==[index 13 term 4]
+2023/10/11 19:59:04 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 13 13]] next [[2 2 -1 14 14]]
+2023/10/11 19:59:04 [3 term 4] converted to follower
+2023/10/11 19:59:04 [3 term 4] Received append[len 0] from leader[2 commit 13] [index 13 term 4]==[index 13 term 4]
+2023/10/11 19:59:04 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 13 13]] next [[2 2 -1 14 14]]
+2023/10/11 19:59:04 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:04 [** 2 term 4] Got new entry[14] to replicate
+2023/10/11 19:59:04 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:04 [4 term 4] converted to follower
+2023/10/11 19:59:04 [4 term 4] Received append[len 1] from leader[2 commit 13] [index 13 term 4]==[index 13 term 4]
+2023/10/11 19:59:04 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 13 14]] next [[2 2 -1 14 15]]
+2023/10/11 19:59:04 [3 term 4] converted to follower
+2023/10/11 19:59:04 [3 term 4] Received append[len 1] from leader[2 commit 13] [index 13 term 4]==[index 13 term 4]
+2023/10/11 19:59:04 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 14 14]] next [[2 2 -1 15 15]]
+2023/10/11 19:59:04 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:04 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:04 [4 term 4] converted to follower
+2023/10/11 19:59:04 [4 term 4] Received append[len 0] from leader[2 commit 14] [index 14 term 4]==[index 14 term 4]
+2023/10/11 19:59:04 [3 term 4] converted to follower
+2023/10/11 19:59:04 [3 term 4] Received append[len 0] from leader[2 commit 14] [index 14 term 4]==[index 14 term 4]
+2023/10/11 19:59:04 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 14 14]] next [[2 2 -1 15 15]]
+2023/10/11 19:59:04 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 14 14]] next [[2 2 -1 15 15]]
+2023/10/11 19:59:04 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:04 [** 2 term 4] Got new entry[15] to replicate
+2023/10/11 19:59:04 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:04 [4 term 4] converted to follower
+2023/10/11 19:59:04 [4 term 4] Received append[len 1] from leader[2 commit 14] [index 14 term 4]==[index 14 term 4]
+2023/10/11 19:59:04 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 14 15]] next [[2 2 -1 15 16]]
+2023/10/11 19:59:04 [3 term 4] converted to follower
+2023/10/11 19:59:04 [3 term 4] Received append[len 1] from leader[2 commit 14] [index 14 term 4]==[index 14 term 4]
+2023/10/11 19:59:04 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 15 15]] next [[2 2 -1 16 16]]
+2023/10/11 19:59:04 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:04 [1 term 5] Goroutine awake and election timed out
+2023/10/11 19:59:04 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:04 [4 term 4] converted to follower
+2023/10/11 19:59:04 [4 term 4] Received append[len 0] from leader[2 commit 15] [index 15 term 4]==[index 15 term 4]
+2023/10/11 19:59:04 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 15 15]] next [[2 2 -1 16 16]]
+2023/10/11 19:59:04 [3 term 4] converted to follower
+2023/10/11 19:59:04 [3 term 4] Received append[len 0] from leader[2 commit 15] [index 15 term 4]==[index 15 term 4]
+2023/10/11 19:59:04 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 15 15]] next [[2 2 -1 16 16]]
+2023/10/11 19:59:04 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:04 [** 2 term 4] Got new entry[16] to replicate
+2023/10/11 19:59:04 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:04 [4 term 4] converted to follower
+2023/10/11 19:59:04 [4 term 4] Received append[len 1] from leader[2 commit 15] [index 15 term 4]==[index 15 term 4]
+2023/10/11 19:59:04 [3 term 4] converted to follower
+2023/10/11 19:59:04 [3 term 4] Received append[len 1] from leader[2 commit 15] [index 15 term 4]==[index 15 term 4]
+2023/10/11 19:59:04 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 15 16]] next [[2 2 -1 16 17]]
+2023/10/11 19:59:04 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 16 16]] next [[2 2 -1 17 17]]
+2023/10/11 19:59:04 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:04 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:04 [3 term 4] converted to follower
+2023/10/11 19:59:04 [3 term 4] Received append[len 0] from leader[2 commit 16] [index 16 term 4]==[index 16 term 4]
+2023/10/11 19:59:04 [4 term 4] converted to follower
+2023/10/11 19:59:04 [4 term 4] Received append[len 0] from leader[2 commit 16] [index 16 term 4]==[index 16 term 4]
+2023/10/11 19:59:04 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 16 16]] next [[2 2 -1 17 17]]
+2023/10/11 19:59:04 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 16 16]] next [[2 2 -1 17 17]]
+2023/10/11 19:59:04 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:04 [** 2 term 4] Got new entry[17] to replicate
+2023/10/11 19:59:04 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:04 [4 term 4] converted to follower
+2023/10/11 19:59:04 [4 term 4] Received append[len 1] from leader[2 commit 16] [index 16 term 4]==[index 16 term 4]
+2023/10/11 19:59:04 [3 term 4] converted to follower
+2023/10/11 19:59:04 [3 term 4] Received append[len 1] from leader[2 commit 16] [index 16 term 4]==[index 16 term 4]
+2023/10/11 19:59:04 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 16 17]] next [[2 2 -1 17 18]]
+2023/10/11 19:59:04 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 17 17]] next [[2 2 -1 18 18]]
+2023/10/11 19:59:04 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:04 [1 term 6] Goroutine awake and election timed out
+2023/10/11 19:59:04 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:04 [4 term 4] converted to follower
+2023/10/11 19:59:04 [4 term 4] Received append[len 0] from leader[2 commit 17] [index 17 term 4]==[index 17 term 4]
+2023/10/11 19:59:04 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 17 17]] next [[2 2 -1 18 18]]
+2023/10/11 19:59:04 [3 term 4] converted to follower
+2023/10/11 19:59:04 [3 term 4] Received append[len 0] from leader[2 commit 17] [index 17 term 4]==[index 17 term 4]
+2023/10/11 19:59:04 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:04 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 17 17]] next [[2 2 -1 18 18]]
+2023/10/11 19:59:04 [** 2 term 4] Got new entry[18] to replicate
+2023/10/11 19:59:05 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:05 [4 term 4] converted to follower
+2023/10/11 19:59:05 [4 term 4] Received append[len 1] from leader[2 commit 17] [index 17 term 4]==[index 17 term 4]
+2023/10/11 19:59:05 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 17 18]] next [[2 2 -1 18 19]]
+2023/10/11 19:59:05 [3 term 4] converted to follower
+2023/10/11 19:59:05 [3 term 4] Received append[len 1] from leader[2 commit 17] [index 17 term 4]==[index 17 term 4]
+2023/10/11 19:59:05 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:05 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 18 18]] next [[2 2 -1 19 19]]
+2023/10/11 19:59:05 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:05 [4 term 4] converted to follower
+2023/10/11 19:59:05 [4 term 4] Received append[len 0] from leader[2 commit 18] [index 18 term 4]==[index 18 term 4]
+2023/10/11 19:59:05 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:05 [3 term 4] converted to follower
+2023/10/11 19:59:05 [3 term 4] Received append[len 0] from leader[2 commit 18] [index 18 term 4]==[index 18 term 4]
+2023/10/11 19:59:05 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 18 18]] next [[2 2 -1 19 19]]
+2023/10/11 19:59:05 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 18 18]] next [[2 2 -1 19 19]]
+2023/10/11 19:59:05 [** 2 term 4] Got new entry[19] to replicate
+2023/10/11 19:59:05 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:05 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:05 [4 term 4] converted to follower
+2023/10/11 19:59:05 [4 term 4] Received append[len 1] from leader[2 commit 18] [index 18 term 4]==[index 18 term 4]
+2023/10/11 19:59:05 [3 term 4] converted to follower
+2023/10/11 19:59:05 [3 term 4] Received append[len 1] from leader[2 commit 18] [index 18 term 4]==[index 18 term 4]
+2023/10/11 19:59:05 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 18 19]] next [[2 2 -1 19 20]]
+2023/10/11 19:59:05 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 19 19]] next [[2 2 -1 20 20]]
+2023/10/11 19:59:05 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:05 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:05 [3 term 4] converted to follower
+2023/10/11 19:59:05 [4 term 4] converted to follower
+2023/10/11 19:59:05 [4 term 4] Received append[len 0] from leader[2 commit 19] [index 19 term 4]==[index 19 term 4]
+2023/10/11 19:59:05 [3 term 4] Received append[len 0] from leader[2 commit 19] [index 19 term 4]==[index 19 term 4]
+2023/10/11 19:59:05 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 19 19]] next [[2 2 -1 20 20]]
+2023/10/11 19:59:05 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 19 19]] next [[2 2 -1 20 20]]
+2023/10/11 19:59:05 [** 2 term 4] Got new entry[20] to replicate
+2023/10/11 19:59:05 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:05 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:05 [4 term 4] converted to follower
+2023/10/11 19:59:05 [4 term 4] Received append[len 1] from leader[2 commit 19] [index 19 term 4]==[index 19 term 4]
+2023/10/11 19:59:05 [3 term 4] converted to follower
+2023/10/11 19:59:05 [3 term 4] Received append[len 1] from leader[2 commit 19] [index 19 term 4]==[index 19 term 4]
+2023/10/11 19:59:05 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 19 20]] next [[2 2 -1 20 21]]
+2023/10/11 19:59:05 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 20 20]] next [[2 2 -1 21 21]]
+2023/10/11 19:59:05 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:05 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:05 [4 term 4] converted to follower
+2023/10/11 19:59:05 [4 term 4] Received append[len 0] from leader[2 commit 20] [index 20 term 4]==[index 20 term 4]
+2023/10/11 19:59:05 [3 term 4] converted to follower
+2023/10/11 19:59:05 [3 term 4] Received append[len 0] from leader[2 commit 20] [index 20 term 4]==[index 20 term 4]
+2023/10/11 19:59:05 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 20 20]] next [[2 2 -1 21 21]]
+2023/10/11 19:59:05 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 20 20]] next [[2 2 -1 21 21]]
+2023/10/11 19:59:05 [** 2 term 4] Got new entry[21] to replicate
+2023/10/11 19:59:05 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:05 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:05 [4 term 4] converted to follower
+2023/10/11 19:59:05 [4 term 4] Received append[len 1] from leader[2 commit 20] [index 20 term 4]==[index 20 term 4]
+2023/10/11 19:59:05 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 20 21]] next [[2 2 -1 21 22]]
+2023/10/11 19:59:05 [3 term 4] converted to follower
+2023/10/11 19:59:05 [3 term 4] Received append[len 1] from leader[2 commit 20] [index 20 term 4]==[index 20 term 4]
+2023/10/11 19:59:05 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 21 21]] next [[2 2 -1 22 22]]
+2023/10/11 19:59:05 [1 term 7] Goroutine awake and election timed out
+2023/10/11 19:59:05 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:05 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:05 [4 term 4] converted to follower
+2023/10/11 19:59:05 [4 term 4] Received append[len 0] from leader[2 commit 21] [index 21 term 4]==[index 21 term 4]
+2023/10/11 19:59:05 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 21 21]] next [[2 2 -1 22 22]]
+2023/10/11 19:59:05 [3 term 4] converted to follower
+2023/10/11 19:59:05 [3 term 4] Received append[len 0] from leader[2 commit 21] [index 21 term 4]==[index 21 term 4]
+2023/10/11 19:59:05 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 21 21]] next [[2 2 -1 22 22]]
+2023/10/11 19:59:05 [** 2 term 4] Got new entry[22] to replicate
+2023/10/11 19:59:05 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:05 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:05 [4 term 4] converted to follower
+2023/10/11 19:59:05 [4 term 4] Received append[len 1] from leader[2 commit 21] [index 21 term 4]==[index 21 term 4]
+2023/10/11 19:59:05 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 21 22]] next [[2 2 -1 22 23]]
+2023/10/11 19:59:05 [3 term 4] converted to follower
+2023/10/11 19:59:05 [3 term 4] Received append[len 1] from leader[2 commit 21] [index 21 term 4]==[index 21 term 4]
+2023/10/11 19:59:05 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 22 22]] next [[2 2 -1 23 23]]
+2023/10/11 19:59:05 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:05 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:05 [4 term 4] converted to follower
+2023/10/11 19:59:05 [4 term 4] Received append[len 0] from leader[2 commit 22] [index 22 term 4]==[index 22 term 4]
+2023/10/11 19:59:05 [3 term 4] converted to follower
+2023/10/11 19:59:05 [3 term 4] Received append[len 0] from leader[2 commit 22] [index 22 term 4]==[index 22 term 4]
+2023/10/11 19:59:05 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 22 22]] next [[2 2 -1 23 23]]
+2023/10/11 19:59:05 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 22 22]] next [[2 2 -1 23 23]]
+2023/10/11 19:59:05 [** 2 term 4] Got new entry[23] to replicate
+2023/10/11 19:59:06 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:06 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:06 [4 term 4] converted to follower
+2023/10/11 19:59:06 [3 term 4] converted to follower
+2023/10/11 19:59:06 [4 term 4] Received append[len 1] from leader[2 commit 22] [index 22 term 4]==[index 22 term 4]
+2023/10/11 19:59:06 [3 term 4] Received append[len 1] from leader[2 commit 22] [index 22 term 4]==[index 22 term 4]
+2023/10/11 19:59:06 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 22 23]] next [[2 2 -1 23 24]]
+2023/10/11 19:59:06 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 23 23]] next [[2 2 -1 24 24]]
+2023/10/11 19:59:06 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:06 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:06 [4 term 4] converted to follower
+2023/10/11 19:59:06 [4 term 4] Received append[len 0] from leader[2 commit 23] [index 23 term 4]==[index 23 term 4]
+2023/10/11 19:59:06 [3 term 4] converted to follower
+2023/10/11 19:59:06 [3 term 4] Received append[len 0] from leader[2 commit 23] [index 23 term 4]==[index 23 term 4]
+2023/10/11 19:59:06 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 23 23]] next [[2 2 -1 24 24]]
+2023/10/11 19:59:06 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 23 23]] next [[2 2 -1 24 24]]
+2023/10/11 19:59:06 [** 2 term 4] Got new entry[24] to replicate
+2023/10/11 19:59:06 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:06 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:06 [4 term 4] converted to follower
+2023/10/11 19:59:06 [3 term 4] converted to follower
+2023/10/11 19:59:06 [3 term 4] Received append[len 1] from leader[2 commit 23] [index 23 term 4]==[index 23 term 4]
+2023/10/11 19:59:06 [4 term 4] Received append[len 1] from leader[2 commit 23] [index 23 term 4]==[index 23 term 4]
+2023/10/11 19:59:06 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 24 23]] next [[2 2 -1 25 24]]
+2023/10/11 19:59:06 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 24 24]] next [[2 2 -1 25 25]]
+2023/10/11 19:59:06 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:06 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:06 [3 term 4] converted to follower
+2023/10/11 19:59:06 [3 term 4] Received append[len 0] from leader[2 commit 24] [index 24 term 4]==[index 24 term 4]
+2023/10/11 19:59:06 [4 term 4] converted to follower
+2023/10/11 19:59:06 [4 term 4] Received append[len 0] from leader[2 commit 24] [index 24 term 4]==[index 24 term 4]
+2023/10/11 19:59:06 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 24 24]] next [[2 2 -1 25 25]]
+2023/10/11 19:59:06 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 24 24]] next [[2 2 -1 25 25]]
+2023/10/11 19:59:06 [** 2 term 4] Got new entry[25] to replicate
+2023/10/11 19:59:06 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:06 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:06 [4 term 4] converted to follower
+2023/10/11 19:59:06 [4 term 4] Received append[len 1] from leader[2 commit 24] [index 24 term 4]==[index 24 term 4]
+2023/10/11 19:59:06 [3 term 4] converted to follower
+2023/10/11 19:59:06 [3 term 4] Received append[len 1] from leader[2 commit 24] [index 24 term 4]==[index 24 term 4]
+2023/10/11 19:59:06 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 24 25]] next [[2 2 -1 25 26]]
+2023/10/11 19:59:06 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 25 25]] next [[2 2 -1 26 26]]
+2023/10/11 19:59:06 [1 term 8] Goroutine awake and election timed out
+2023/10/11 19:59:06 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:06 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:06 [4 term 4] converted to follower
+2023/10/11 19:59:06 [4 term 4] Received append[len 0] from leader[2 commit 25] [index 25 term 4]==[index 25 term 4]
+2023/10/11 19:59:06 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 25 25]] next [[2 2 -1 26 26]]
+2023/10/11 19:59:06 [3 term 4] converted to follower
+2023/10/11 19:59:06 [3 term 4] Received append[len 0] from leader[2 commit 25] [index 25 term 4]==[index 25 term 4]
+2023/10/11 19:59:06 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 25 25]] next [[2 2 -1 26 26]]
+2023/10/11 19:59:06 [** 2 term 4] Got new entry[26] to replicate
+2023/10/11 19:59:06 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:06 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:06 [4 term 4] converted to follower
+2023/10/11 19:59:06 [4 term 4] Received append[len 1] from leader[2 commit 25] [index 25 term 4]==[index 25 term 4]
+2023/10/11 19:59:06 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 25 26]] next [[2 2 -1 26 27]]
+2023/10/11 19:59:06 [3 term 4] converted to follower
+2023/10/11 19:59:06 [3 term 4] Received append[len 1] from leader[2 commit 25] [index 25 term 4]==[index 25 term 4]
+2023/10/11 19:59:06 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 26 26]] next [[2 2 -1 27 27]]
+2023/10/11 19:59:06 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:06 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:06 [4 term 4] converted to follower
+2023/10/11 19:59:06 [4 term 4] Received append[len 0] from leader[2 commit 26] [index 26 term 4]==[index 26 term 4]
+2023/10/11 19:59:06 [3 term 4] converted to follower
+2023/10/11 19:59:06 [3 term 4] Received append[len 0] from leader[2 commit 26] [index 26 term 4]==[index 26 term 4]
+2023/10/11 19:59:06 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 26 26]] next [[2 2 -1 27 27]]
+2023/10/11 19:59:06 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 26 26]] next [[2 2 -1 27 27]]
+2023/10/11 19:59:06 [** 2 term 4] Got new entry[27] to replicate
+2023/10/11 19:59:06 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:06 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:06 [4 term 4] converted to follower
+2023/10/11 19:59:06 [3 term 4] converted to follower
+2023/10/11 19:59:06 [3 term 4] Received append[len 1] from leader[2 commit 26] [index 26 term 4]==[index 26 term 4]
+2023/10/11 19:59:06 [4 term 4] Received append[len 1] from leader[2 commit 26] [index 26 term 4]==[index 26 term 4]
+2023/10/11 19:59:06 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 27 26]] next [[2 2 -1 28 27]]
+2023/10/11 19:59:06 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 27 27]] next [[2 2 -1 28 28]]
+2023/10/11 19:59:06 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:06 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:06 [4 term 4] converted to follower
+2023/10/11 19:59:06 [4 term 4] Received append[len 0] from leader[2 commit 27] [index 27 term 4]==[index 27 term 4]
+2023/10/11 19:59:06 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 27 27]] next [[2 2 -1 28 28]]
+2023/10/11 19:59:06 [3 term 4] converted to follower
+2023/10/11 19:59:06 [3 term 4] Received append[len 0] from leader[2 commit 27] [index 27 term 4]==[index 27 term 4]
+2023/10/11 19:59:06 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 27 27]] next [[2 2 -1 28 28]]
+2023/10/11 19:59:06 [** 2 term 4] Got new entry[28] to replicate
+2023/10/11 19:59:07 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:07 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:07 [4 term 4] converted to follower
+2023/10/11 19:59:07 [4 term 4] Received append[len 1] from leader[2 commit 27] [index 27 term 4]==[index 27 term 4]
+2023/10/11 19:59:07 [3 term 4] converted to follower
+2023/10/11 19:59:07 [3 term 4] Received append[len 1] from leader[2 commit 27] [index 27 term 4]==[index 27 term 4]
+2023/10/11 19:59:07 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 28 27]] next [[2 2 -1 29 28]]
+2023/10/11 19:59:07 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 28 28]] next [[2 2 -1 29 29]]
+2023/10/11 19:59:07 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:07 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:07 [4 term 4] converted to follower
+2023/10/11 19:59:07 [4 term 4] Received append[len 0] from leader[2 commit 28] [index 28 term 4]==[index 28 term 4]
+2023/10/11 19:59:07 [3 term 4] converted to follower
+2023/10/11 19:59:07 [3 term 4] Received append[len 0] from leader[2 commit 28] [index 28 term 4]==[index 28 term 4]
+2023/10/11 19:59:07 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 28 28]] next [[2 2 -1 29 29]]
+2023/10/11 19:59:07 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 28 28]] next [[2 2 -1 29 29]]
+2023/10/11 19:59:07 [** 2 term 4] Got new entry[29] to replicate
+2023/10/11 19:59:07 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:07 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:07 [4 term 4] converted to follower
+2023/10/11 19:59:07 [4 term 4] Received append[len 1] from leader[2 commit 28] [index 28 term 4]==[index 28 term 4]
+2023/10/11 19:59:07 [3 term 4] converted to follower
+2023/10/11 19:59:07 [3 term 4] Received append[len 1] from leader[2 commit 28] [index 28 term 4]==[index 28 term 4]
+2023/10/11 19:59:07 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 28 29]] next [[2 2 -1 29 30]]
+2023/10/11 19:59:07 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 29 29]] next [[2 2 -1 30 30]]
+2023/10/11 19:59:07 [1 term 9] Goroutine awake and election timed out
+2023/10/11 19:59:07 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:07 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:07 [3 term 4] converted to follower
+2023/10/11 19:59:07 [3 term 4] Received append[len 0] from leader[2 commit 29] [index 29 term 4]==[index 29 term 4]
+2023/10/11 19:59:07 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 29 29]] next [[2 2 -1 30 30]]
+2023/10/11 19:59:07 [4 term 4] converted to follower
+2023/10/11 19:59:07 [4 term 4] Received append[len 0] from leader[2 commit 29] [index 29 term 4]==[index 29 term 4]
+2023/10/11 19:59:07 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 29 29]] next [[2 2 -1 30 30]]
+2023/10/11 19:59:07 [** 2 term 4] Got new entry[30] to replicate
+2023/10/11 19:59:07 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:07 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:07 [3 term 4] converted to follower
+2023/10/11 19:59:07 [3 term 4] Received append[len 1] from leader[2 commit 29] [index 29 term 4]==[index 29 term 4]
+2023/10/11 19:59:07 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 30 29]] next [[2 2 -1 31 30]]
+2023/10/11 19:59:07 [4 term 4] converted to follower
+2023/10/11 19:59:07 [4 term 4] Received append[len 1] from leader[2 commit 29] [index 29 term 4]==[index 29 term 4]
+2023/10/11 19:59:07 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 30 30]] next [[2 2 -1 31 31]]
+2023/10/11 19:59:07 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:07 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:07 [4 term 4] converted to follower
+2023/10/11 19:59:07 [4 term 4] Received append[len 0] from leader[2 commit 30] [index 30 term 4]==[index 30 term 4]
+2023/10/11 19:59:07 [3 term 4] converted to follower
+2023/10/11 19:59:07 [3 term 4] Received append[len 0] from leader[2 commit 30] [index 30 term 4]==[index 30 term 4]
+2023/10/11 19:59:07 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 30 30]] next [[2 2 -1 31 31]]
+2023/10/11 19:59:07 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 30 30]] next [[2 2 -1 31 31]]
+2023/10/11 19:59:07 [** 2 term 4] Got new entry[31] to replicate
+2023/10/11 19:59:07 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:07 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:07 [4 term 4] converted to follower
+2023/10/11 19:59:07 [4 term 4] Received append[len 1] from leader[2 commit 30] [index 30 term 4]==[index 30 term 4]
+2023/10/11 19:59:07 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 30 31]] next [[2 2 -1 31 32]]
+2023/10/11 19:59:07 [3 term 4] converted to follower
+2023/10/11 19:59:07 [3 term 4] Received append[len 1] from leader[2 commit 30] [index 30 term 4]==[index 30 term 4]
+2023/10/11 19:59:07 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 31 31]] next [[2 2 -1 32 32]]
+2023/10/11 19:59:07 [1 term 10] Goroutine awake and election timed out
+2023/10/11 19:59:07 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:07 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:07 [3 term 4] converted to follower
+2023/10/11 19:59:07 [3 term 4] Received append[len 0] from leader[2 commit 31] [index 31 term 4]==[index 31 term 4]
+2023/10/11 19:59:07 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 31 31]] next [[2 2 -1 32 32]]
+2023/10/11 19:59:07 [4 term 4] converted to follower
+2023/10/11 19:59:07 [4 term 4] Received append[len 0] from leader[2 commit 31] [index 31 term 4]==[index 31 term 4]
+2023/10/11 19:59:07 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 31 31]] next [[2 2 -1 32 32]]
+2023/10/11 19:59:07 [** 2 term 4] Got new entry[32] to replicate
+2023/10/11 19:59:07 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:07 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:07 [4 term 4] converted to follower
+2023/10/11 19:59:07 [4 term 4] Received append[len 1] from leader[2 commit 31] [index 31 term 4]==[index 31 term 4]
+2023/10/11 19:59:07 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 31 32]] next [[2 2 -1 32 33]]
+2023/10/11 19:59:07 [3 term 4] converted to follower
+2023/10/11 19:59:07 [3 term 4] Received append[len 1] from leader[2 commit 31] [index 31 term 4]==[index 31 term 4]
+2023/10/11 19:59:07 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 32 32]] next [[2 2 -1 33 33]]
+2023/10/11 19:59:07 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:07 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:07 [3 term 4] converted to follower
+2023/10/11 19:59:07 [3 term 4] Received append[len 0] from leader[2 commit 32] [index 32 term 4]==[index 32 term 4]
+2023/10/11 19:59:07 [4 term 4] converted to follower
+2023/10/11 19:59:07 [4 term 4] Received append[len 0] from leader[2 commit 32] [index 32 term 4]==[index 32 term 4]
+2023/10/11 19:59:07 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 32 32]] next [[2 2 -1 33 33]]
+2023/10/11 19:59:07 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 32 32]] next [[2 2 -1 33 33]]
+2023/10/11 19:59:07 [** 2 term 4] Got new entry[33] to replicate
+2023/10/11 19:59:08 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:08 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:08 [3 term 4] converted to follower
+2023/10/11 19:59:08 [3 term 4] Received append[len 1] from leader[2 commit 32] [index 32 term 4]==[index 32 term 4]
+2023/10/11 19:59:08 [4 term 4] converted to follower
+2023/10/11 19:59:08 [4 term 4] Received append[len 1] from leader[2 commit 32] [index 32 term 4]==[index 32 term 4]
+2023/10/11 19:59:08 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 33 32]] next [[2 2 -1 34 33]]
+2023/10/11 19:59:08 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 33 33]] next [[2 2 -1 34 34]]
+2023/10/11 19:59:08 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:08 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:08 [4 term 4] converted to follower
+2023/10/11 19:59:08 [4 term 4] Received append[len 0] from leader[2 commit 33] [index 33 term 4]==[index 33 term 4]
+2023/10/11 19:59:08 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 33 33]] next [[2 2 -1 34 34]]
+2023/10/11 19:59:08 [3 term 4] converted to follower
+2023/10/11 19:59:08 [3 term 4] Received append[len 0] from leader[2 commit 33] [index 33 term 4]==[index 33 term 4]
+2023/10/11 19:59:08 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 33 33]] next [[2 2 -1 34 34]]
+2023/10/11 19:59:08 [** 2 term 4] Got new entry[34] to replicate
+2023/10/11 19:59:08 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:08 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:08 [3 term 4] converted to follower
+2023/10/11 19:59:08 [4 term 4] converted to follower
+2023/10/11 19:59:08 [4 term 4] Received append[len 1] from leader[2 commit 33] [index 33 term 4]==[index 33 term 4]
+2023/10/11 19:59:08 [3 term 4] Received append[len 1] from leader[2 commit 33] [index 33 term 4]==[index 33 term 4]
+2023/10/11 19:59:08 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 33 34]] next [[2 2 -1 34 35]]
+2023/10/11 19:59:08 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 34 34]] next [[2 2 -1 35 35]]
+2023/10/11 19:59:08 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:08 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:08 [3 term 4] converted to follower
+2023/10/11 19:59:08 [3 term 4] Received append[len 0] from leader[2 commit 34] [index 34 term 4]==[index 34 term 4]
+2023/10/11 19:59:08 [4 term 4] converted to follower
+2023/10/11 19:59:08 [4 term 4] Received append[len 0] from leader[2 commit 34] [index 34 term 4]==[index 34 term 4]
+2023/10/11 19:59:08 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 34 34]] next [[2 2 -1 35 35]]
+2023/10/11 19:59:08 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 34 34]] next [[2 2 -1 35 35]]
+2023/10/11 19:59:08 [** 2 term 4] Got new entry[35] to replicate
+2023/10/11 19:59:08 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:08 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:08 [4 term 4] converted to follower
+2023/10/11 19:59:08 [4 term 4] Received append[len 1] from leader[2 commit 34] [index 34 term 4]==[index 34 term 4]
+2023/10/11 19:59:08 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 34 35]] next [[2 2 -1 35 36]]
+2023/10/11 19:59:08 [3 term 4] converted to follower
+2023/10/11 19:59:08 [3 term 4] Received append[len 1] from leader[2 commit 34] [index 34 term 4]==[index 34 term 4]
+2023/10/11 19:59:08 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 35 35]] next [[2 2 -1 36 36]]
+2023/10/11 19:59:08 [1 term 11] Goroutine awake and election timed out
+2023/10/11 19:59:08 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:08 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:08 [3 term 4] converted to follower
+2023/10/11 19:59:08 [3 term 4] Received append[len 0] from leader[2 commit 35] [index 35 term 4]==[index 35 term 4]
+2023/10/11 19:59:08 [4 term 4] converted to follower
+2023/10/11 19:59:08 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 35 35]] next [[2 2 -1 36 36]]
+2023/10/11 19:59:08 [4 term 4] Received append[len 0] from leader[2 commit 35] [index 35 term 4]==[index 35 term 4]
+2023/10/11 19:59:08 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 35 35]] next [[2 2 -1 36 36]]
+2023/10/11 19:59:08 [** 2 term 4] Got new entry[36] to replicate
+2023/10/11 19:59:08 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:08 [4 term 4] converted to follower
+2023/10/11 19:59:08 [4 term 4] Received append[len 1] from leader[2 commit 35] [index 35 term 4]==[index 35 term 4]
+2023/10/11 19:59:08 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 35 36]] next [[2 2 -1 36 37]]
+2023/10/11 19:59:08 [3 term 4] converted to follower
+2023/10/11 19:59:08 [3 term 4] Received append[len 1] from leader[2 commit 35] [index 35 term 4]==[index 35 term 4]
+2023/10/11 19:59:08 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 36 36]] next [[2 2 -1 37 37]]
+2023/10/11 19:59:08 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:08 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:08 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:08 [3 term 4] converted to follower
+2023/10/11 19:59:08 [3 term 4] Received append[len 0] from leader[2 commit 36] [index 36 term 4]==[index 36 term 4]
+2023/10/11 19:59:08 [4 term 4] converted to follower
+2023/10/11 19:59:08 [4 term 4] Received append[len 0] from leader[2 commit 36] [index 36 term 4]==[index 36 term 4]
+2023/10/11 19:59:08 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 36 36]] next [[2 2 -1 37 37]]
+2023/10/11 19:59:08 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 36 36]] next [[2 2 -1 37 37]]
+2023/10/11 19:59:08 [** 2 term 4] Got new entry[37] to replicate
+2023/10/11 19:59:08 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:08 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:08 [4 term 4] converted to follower
+2023/10/11 19:59:08 [4 term 4] Received append[len 1] from leader[2 commit 36] [index 36 term 4]==[index 36 term 4]
+2023/10/11 19:59:08 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 36 37]] next [[2 2 -1 37 38]]
+2023/10/11 19:59:08 [3 term 4] converted to follower
+2023/10/11 19:59:08 [3 term 4] Received append[len 1] from leader[2 commit 36] [index 36 term 4]==[index 36 term 4]
+2023/10/11 19:59:08 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 37 37]] next [[2 2 -1 38 38]]
+2023/10/11 19:59:08 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:08 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:08 [3 term 4] converted to follower
+2023/10/11 19:59:08 [3 term 4] Received append[len 0] from leader[2 commit 37] [index 37 term 4]==[index 37 term 4]
+2023/10/11 19:59:08 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 37 37]] next [[2 2 -1 38 38]]
+2023/10/11 19:59:08 [4 term 4] converted to follower
+2023/10/11 19:59:08 [4 term 4] Received append[len 0] from leader[2 commit 37] [index 37 term 4]==[index 37 term 4]
+2023/10/11 19:59:08 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 37 37]] next [[2 2 -1 38 38]]
+2023/10/11 19:59:08 [** 2 term 4] Got new entry[38] to replicate
+2023/10/11 19:59:09 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:09 [4 term 4] converted to follower
+2023/10/11 19:59:09 [4 term 4] Received append[len 1] from leader[2 commit 37] [index 37 term 4]==[index 37 term 4]
+2023/10/11 19:59:09 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 37 38]] next [[2 2 -1 38 39]]
+2023/10/11 19:59:09 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:09 [3 term 4] converted to follower
+2023/10/11 19:59:09 [3 term 4] Received append[len 1] from leader[2 commit 37] [index 37 term 4]==[index 37 term 4]
+2023/10/11 19:59:09 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 38 38]] next [[2 2 -1 39 39]]
+2023/10/11 19:59:09 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:09 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:09 [3 term 4] converted to follower
+2023/10/11 19:59:09 [3 term 4] Received append[len 0] from leader[2 commit 38] [index 38 term 4]==[index 38 term 4]
+2023/10/11 19:59:09 [4 term 4] converted to follower
+2023/10/11 19:59:09 [4 term 4] Received append[len 0] from leader[2 commit 38] [index 38 term 4]==[index 38 term 4]
+2023/10/11 19:59:09 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 38 38]] next [[2 2 -1 39 39]]
+2023/10/11 19:59:09 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 38 38]] next [[2 2 -1 39 39]]
+2023/10/11 19:59:09 [** 2 term 4] Got new entry[39] to replicate
+2023/10/11 19:59:09 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:09 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:09 [4 term 4] converted to follower
+2023/10/11 19:59:09 [4 term 4] Received append[len 1] from leader[2 commit 38] [index 38 term 4]==[index 38 term 4]
+2023/10/11 19:59:09 [3 term 4] converted to follower
+2023/10/11 19:59:09 [3 term 4] Received append[len 1] from leader[2 commit 38] [index 38 term 4]==[index 38 term 4]
+2023/10/11 19:59:09 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 38 39]] next [[2 2 -1 39 40]]
+2023/10/11 19:59:09 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 39 39]] next [[2 2 -1 40 40]]
+2023/10/11 19:59:09 [1 term 12] Goroutine awake and election timed out
+2023/10/11 19:59:09 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:09 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:09 [4 term 4] converted to follower
+2023/10/11 19:59:09 [4 term 4] Received append[len 0] from leader[2 commit 39] [index 39 term 4]==[index 39 term 4]
+2023/10/11 19:59:09 [3 term 4] converted to follower
+2023/10/11 19:59:09 [3 term 4] Received append[len 0] from leader[2 commit 39] [index 39 term 4]==[index 39 term 4]
+2023/10/11 19:59:09 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 39 39]] next [[2 2 -1 40 40]]
+2023/10/11 19:59:09 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 39 39]] next [[2 2 -1 40 40]]
+2023/10/11 19:59:09 [** 2 term 4] Got new entry[40] to replicate
+2023/10/11 19:59:09 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:09 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:09 [4 term 4] converted to follower
+2023/10/11 19:59:09 [4 term 4] Received append[len 1] from leader[2 commit 39] [index 39 term 4]==[index 39 term 4]
+2023/10/11 19:59:09 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 39 40]] next [[2 2 -1 40 41]]
+2023/10/11 19:59:09 [3 term 4] converted to follower
+2023/10/11 19:59:09 [3 term 4] Received append[len 1] from leader[2 commit 39] [index 39 term 4]==[index 39 term 4]
+2023/10/11 19:59:09 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 40 40]] next [[2 2 -1 41 41]]
+2023/10/11 19:59:09 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:09 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:09 [3 term 4] converted to follower
+2023/10/11 19:59:09 [3 term 4] Received append[len 0] from leader[2 commit 40] [index 40 term 4]==[index 40 term 4]
+2023/10/11 19:59:09 [4 term 4] converted to follower
+2023/10/11 19:59:09 [4 term 4] Received append[len 0] from leader[2 commit 40] [index 40 term 4]==[index 40 term 4]
+2023/10/11 19:59:09 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 40 40]] next [[2 2 -1 41 41]]
+2023/10/11 19:59:09 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 40 40]] next [[2 2 -1 41 41]]
+2023/10/11 19:59:09 [** 2 term 4] Got new entry[41] to replicate
+2023/10/11 19:59:09 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:09 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:09 [4 term 4] converted to follower
+2023/10/11 19:59:09 [4 term 4] Received append[len 1] from leader[2 commit 40] [index 40 term 4]==[index 40 term 4]
+2023/10/11 19:59:09 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 40 41]] next [[2 2 -1 41 42]]
+2023/10/11 19:59:09 [3 term 4] converted to follower
+2023/10/11 19:59:09 [3 term 4] Received append[len 1] from leader[2 commit 40] [index 40 term 4]==[index 40 term 4]
+2023/10/11 19:59:09 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 41 41]] next [[2 2 -1 42 42]]
+2023/10/11 19:59:09 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:09 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:09 [3 term 4] converted to follower
+2023/10/11 19:59:09 [3 term 4] Received append[len 0] from leader[2 commit 41] [index 41 term 4]==[index 41 term 4]
+2023/10/11 19:59:09 [4 term 4] converted to follower
+2023/10/11 19:59:09 [4 term 4] Received append[len 0] from leader[2 commit 41] [index 41 term 4]==[index 41 term 4]
+2023/10/11 19:59:09 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 41 41]] next [[2 2 -1 42 42]]
+2023/10/11 19:59:09 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 41 41]] next [[2 2 -1 42 42]]
+2023/10/11 19:59:09 [** 2 term 4] Got new entry[42] to replicate
+2023/10/11 19:59:09 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:09 [3 term 4] converted to follower
+2023/10/11 19:59:09 [3 term 4] Received append[len 1] from leader[2 commit 41] [index 41 term 4]==[index 41 term 4]
+2023/10/11 19:59:09 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:09 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 42 41]] next [[2 2 -1 43 42]]
+2023/10/11 19:59:09 [4 term 4] converted to follower
+2023/10/11 19:59:09 [4 term 4] Received append[len 1] from leader[2 commit 41] [index 41 term 4]==[index 41 term 4]
+2023/10/11 19:59:09 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 42 42]] next [[2 2 -1 43 43]]
+2023/10/11 19:59:09 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:09 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:09 [4 term 4] converted to follower
+2023/10/11 19:59:09 [4 term 4] Received append[len 0] from leader[2 commit 42] [index 42 term 4]==[index 42 term 4]
+2023/10/11 19:59:09 [3 term 4] converted to follower
+2023/10/11 19:59:09 [3 term 4] Received append[len 0] from leader[2 commit 42] [index 42 term 4]==[index 42 term 4]
+2023/10/11 19:59:09 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 42 42]] next [[2 2 -1 43 43]]
+2023/10/11 19:59:09 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 42 42]] next [[2 2 -1 43 43]]
+2023/10/11 19:59:09 [** 2 term 4] Got new entry[43] to replicate
+2023/10/11 19:59:10 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:10 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:10 [3 term 4] converted to follower
+2023/10/11 19:59:10 [3 term 4] Received append[len 1] from leader[2 commit 42] [index 42 term 4]==[index 42 term 4]
+2023/10/11 19:59:10 [4 term 4] converted to follower
+2023/10/11 19:59:10 [4 term 4] Received append[len 1] from leader[2 commit 42] [index 42 term 4]==[index 42 term 4]
+2023/10/11 19:59:10 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 43 42]] next [[2 2 -1 44 43]]
+2023/10/11 19:59:10 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 43 43]] next [[2 2 -1 44 44]]
+2023/10/11 19:59:10 [1 term 13] Goroutine awake and election timed out
+2023/10/11 19:59:10 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:10 [4 term 4] converted to follower
+2023/10/11 19:59:10 [4 term 4] Received append[len 0] from leader[2 commit 43] [index 43 term 4]==[index 43 term 4]
+2023/10/11 19:59:10 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:10 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 43 43]] next [[2 2 -1 44 44]]
+2023/10/11 19:59:10 [3 term 4] converted to follower
+2023/10/11 19:59:10 [3 term 4] Received append[len 0] from leader[2 commit 43] [index 43 term 4]==[index 43 term 4]
+2023/10/11 19:59:10 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 43 43]] next [[2 2 -1 44 44]]
+2023/10/11 19:59:10 [** 2 term 4] Got new entry[44] to replicate
+2023/10/11 19:59:10 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:10 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:10 [3 term 4] converted to follower
+2023/10/11 19:59:10 [3 term 4] Received append[len 1] from leader[2 commit 43] [index 43 term 4]==[index 43 term 4]
+2023/10/11 19:59:10 [4 term 4] converted to follower
+2023/10/11 19:59:10 [4 term 4] Received append[len 1] from leader[2 commit 43] [index 43 term 4]==[index 43 term 4]
+2023/10/11 19:59:10 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 44 43]] next [[2 2 -1 45 44]]
+2023/10/11 19:59:10 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 44 44]] next [[2 2 -1 45 45]]
+2023/10/11 19:59:10 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:10 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:10 [4 term 4] converted to follower
+2023/10/11 19:59:10 [3 term 4] converted to follower
+2023/10/11 19:59:10 [3 term 4] Received append[len 0] from leader[2 commit 44] [index 44 term 4]==[index 44 term 4]
+2023/10/11 19:59:10 [4 term 4] Received append[len 0] from leader[2 commit 44] [index 44 term 4]==[index 44 term 4]
+2023/10/11 19:59:10 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 44 44]] next [[2 2 -1 45 45]]
+2023/10/11 19:59:10 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 44 44]] next [[2 2 -1 45 45]]
+2023/10/11 19:59:10 [** 2 term 4] Got new entry[45] to replicate
+2023/10/11 19:59:10 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:10 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:10 [4 term 4] converted to follower
+2023/10/11 19:59:10 [4 term 4] Received append[len 1] from leader[2 commit 44] [index 44 term 4]==[index 44 term 4]
+2023/10/11 19:59:10 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 44 45]] next [[2 2 -1 45 46]]
+2023/10/11 19:59:10 [3 term 4] converted to follower
+2023/10/11 19:59:10 [3 term 4] Received append[len 1] from leader[2 commit 44] [index 44 term 4]==[index 44 term 4]
+2023/10/11 19:59:10 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 45 45]] next [[2 2 -1 46 46]]
+2023/10/11 19:59:10 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:10 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:10 [3 term 4] converted to follower
+2023/10/11 19:59:10 [3 term 4] Received append[len 0] from leader[2 commit 45] [index 45 term 4]==[index 45 term 4]
+2023/10/11 19:59:10 [4 term 4] converted to follower
+2023/10/11 19:59:10 [4 term 4] Received append[len 0] from leader[2 commit 45] [index 45 term 4]==[index 45 term 4]
+2023/10/11 19:59:10 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 45 45]] next [[2 2 -1 46 46]]
+2023/10/11 19:59:10 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 45 45]] next [[2 2 -1 46 46]]
+2023/10/11 19:59:10 [** 2 term 4] Got new entry[46] to replicate
+2023/10/11 19:59:10 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:10 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:10 [4 term 4] converted to follower
+2023/10/11 19:59:10 [4 term 4] Received append[len 1] from leader[2 commit 45] [index 45 term 4]==[index 45 term 4]
+2023/10/11 19:59:10 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 45 46]] next [[2 2 -1 46 47]]
+2023/10/11 19:59:10 [3 term 4] converted to follower
+2023/10/11 19:59:10 [3 term 4] Received append[len 1] from leader[2 commit 45] [index 45 term 4]==[index 45 term 4]
+2023/10/11 19:59:10 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 46 46]] next [[2 2 -1 47 47]]
+2023/10/11 19:59:10 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:10 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:10 [3 term 4] converted to follower
+2023/10/11 19:59:10 [3 term 4] Received append[len 0] from leader[2 commit 46] [index 46 term 4]==[index 46 term 4]
+2023/10/11 19:59:10 [4 term 4] converted to follower
+2023/10/11 19:59:10 [4 term 4] Received append[len 0] from leader[2 commit 46] [index 46 term 4]==[index 46 term 4]
+2023/10/11 19:59:10 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 46 46]] next [[2 2 -1 47 47]]
+2023/10/11 19:59:10 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 46 46]] next [[2 2 -1 47 47]]
+2023/10/11 19:59:10 [** 2 term 4] Got new entry[47] to replicate
+2023/10/11 19:59:10 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:10 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:10 [4 term 4] converted to follower
+2023/10/11 19:59:10 [4 term 4] Received append[len 1] from leader[2 commit 46] [index 46 term 4]==[index 46 term 4]
+2023/10/11 19:59:10 [3 term 4] converted to follower
+2023/10/11 19:59:10 [3 term 4] Received append[len 1] from leader[2 commit 46] [index 46 term 4]==[index 46 term 4]
+2023/10/11 19:59:10 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 47 46]] next [[2 2 -1 48 47]]
+2023/10/11 19:59:10 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 47 47]] next [[2 2 -1 48 48]]
+2023/10/11 19:59:10 [1 term 14] Goroutine awake and election timed out
+2023/10/11 19:59:10 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:10 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:10 [4 term 4] converted to follower
+2023/10/11 19:59:10 [4 term 4] Received append[len 0] from leader[2 commit 47] [index 47 term 4]==[index 47 term 4]
+2023/10/11 19:59:10 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 47 47]] next [[2 2 -1 48 48]]
+2023/10/11 19:59:10 [3 term 4] converted to follower
+2023/10/11 19:59:10 [3 term 4] Received append[len 0] from leader[2 commit 47] [index 47 term 4]==[index 47 term 4]
+2023/10/11 19:59:10 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 47 47]] next [[2 2 -1 48 48]]
+2023/10/11 19:59:10 [** 2 term 4] Got new entry[48] to replicate
+2023/10/11 19:59:11 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:11 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:11 [3 term 4] converted to follower
+2023/10/11 19:59:11 [3 term 4] Received append[len 1] from leader[2 commit 47] [index 47 term 4]==[index 47 term 4]
+2023/10/11 19:59:11 [4 term 4] converted to follower
+2023/10/11 19:59:11 [4 term 4] Received append[len 1] from leader[2 commit 47] [index 47 term 4]==[index 47 term 4]
+2023/10/11 19:59:11 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 48 47]] next [[2 2 -1 49 48]]
+2023/10/11 19:59:11 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 48 48]] next [[2 2 -1 49 49]]
+2023/10/11 19:59:11 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:11 [4 term 4] converted to follower
+2023/10/11 19:59:11 [4 term 4] Received append[len 0] from leader[2 commit 48] [index 48 term 4]==[index 48 term 4]
+2023/10/11 19:59:11 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:11 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 48 48]] next [[2 2 -1 49 49]]
+2023/10/11 19:59:11 [3 term 4] converted to follower
+2023/10/11 19:59:11 [3 term 4] Received append[len 0] from leader[2 commit 48] [index 48 term 4]==[index 48 term 4]
+2023/10/11 19:59:11 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 48 48]] next [[2 2 -1 49 49]]
+2023/10/11 19:59:11 [** 2 term 4] Got new entry[49] to replicate
+2023/10/11 19:59:11 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:11 [4 term 4] converted to follower
+2023/10/11 19:59:11 [4 term 4] Received append[len 1] from leader[2 commit 48] [index 48 term 4]==[index 48 term 4]
+2023/10/11 19:59:11 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:11 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 48 49]] next [[2 2 -1 49 50]]
+2023/10/11 19:59:11 [3 term 4] converted to follower
+2023/10/11 19:59:11 [3 term 4] Received append[len 1] from leader[2 commit 48] [index 48 term 4]==[index 48 term 4]
+2023/10/11 19:59:11 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 49 49]] next [[2 2 -1 50 50]]
+2023/10/11 19:59:11 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:11 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:11 [4 term 4] converted to follower
+2023/10/11 19:59:11 [4 term 4] Received append[len 0] from leader[2 commit 49] [index 49 term 4]==[index 49 term 4]
+2023/10/11 19:59:11 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 49 49]] next [[2 2 -1 50 50]]
+2023/10/11 19:59:11 [3 term 4] converted to follower
+2023/10/11 19:59:11 [3 term 4] Received append[len 0] from leader[2 commit 49] [index 49 term 4]==[index 49 term 4]
+2023/10/11 19:59:11 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 49 49]] next [[2 2 -1 50 50]]
+2023/10/11 19:59:11 [** 2 term 4] Got new entry[50] to replicate
+2023/10/11 19:59:11 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:11 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:11 [3 term 4] converted to follower
+2023/10/11 19:59:11 [3 term 4] Received append[len 1] from leader[2 commit 49] [index 49 term 4]==[index 49 term 4]
+2023/10/11 19:59:11 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 50 49]] next [[2 2 -1 51 50]]
+2023/10/11 19:59:11 [4 term 4] converted to follower
+2023/10/11 19:59:11 [4 term 4] Received append[len 1] from leader[2 commit 49] [index 49 term 4]==[index 49 term 4]
+2023/10/11 19:59:11 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 50 50]] next [[2 2 -1 51 51]]
+2023/10/11 19:59:11 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:11 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:11 [4 term 4] converted to follower
+2023/10/11 19:59:11 [4 term 4] Received append[len 0] from leader[2 commit 50] [index 50 term 4]==[index 50 term 4]
+2023/10/11 19:59:11 [3 term 4] converted to follower
+2023/10/11 19:59:11 [3 term 4] Received append[len 0] from leader[2 commit 50] [index 50 term 4]==[index 50 term 4]
+2023/10/11 19:59:11 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 50 50]] next [[2 2 -1 51 51]]
+2023/10/11 19:59:11 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 50 50]] next [[2 2 -1 51 51]]
+2023/10/11 19:59:11 [** 2 term 4] Got new entry[51] to replicate
+2023/10/11 19:59:11 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:11 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:11 [3 term 4] converted to follower
+2023/10/11 19:59:11 [3 term 4] Received append[len 1] from leader[2 commit 50] [index 50 term 4]==[index 50 term 4]
+2023/10/11 19:59:11 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 51 50]] next [[2 2 -1 52 51]]
+2023/10/11 19:59:11 [4 term 4] converted to follower
+2023/10/11 19:59:11 [4 term 4] Received append[len 1] from leader[2 commit 50] [index 50 term 4]==[index 50 term 4]
+2023/10/11 19:59:11 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 51 51]] next [[2 2 -1 52 52]]
+2023/10/11 19:59:11 [1 term 15] Goroutine awake and election timed out
+2023/10/11 19:59:11 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:11 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:11 [4 term 4] converted to follower
+2023/10/11 19:59:11 [4 term 4] Received append[len 0] from leader[2 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:11 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 51 51]] next [[2 2 -1 52 52]]
+2023/10/11 19:59:11 [3 term 4] converted to follower
+2023/10/11 19:59:11 [3 term 4] Received append[len 0] from leader[2 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:11 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 51 51]] next [[2 2 -1 52 52]]
+2023/10/11 19:59:11 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:11 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:11 [4 term 4] converted to follower
+2023/10/11 19:59:11 [4 term 4] Received append[len 0] from leader[2 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:11 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 51 51]] next [[2 2 -1 52 52]]
+2023/10/11 19:59:11 [3 term 4] converted to follower
+2023/10/11 19:59:11 [3 term 4] Received append[len 0] from leader[2 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:11 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 51 51]] next [[2 2 -1 52 52]]
+2023/10/11 19:59:11 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:11 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:11 [4 term 4] converted to follower
+2023/10/11 19:59:11 [4 term 4] Received append[len 0] from leader[2 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:11 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 51 51]] next [[2 2 -1 52 52]]
+2023/10/11 19:59:11 [3 term 4] converted to follower
+2023/10/11 19:59:11 [3 term 4] Received append[len 0] from leader[2 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:11 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 51 51]] next [[2 2 -1 52 52]]
+2023/10/11 19:59:12 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:12 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:12 [3 term 4] converted to follower
+2023/10/11 19:59:12 [4 term 4] converted to follower
+2023/10/11 19:59:12 [3 term 4] Received append[len 0] from leader[2 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:12 [4 term 4] Received append[len 0] from leader[2 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:12 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 51 51]] next [[2 2 -1 52 52]]
+2023/10/11 19:59:12 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 51 51]] next [[2 2 -1 52 52]]
+2023/10/11 19:59:12 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:12 [4 term 4] converted to follower
+2023/10/11 19:59:12 [4 term 4] Received append[len 0] from leader[2 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:12 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:12 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 51 51]] next [[2 2 -1 52 52]]
+2023/10/11 19:59:12 [3 term 4] converted to follower
+2023/10/11 19:59:12 [3 term 4] Received append[len 0] from leader[2 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:12 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 51 51]] next [[2 2 -1 52 52]]
+2023/10/11 19:59:12 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:12 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:12 [4 term 4] converted to follower
+2023/10/11 19:59:12 [4 term 4] Received append[len 0] from leader[2 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:12 [3 term 4] converted to follower
+2023/10/11 19:59:12 [3 term 4] Received append[len 0] from leader[2 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:12 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 51 51]] next [[2 2 -1 52 52]]
+2023/10/11 19:59:12 [** 2 term 4] replicated on [3] total replicated [[0 0 -1 51 51]] next [[2 2 -1 52 52]]
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[52] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[53] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[54] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[55] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[56] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[57] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[58] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[59] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[60] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[61] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[62] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[63] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[64] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[65] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[66] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[67] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[68] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[69] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[70] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[71] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[72] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[73] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[74] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[75] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[76] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[77] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[78] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[79] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[80] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[81] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[82] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[83] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[84] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[85] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[86] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[87] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[88] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[89] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[90] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[91] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[92] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[93] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[94] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[95] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[96] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[97] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[98] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[99] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[100] to replicate
+2023/10/11 19:59:12 [** 2 term 4] Got new entry[101] to replicate
+2023/10/11 19:59:12 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:12 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:12 [4 term 4] converted to follower
+2023/10/11 19:59:12 [4 term 4] Received append[len 50] from leader[2 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:12 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 51 101]] next [[2 2 -1 52 102]]
+2023/10/11 19:59:12 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:12 [4 term 4] converted to follower
+2023/10/11 19:59:12 [4 term 4] Received append[len 0] from leader[2 commit 51] [index 101 term 4]==[index 101 term 4]
+2023/10/11 19:59:12 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 51 101]] next [[2 2 -1 52 102]]
+2023/10/11 19:59:12 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:12 [1 term 16] Goroutine awake and election timed out
+2023/10/11 19:59:12 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:12 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:12 [4 term 4] converted to follower
+2023/10/11 19:59:12 [4 term 4] Received append[len 0] from leader[2 commit 51] [index 101 term 4]==[index 101 term 4]
+2023/10/11 19:59:12 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 51 101]] next [[2 2 -1 52 102]]
+2023/10/11 19:59:12 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:12 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:12 [4 term 4] converted to follower
+2023/10/11 19:59:12 [4 term 4] Received append[len 0] from leader[2 commit 51] [index 101 term 4]==[index 101 term 4]
+2023/10/11 19:59:12 [** 2 term 4] replicated on [4] total replicated [[0 0 -1 51 101]] next [[2 2 -1 52 102]]
+2023/10/11 19:59:12 [** 0 term 2] Got new entry[52] to replicate
+2023/10/11 19:59:12 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:12 [** 0 term 2] sent a new wave of appends!
+2023/10/11 19:59:12 [0 term 17] converted to follower
+2023/10/11 19:59:12 [0 term 17] Goroutine awake and election timed out
+2023/10/11 19:59:12 [1 term 18] converted to follower
+2023/10/11 19:59:12 [1 term 18] Received vote from more up to date server [index 52 term 2]>[index 51 term 2]
+2023/10/11 19:59:12 [3 term 18] converted to follower
+2023/10/11 19:59:12 [0 term 18] Goroutine to collect vote. Current count: 1
+2023/10/11 19:59:12 [0 term 18] Goroutine to collect vote. Current count: 2
+2023/10/11 19:59:12 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:12 [3 term 18] Goroutine awake and election timed out
+2023/10/11 19:59:12 [1 term 19] converted to follower
+2023/10/11 19:59:12 [1 term 19] Received vote from more up to date server [index 51 term 4]>[index 51 term 2]
+2023/10/11 19:59:12 [3 term 19] Goroutine to collect vote. Current count: 2
+2023/10/11 19:59:12 [0 term 19] converted to follower
+2023/10/11 19:59:12 [0 term 19] Received vote from more up to date server [index 51 term 4]>[index 52 term 2]
+2023/10/11 19:59:12 [3 term 19] Goroutine to collect vote. Current count: 3
+2023/10/11 19:59:12 [** 3 term 19] [52 52 52 -1 52] is now leader!
+2023/10/11 19:59:12 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:12 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:13 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:13 [0 term 19] converted to follower
+2023/10/11 19:59:13 [1 term 19] converted to follower
+2023/10/11 19:59:13 [0 term 19] Received append[len 50] from leader[3 commit 51] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:13 [** 3 term 19] replicated on [0] total replicated [[51 0 0 -1 0]] next [[52 2 52 -1 52]]
+2023/10/11 19:59:13 [1 term 19] Received append[len 50] from leader[3 commit 51] [index 1 term 2]==[index 1 term 2]
+2023/10/11 19:59:13 [** 3 term 19] replicated on [1] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:13 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:13 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:13 [1 term 19] converted to follower
+2023/10/11 19:59:13 [1 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:13 [0 term 19] converted to follower
+2023/10/11 19:59:13 [0 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:13 [** 3 term 19] replicated on [1] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:13 [** 3 term 19] replicated on [0] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:13 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:13 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:13 [0 term 19] converted to follower
+2023/10/11 19:59:13 [1 term 19] converted to follower
+2023/10/11 19:59:13 [0 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:13 [** 3 term 19] replicated on [0] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:13 [1 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:13 [** 3 term 19] replicated on [1] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:13 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:13 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:13 [1 term 19] converted to follower
+2023/10/11 19:59:13 [1 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:13 [0 term 19] converted to follower
+2023/10/11 19:59:13 [** 3 term 19] replicated on [1] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:13 [0 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:13 [** 3 term 19] replicated on [0] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:13 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:13 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:13 [1 term 19] converted to follower
+2023/10/11 19:59:13 [1 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:13 [0 term 19] converted to follower
+2023/10/11 19:59:13 [0 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:13 [** 3 term 19] replicated on [1] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:13 [** 3 term 19] replicated on [0] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:13 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:13 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:13 [1 term 19] converted to follower
+2023/10/11 19:59:13 [1 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:13 [0 term 19] converted to follower
+2023/10/11 19:59:13 [0 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:13 [** 3 term 19] replicated on [1] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:13 [** 3 term 19] replicated on [0] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:13 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:13 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:13 [0 term 19] converted to follower
+2023/10/11 19:59:13 [0 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:13 [1 term 19] converted to follower
+2023/10/11 19:59:13 [1 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:13 [** 3 term 19] replicated on [0] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:13 [** 3 term 19] replicated on [1] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:13 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:13 [4 term 4] Goroutine awake and election timed out
+2023/10/11 19:59:13 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:13 [1 term 19] converted to follower
+2023/10/11 19:59:13 [0 term 19] converted to follower
+2023/10/11 19:59:13 [0 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:13 [1 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:13 [** 3 term 19] replicated on [0] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:13 [** 3 term 19] replicated on [1] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:13 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:13 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:13 [0 term 19] converted to follower
+2023/10/11 19:59:13 [0 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:13 [1 term 19] converted to follower
+2023/10/11 19:59:13 [1 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:13 [** 3 term 19] replicated on [0] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:13 [** 3 term 19] replicated on [1] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:13 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:13 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:13 [1 term 19] converted to follower
+2023/10/11 19:59:13 [0 term 19] converted to follower
+2023/10/11 19:59:13 [0 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:13 [1 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:13 [** 3 term 19] replicated on [0] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:13 [** 3 term 19] replicated on [1] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:13 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:14 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:14 [0 term 19] converted to follower
+2023/10/11 19:59:14 [0 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:14 [** 3 term 19] replicated on [0] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:14 [1 term 19] converted to follower
+2023/10/11 19:59:14 [1 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:14 [** 3 term 19] replicated on [1] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:14 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:14 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:14 [0 term 19] converted to follower
+2023/10/11 19:59:14 [0 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:14 [1 term 19] converted to follower
+2023/10/11 19:59:14 [1 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:14 [** 3 term 19] replicated on [0] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:14 [** 3 term 19] replicated on [1] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:14 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:14 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:14 [0 term 19] converted to follower
+2023/10/11 19:59:14 [1 term 19] converted to follower
+2023/10/11 19:59:14 [1 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:14 [0 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:14 [** 3 term 19] replicated on [1] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:14 [** 3 term 19] replicated on [0] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:14 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:14 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:14 [0 term 19] converted to follower
+2023/10/11 19:59:14 [1 term 19] converted to follower
+2023/10/11 19:59:14 [1 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:14 [0 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:14 [** 3 term 19] replicated on [1] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:14 [** 3 term 19] replicated on [0] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:14 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:14 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:14 [1 term 19] converted to follower
+2023/10/11 19:59:14 [1 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:14 [** 3 term 19] replicated on [1] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:14 [0 term 19] converted to follower
+2023/10/11 19:59:14 [0 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:14 [** 3 term 19] replicated on [0] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:14 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:14 [4 term 5] Goroutine awake and election timed out
+2023/10/11 19:59:14 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:14 [1 term 19] converted to follower
+2023/10/11 19:59:14 [1 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:14 [0 term 19] converted to follower
+2023/10/11 19:59:14 [0 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:14 [** 3 term 19] replicated on [1] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:14 [** 3 term 19] replicated on [0] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:14 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:14 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:14 [0 term 19] converted to follower
+2023/10/11 19:59:14 [0 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:14 [** 3 term 19] replicated on [0] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:14 [1 term 19] converted to follower
+2023/10/11 19:59:14 [1 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:14 [** 3 term 19] replicated on [1] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:14 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:14 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:14 [1 term 19] converted to follower
+2023/10/11 19:59:14 [1 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:14 [0 term 19] converted to follower
+2023/10/11 19:59:14 [0 term 19] Received append[len 0] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:14 [** 3 term 19] replicated on [1] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:14 [** 3 term 19] replicated on [0] total replicated [[51 51 0 -1 0]] next [[52 52 52 -1 52]]
+2023/10/11 19:59:14 [** 3 term 19] Got new entry[52] to replicate
+2023/10/11 19:59:14 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:14 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:14 [1 term 19] converted to follower
+2023/10/11 19:59:14 [1 term 19] Received append[len 1] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:14 [0 term 19] converted to follower
+2023/10/11 19:59:14 [** 3 term 19] replicated on [1] total replicated [[51 52 0 -1 0]] next [[52 53 52 -1 52]]
+2023/10/11 19:59:14 [0 term 19] Received append[len 1] from leader[3 commit 51] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:14 [** 3 term 19] replicated on [0] total replicated [[52 52 0 -1 0]] next [[53 53 52 -1 52]]
+2023/10/11 19:59:14 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:14 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:14 [1 term 19] converted to follower
+2023/10/11 19:59:14 [0 term 19] converted to follower
+2023/10/11 19:59:14 [0 term 19] Received append[len 0] from leader[3 commit 52] [index 52 term 19]==[index 52 term 19]
+2023/10/11 19:59:14 [1 term 19] Received append[len 0] from leader[3 commit 52] [index 52 term 19]==[index 52 term 19]
+2023/10/11 19:59:14 [** 3 term 19] replicated on [0] total replicated [[52 52 0 -1 0]] next [[53 53 52 -1 52]]
+2023/10/11 19:59:14 [** 3 term 19] replicated on [1] total replicated [[52 52 0 -1 0]] next [[53 53 52 -1 52]]
+2023/10/11 19:59:14 [** 3 term 19] Got new entry[53] to replicate
+2023/10/11 19:59:14 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:15 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:15 [0 term 19] converted to follower
+2023/10/11 19:59:15 [0 term 19] Received append[len 1] from leader[3 commit 52] [index 52 term 19]==[index 52 term 19]
+2023/10/11 19:59:15 [1 term 19] converted to follower
+2023/10/11 19:59:15 [1 term 19] Received append[len 1] from leader[3 commit 52] [index 52 term 19]==[index 52 term 19]
+2023/10/11 19:59:15 [** 3 term 19] replicated on [0] total replicated [[53 52 0 -1 0]] next [[54 53 52 -1 52]]
+2023/10/11 19:59:15 [** 3 term 19] replicated on [1] total replicated [[53 53 0 -1 0]] next [[54 54 52 -1 52]]
+2023/10/11 19:59:15 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:15 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:15 [1 term 19] converted to follower
+2023/10/11 19:59:15 [1 term 19] Received append[len 0] from leader[3 commit 53] [index 53 term 19]==[index 53 term 19]
+2023/10/11 19:59:15 [** 3 term 19] replicated on [1] total replicated [[53 53 0 -1 0]] next [[54 54 52 -1 52]]
+2023/10/11 19:59:15 [0 term 19] converted to follower
+2023/10/11 19:59:15 [0 term 19] Received append[len 0] from leader[3 commit 53] [index 53 term 19]==[index 53 term 19]
+2023/10/11 19:59:15 [** 3 term 19] replicated on [0] total replicated [[53 53 0 -1 0]] next [[54 54 52 -1 52]]
+2023/10/11 19:59:15 [** 3 term 19] Got new entry[54] to replicate
+2023/10/11 19:59:15 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:15 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:15 [0 term 19] converted to follower
+2023/10/11 19:59:15 [0 term 19] Received append[len 1] from leader[3 commit 53] [index 53 term 19]==[index 53 term 19]
+2023/10/11 19:59:15 [1 term 19] converted to follower
+2023/10/11 19:59:15 [1 term 19] Received append[len 1] from leader[3 commit 53] [index 53 term 19]==[index 53 term 19]
+2023/10/11 19:59:15 [** 3 term 19] replicated on [0] total replicated [[54 53 0 -1 0]] next [[55 54 52 -1 52]]
+2023/10/11 19:59:15 [** 3 term 19] replicated on [1] total replicated [[54 54 0 -1 0]] next [[55 55 52 -1 52]]
+2023/10/11 19:59:15 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:15 [4 term 6] Goroutine awake and election timed out
+2023/10/11 19:59:15 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:15 [1 term 19] converted to follower
+2023/10/11 19:59:15 [1 term 19] Received append[len 0] from leader[3 commit 54] [index 54 term 19]==[index 54 term 19]
+2023/10/11 19:59:15 [0 term 19] converted to follower
+2023/10/11 19:59:15 [0 term 19] Received append[len 0] from leader[3 commit 54] [index 54 term 19]==[index 54 term 19]
+2023/10/11 19:59:15 [** 3 term 19] replicated on [1] total replicated [[54 54 0 -1 0]] next [[55 55 52 -1 52]]
+2023/10/11 19:59:15 [** 3 term 19] replicated on [0] total replicated [[54 54 0 -1 0]] next [[55 55 52 -1 52]]
+2023/10/11 19:59:15 [** 3 term 19] Got new entry[55] to replicate
+2023/10/11 19:59:15 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:15 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:15 [1 term 19] converted to follower
+2023/10/11 19:59:15 [0 term 19] converted to follower
+2023/10/11 19:59:15 [0 term 19] Received append[len 1] from leader[3 commit 54] [index 54 term 19]==[index 54 term 19]
+2023/10/11 19:59:15 [1 term 19] Received append[len 1] from leader[3 commit 54] [index 54 term 19]==[index 54 term 19]
+2023/10/11 19:59:15 [** 3 term 19] replicated on [0] total replicated [[55 54 0 -1 0]] next [[56 55 52 -1 52]]
+2023/10/11 19:59:15 [** 3 term 19] replicated on [1] total replicated [[55 55 0 -1 0]] next [[56 56 52 -1 52]]
+2023/10/11 19:59:15 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:15 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:15 [1 term 19] converted to follower
+2023/10/11 19:59:15 [0 term 19] converted to follower
+2023/10/11 19:59:15 [1 term 19] Received append[len 0] from leader[3 commit 55] [index 55 term 19]==[index 55 term 19]
+2023/10/11 19:59:15 [** 3 term 19] replicated on [1] total replicated [[55 55 0 -1 0]] next [[56 56 52 -1 52]]
+2023/10/11 19:59:15 [0 term 19] Received append[len 0] from leader[3 commit 55] [index 55 term 19]==[index 55 term 19]
+2023/10/11 19:59:15 [** 3 term 19] replicated on [0] total replicated [[55 55 0 -1 0]] next [[56 56 52 -1 52]]
+2023/10/11 19:59:15 [** 3 term 19] Got new entry[56] to replicate
+2023/10/11 19:59:15 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:15 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:15 [1 term 19] converted to follower
+2023/10/11 19:59:15 [1 term 19] Received append[len 1] from leader[3 commit 55] [index 55 term 19]==[index 55 term 19]
+2023/10/11 19:59:15 [** 3 term 19] replicated on [1] total replicated [[55 56 0 -1 0]] next [[56 57 52 -1 52]]
+2023/10/11 19:59:15 [0 term 19] converted to follower
+2023/10/11 19:59:15 [0 term 19] Received append[len 1] from leader[3 commit 55] [index 55 term 19]==[index 55 term 19]
+2023/10/11 19:59:15 [** 3 term 19] replicated on [0] total replicated [[56 56 0 -1 0]] next [[57 57 52 -1 52]]
+2023/10/11 19:59:15 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:15 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:15 [0 term 19] converted to follower
+2023/10/11 19:59:15 [0 term 19] Received append[len 0] from leader[3 commit 56] [index 56 term 19]==[index 56 term 19]
+2023/10/11 19:59:15 [1 term 19] converted to follower
+2023/10/11 19:59:15 [1 term 19] Received append[len 0] from leader[3 commit 56] [index 56 term 19]==[index 56 term 19]
+2023/10/11 19:59:15 [** 3 term 19] replicated on [0] total replicated [[56 56 0 -1 0]] next [[57 57 52 -1 52]]
+2023/10/11 19:59:15 [** 3 term 19] replicated on [1] total replicated [[56 56 0 -1 0]] next [[57 57 52 -1 52]]
+2023/10/11 19:59:15 [** 3 term 19] Got new entry[57] to replicate
+2023/10/11 19:59:15 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:15 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:15 [1 term 19] converted to follower
+2023/10/11 19:59:15 [1 term 19] Received append[len 1] from leader[3 commit 56] [index 56 term 19]==[index 56 term 19]
+2023/10/11 19:59:15 [** 3 term 19] replicated on [1] total replicated [[56 57 0 -1 0]] next [[57 58 52 -1 52]]
+2023/10/11 19:59:15 [0 term 19] converted to follower
+2023/10/11 19:59:15 [0 term 19] Received append[len 1] from leader[3 commit 56] [index 56 term 19]==[index 56 term 19]
+2023/10/11 19:59:15 [** 3 term 19] replicated on [0] total replicated [[57 57 0 -1 0]] next [[58 58 52 -1 52]]
+2023/10/11 19:59:15 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:15 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:15 [1 term 19] converted to follower
+2023/10/11 19:59:15 [1 term 19] Received append[len 0] from leader[3 commit 57] [index 57 term 19]==[index 57 term 19]
+2023/10/11 19:59:15 [0 term 19] converted to follower
+2023/10/11 19:59:15 [0 term 19] Received append[len 0] from leader[3 commit 57] [index 57 term 19]==[index 57 term 19]
+2023/10/11 19:59:15 [** 3 term 19] replicated on [1] total replicated [[57 57 0 -1 0]] next [[58 58 52 -1 52]]
+2023/10/11 19:59:15 [** 3 term 19] replicated on [0] total replicated [[57 57 0 -1 0]] next [[58 58 52 -1 52]]
+2023/10/11 19:59:15 [** 3 term 19] Got new entry[58] to replicate
+2023/10/11 19:59:15 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:16 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:16 [1 term 19] converted to follower
+2023/10/11 19:59:16 [0 term 19] converted to follower
+2023/10/11 19:59:16 [1 term 19] Received append[len 1] from leader[3 commit 57] [index 57 term 19]==[index 57 term 19]
+2023/10/11 19:59:16 [0 term 19] Received append[len 1] from leader[3 commit 57] [index 57 term 19]==[index 57 term 19]
+2023/10/11 19:59:16 [** 3 term 19] replicated on [0] total replicated [[58 57 0 -1 0]] next [[59 58 52 -1 52]]
+2023/10/11 19:59:16 [** 3 term 19] replicated on [1] total replicated [[58 58 0 -1 0]] next [[59 59 52 -1 52]]
+2023/10/11 19:59:16 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:16 [4 term 7] Goroutine awake and election timed out
+2023/10/11 19:59:16 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:16 [1 term 19] converted to follower
+2023/10/11 19:59:16 [1 term 19] Received append[len 0] from leader[3 commit 58] [index 58 term 19]==[index 58 term 19]
+2023/10/11 19:59:16 [0 term 19] converted to follower
+2023/10/11 19:59:16 [0 term 19] Received append[len 0] from leader[3 commit 58] [index 58 term 19]==[index 58 term 19]
+2023/10/11 19:59:16 [** 3 term 19] replicated on [1] total replicated [[58 58 0 -1 0]] next [[59 59 52 -1 52]]
+2023/10/11 19:59:16 [** 3 term 19] replicated on [0] total replicated [[58 58 0 -1 0]] next [[59 59 52 -1 52]]
+2023/10/11 19:59:16 [** 3 term 19] Got new entry[59] to replicate
+2023/10/11 19:59:16 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:16 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:16 [1 term 19] converted to follower
+2023/10/11 19:59:16 [1 term 19] Received append[len 1] from leader[3 commit 58] [index 58 term 19]==[index 58 term 19]
+2023/10/11 19:59:16 [0 term 19] converted to follower
+2023/10/11 19:59:16 [0 term 19] Received append[len 1] from leader[3 commit 58] [index 58 term 19]==[index 58 term 19]
+2023/10/11 19:59:16 [** 3 term 19] replicated on [1] total replicated [[58 59 0 -1 0]] next [[59 60 52 -1 52]]
+2023/10/11 19:59:16 [** 3 term 19] replicated on [0] total replicated [[59 59 0 -1 0]] next [[60 60 52 -1 52]]
+2023/10/11 19:59:16 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:16 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:16 [1 term 19] converted to follower
+2023/10/11 19:59:16 [0 term 19] converted to follower
+2023/10/11 19:59:16 [0 term 19] Received append[len 0] from leader[3 commit 59] [index 59 term 19]==[index 59 term 19]
+2023/10/11 19:59:16 [1 term 19] Received append[len 0] from leader[3 commit 59] [index 59 term 19]==[index 59 term 19]
+2023/10/11 19:59:16 [** 3 term 19] replicated on [0] total replicated [[59 59 0 -1 0]] next [[60 60 52 -1 52]]
+2023/10/11 19:59:16 [** 3 term 19] replicated on [1] total replicated [[59 59 0 -1 0]] next [[60 60 52 -1 52]]
+2023/10/11 19:59:16 [** 3 term 19] Got new entry[60] to replicate
+2023/10/11 19:59:16 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:16 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:16 [0 term 19] converted to follower
+2023/10/11 19:59:16 [1 term 19] converted to follower
+2023/10/11 19:59:16 [0 term 19] Received append[len 1] from leader[3 commit 59] [index 59 term 19]==[index 59 term 19]
+2023/10/11 19:59:16 [1 term 19] Received append[len 1] from leader[3 commit 59] [index 59 term 19]==[index 59 term 19]
+2023/10/11 19:59:16 [** 3 term 19] replicated on [0] total replicated [[60 59 0 -1 0]] next [[61 60 52 -1 52]]
+2023/10/11 19:59:16 [** 3 term 19] replicated on [1] total replicated [[60 60 0 -1 0]] next [[61 61 52 -1 52]]
+2023/10/11 19:59:16 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:16 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:16 [1 term 19] converted to follower
+2023/10/11 19:59:16 [1 term 19] Received append[len 0] from leader[3 commit 60] [index 60 term 19]==[index 60 term 19]
+2023/10/11 19:59:16 [** 3 term 19] replicated on [1] total replicated [[60 60 0 -1 0]] next [[61 61 52 -1 52]]
+2023/10/11 19:59:16 [0 term 19] converted to follower
+2023/10/11 19:59:16 [0 term 19] Received append[len 0] from leader[3 commit 60] [index 60 term 19]==[index 60 term 19]
+2023/10/11 19:59:16 [** 3 term 19] replicated on [0] total replicated [[60 60 0 -1 0]] next [[61 61 52 -1 52]]
+2023/10/11 19:59:16 [** 3 term 19] Got new entry[61] to replicate
+2023/10/11 19:59:16 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:16 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:16 [1 term 19] converted to follower
+2023/10/11 19:59:16 [1 term 19] Received append[len 1] from leader[3 commit 60] [index 60 term 19]==[index 60 term 19]
+2023/10/11 19:59:16 [0 term 19] converted to follower
+2023/10/11 19:59:16 [** 3 term 19] replicated on [1] total replicated [[60 61 0 -1 0]] next [[61 62 52 -1 52]]
+2023/10/11 19:59:16 [0 term 19] Received append[len 1] from leader[3 commit 60] [index 60 term 19]==[index 60 term 19]
+2023/10/11 19:59:16 [** 3 term 19] replicated on [0] total replicated [[61 61 0 -1 0]] next [[62 62 52 -1 52]]
+2023/10/11 19:59:16 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:16 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:16 [0 term 19] converted to follower
+2023/10/11 19:59:16 [0 term 19] Received append[len 0] from leader[3 commit 61] [index 61 term 19]==[index 61 term 19]
+2023/10/11 19:59:16 [1 term 19] converted to follower
+2023/10/11 19:59:16 [1 term 19] Received append[len 0] from leader[3 commit 61] [index 61 term 19]==[index 61 term 19]
+2023/10/11 19:59:16 [** 3 term 19] replicated on [0] total replicated [[61 61 0 -1 0]] next [[62 62 52 -1 52]]
+2023/10/11 19:59:16 [** 3 term 19] replicated on [1] total replicated [[61 61 0 -1 0]] next [[62 62 52 -1 52]]
+2023/10/11 19:59:16 [** 3 term 19] Got new entry[62] to replicate
+2023/10/11 19:59:16 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:16 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:16 [0 term 19] converted to follower
+2023/10/11 19:59:16 [0 term 19] Received append[len 1] from leader[3 commit 61] [index 61 term 19]==[index 61 term 19]
+2023/10/11 19:59:16 [** 3 term 19] replicated on [0] total replicated [[62 61 0 -1 0]] next [[63 62 52 -1 52]]
+2023/10/11 19:59:16 [1 term 19] converted to follower
+2023/10/11 19:59:16 [1 term 19] Received append[len 1] from leader[3 commit 61] [index 61 term 19]==[index 61 term 19]
+2023/10/11 19:59:16 [** 3 term 19] replicated on [1] total replicated [[62 62 0 -1 0]] next [[63 63 52 -1 52]]
+2023/10/11 19:59:16 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:16 [4 term 8] Goroutine awake and election timed out
+2023/10/11 19:59:16 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:16 [0 term 19] converted to follower
+2023/10/11 19:59:16 [0 term 19] Received append[len 0] from leader[3 commit 62] [index 62 term 19]==[index 62 term 19]
+2023/10/11 19:59:16 [1 term 19] converted to follower
+2023/10/11 19:59:16 [1 term 19] Received append[len 0] from leader[3 commit 62] [index 62 term 19]==[index 62 term 19]
+2023/10/11 19:59:16 [** 3 term 19] replicated on [0] total replicated [[62 62 0 -1 0]] next [[63 63 52 -1 52]]
+2023/10/11 19:59:16 [** 3 term 19] replicated on [1] total replicated [[62 62 0 -1 0]] next [[63 63 52 -1 52]]
+2023/10/11 19:59:16 [** 3 term 19] Got new entry[63] to replicate
+2023/10/11 19:59:16 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:17 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:17 [0 term 19] converted to follower
+2023/10/11 19:59:17 [0 term 19] Received append[len 1] from leader[3 commit 62] [index 62 term 19]==[index 62 term 19]
+2023/10/11 19:59:17 [1 term 19] converted to follower
+2023/10/11 19:59:17 [1 term 19] Received append[len 1] from leader[3 commit 62] [index 62 term 19]==[index 62 term 19]
+2023/10/11 19:59:17 [** 3 term 19] replicated on [0] total replicated [[63 62 0 -1 0]] next [[64 63 52 -1 52]]
+2023/10/11 19:59:17 [** 3 term 19] replicated on [1] total replicated [[63 63 0 -1 0]] next [[64 64 52 -1 52]]
+2023/10/11 19:59:17 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:17 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:17 [1 term 19] converted to follower
+2023/10/11 19:59:17 [1 term 19] Received append[len 0] from leader[3 commit 63] [index 63 term 19]==[index 63 term 19]
+2023/10/11 19:59:17 [** 3 term 19] replicated on [1] total replicated [[63 63 0 -1 0]] next [[64 64 52 -1 52]]
+2023/10/11 19:59:17 [0 term 19] converted to follower
+2023/10/11 19:59:17 [0 term 19] Received append[len 0] from leader[3 commit 63] [index 63 term 19]==[index 63 term 19]
+2023/10/11 19:59:17 [** 3 term 19] replicated on [0] total replicated [[63 63 0 -1 0]] next [[64 64 52 -1 52]]
+2023/10/11 19:59:17 [** 3 term 19] Got new entry[64] to replicate
+2023/10/11 19:59:17 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:17 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:17 [1 term 19] converted to follower
+2023/10/11 19:59:17 [1 term 19] Received append[len 1] from leader[3 commit 63] [index 63 term 19]==[index 63 term 19]
+2023/10/11 19:59:17 [** 3 term 19] replicated on [1] total replicated [[63 64 0 -1 0]] next [[64 65 52 -1 52]]
+2023/10/11 19:59:17 [0 term 19] converted to follower
+2023/10/11 19:59:17 [0 term 19] Received append[len 1] from leader[3 commit 63] [index 63 term 19]==[index 63 term 19]
+2023/10/11 19:59:17 [** 3 term 19] replicated on [0] total replicated [[64 64 0 -1 0]] next [[65 65 52 -1 52]]
+2023/10/11 19:59:17 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:17 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:17 [0 term 19] converted to follower
+2023/10/11 19:59:17 [0 term 19] Received append[len 0] from leader[3 commit 64] [index 64 term 19]==[index 64 term 19]
+2023/10/11 19:59:17 [** 3 term 19] replicated on [0] total replicated [[64 64 0 -1 0]] next [[65 65 52 -1 52]]
+2023/10/11 19:59:17 [1 term 19] converted to follower
+2023/10/11 19:59:17 [1 term 19] Received append[len 0] from leader[3 commit 64] [index 64 term 19]==[index 64 term 19]
+2023/10/11 19:59:17 [** 3 term 19] replicated on [1] total replicated [[64 64 0 -1 0]] next [[65 65 52 -1 52]]
+2023/10/11 19:59:17 [** 3 term 19] Got new entry[65] to replicate
+2023/10/11 19:59:17 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:17 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:17 [1 term 19] converted to follower
+2023/10/11 19:59:17 [1 term 19] Received append[len 1] from leader[3 commit 64] [index 64 term 19]==[index 64 term 19]
+2023/10/11 19:59:17 [0 term 19] converted to follower
+2023/10/11 19:59:17 [0 term 19] Received append[len 1] from leader[3 commit 64] [index 64 term 19]==[index 64 term 19]
+2023/10/11 19:59:17 [** 3 term 19] replicated on [1] total replicated [[64 65 0 -1 0]] next [[65 66 52 -1 52]]
+2023/10/11 19:59:17 [** 3 term 19] replicated on [0] total replicated [[65 65 0 -1 0]] next [[66 66 52 -1 52]]
+2023/10/11 19:59:17 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:17 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:17 [1 term 19] converted to follower
+2023/10/11 19:59:17 [0 term 19] converted to follower
+2023/10/11 19:59:17 [0 term 19] Received append[len 0] from leader[3 commit 65] [index 65 term 19]==[index 65 term 19]
+2023/10/11 19:59:17 [1 term 19] Received append[len 0] from leader[3 commit 65] [index 65 term 19]==[index 65 term 19]
+2023/10/11 19:59:17 [** 3 term 19] replicated on [0] total replicated [[65 65 0 -1 0]] next [[66 66 52 -1 52]]
+2023/10/11 19:59:17 [** 3 term 19] replicated on [1] total replicated [[65 65 0 -1 0]] next [[66 66 52 -1 52]]
+2023/10/11 19:59:17 [** 3 term 19] Got new entry[66] to replicate
+2023/10/11 19:59:17 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:17 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:17 [0 term 19] converted to follower
+2023/10/11 19:59:17 [0 term 19] Received append[len 1] from leader[3 commit 65] [index 65 term 19]==[index 65 term 19]
+2023/10/11 19:59:17 [1 term 19] converted to follower
+2023/10/11 19:59:17 [1 term 19] Received append[len 1] from leader[3 commit 65] [index 65 term 19]==[index 65 term 19]
+2023/10/11 19:59:17 [** 3 term 19] replicated on [0] total replicated [[66 65 0 -1 0]] next [[67 66 52 -1 52]]
+2023/10/11 19:59:17 [** 3 term 19] replicated on [1] total replicated [[66 66 0 -1 0]] next [[67 67 52 -1 52]]
+2023/10/11 19:59:17 [4 term 9] Goroutine awake and election timed out
+2023/10/11 19:59:17 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:17 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:17 [0 term 19] converted to follower
+2023/10/11 19:59:17 [0 term 19] Received append[len 0] from leader[3 commit 66] [index 66 term 19]==[index 66 term 19]
+2023/10/11 19:59:17 [1 term 19] converted to follower
+2023/10/11 19:59:17 [1 term 19] Received append[len 0] from leader[3 commit 66] [index 66 term 19]==[index 66 term 19]
+2023/10/11 19:59:17 [** 3 term 19] replicated on [1] total replicated [[66 66 0 -1 0]] next [[67 67 52 -1 52]]
+2023/10/11 19:59:17 [** 3 term 19] replicated on [0] total replicated [[66 66 0 -1 0]] next [[67 67 52 -1 52]]
+2023/10/11 19:59:17 [** 3 term 19] Got new entry[67] to replicate
+2023/10/11 19:59:17 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:17 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:17 [1 term 19] converted to follower
+2023/10/11 19:59:17 [1 term 19] Received append[len 1] from leader[3 commit 66] [index 66 term 19]==[index 66 term 19]
+2023/10/11 19:59:17 [** 3 term 19] replicated on [1] total replicated [[66 67 0 -1 0]] next [[67 68 52 -1 52]]
+2023/10/11 19:59:17 [0 term 19] converted to follower
+2023/10/11 19:59:17 [0 term 19] Received append[len 1] from leader[3 commit 66] [index 66 term 19]==[index 66 term 19]
+2023/10/11 19:59:17 [** 3 term 19] replicated on [0] total replicated [[67 67 0 -1 0]] next [[68 68 52 -1 52]]
+2023/10/11 19:59:17 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:17 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:17 [0 term 19] converted to follower
+2023/10/11 19:59:17 [0 term 19] Received append[len 0] from leader[3 commit 67] [index 67 term 19]==[index 67 term 19]
+2023/10/11 19:59:17 [1 term 19] converted to follower
+2023/10/11 19:59:17 [1 term 19] Received append[len 0] from leader[3 commit 67] [index 67 term 19]==[index 67 term 19]
+2023/10/11 19:59:17 [** 3 term 19] replicated on [0] total replicated [[67 67 0 -1 0]] next [[68 68 52 -1 52]]
+2023/10/11 19:59:17 [** 3 term 19] replicated on [1] total replicated [[67 67 0 -1 0]] next [[68 68 52 -1 52]]
+2023/10/11 19:59:17 [** 3 term 19] Got new entry[68] to replicate
+2023/10/11 19:59:18 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:18 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:18 [1 term 19] converted to follower
+2023/10/11 19:59:18 [1 term 19] Received append[len 1] from leader[3 commit 67] [index 67 term 19]==[index 67 term 19]
+2023/10/11 19:59:18 [0 term 19] converted to follower
+2023/10/11 19:59:18 [** 3 term 19] replicated on [1] total replicated [[67 68 0 -1 0]] next [[68 69 52 -1 52]]
+2023/10/11 19:59:18 [0 term 19] Received append[len 1] from leader[3 commit 67] [index 67 term 19]==[index 67 term 19]
+2023/10/11 19:59:18 [** 3 term 19] replicated on [0] total replicated [[68 68 0 -1 0]] next [[69 69 52 -1 52]]
+2023/10/11 19:59:18 [4 term 10] Goroutine awake and election timed out
+2023/10/11 19:59:18 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:18 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:18 [1 term 19] converted to follower
+2023/10/11 19:59:18 [1 term 19] Received append[len 0] from leader[3 commit 68] [index 68 term 19]==[index 68 term 19]
+2023/10/11 19:59:18 [** 3 term 19] replicated on [1] total replicated [[68 68 0 -1 0]] next [[69 69 52 -1 52]]
+2023/10/11 19:59:18 [0 term 19] converted to follower
+2023/10/11 19:59:18 [0 term 19] Received append[len 0] from leader[3 commit 68] [index 68 term 19]==[index 68 term 19]
+2023/10/11 19:59:18 [** 3 term 19] replicated on [0] total replicated [[68 68 0 -1 0]] next [[69 69 52 -1 52]]
+2023/10/11 19:59:18 [** 3 term 19] Got new entry[69] to replicate
+2023/10/11 19:59:18 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:18 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:18 [1 term 19] converted to follower
+2023/10/11 19:59:18 [1 term 19] Received append[len 1] from leader[3 commit 68] [index 68 term 19]==[index 68 term 19]
+2023/10/11 19:59:18 [0 term 19] converted to follower
+2023/10/11 19:59:18 [0 term 19] Received append[len 1] from leader[3 commit 68] [index 68 term 19]==[index 68 term 19]
+2023/10/11 19:59:18 [** 3 term 19] replicated on [1] total replicated [[68 69 0 -1 0]] next [[69 70 52 -1 52]]
+2023/10/11 19:59:18 [** 3 term 19] replicated on [0] total replicated [[69 69 0 -1 0]] next [[70 70 52 -1 52]]
+2023/10/11 19:59:18 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:18 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:18 [0 term 19] converted to follower
+2023/10/11 19:59:18 [1 term 19] converted to follower
+2023/10/11 19:59:18 [1 term 19] Received append[len 0] from leader[3 commit 69] [index 69 term 19]==[index 69 term 19]
+2023/10/11 19:59:18 [** 3 term 19] replicated on [1] total replicated [[69 69 0 -1 0]] next [[70 70 52 -1 52]]
+2023/10/11 19:59:18 [0 term 19] Received append[len 0] from leader[3 commit 69] [index 69 term 19]==[index 69 term 19]
+2023/10/11 19:59:18 [** 3 term 19] replicated on [0] total replicated [[69 69 0 -1 0]] next [[70 70 52 -1 52]]
+2023/10/11 19:59:18 [** 3 term 19] Got new entry[70] to replicate
+2023/10/11 19:59:18 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:18 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:18 [1 term 19] converted to follower
+2023/10/11 19:59:18 [1 term 19] Received append[len 1] from leader[3 commit 69] [index 69 term 19]==[index 69 term 19]
+2023/10/11 19:59:18 [** 3 term 19] replicated on [1] total replicated [[69 70 0 -1 0]] next [[70 71 52 -1 52]]
+2023/10/11 19:59:18 [0 term 19] converted to follower
+2023/10/11 19:59:18 [0 term 19] Received append[len 1] from leader[3 commit 69] [index 69 term 19]==[index 69 term 19]
+2023/10/11 19:59:18 [** 3 term 19] replicated on [0] total replicated [[70 70 0 -1 0]] next [[71 71 52 -1 52]]
+2023/10/11 19:59:18 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:18 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:18 [0 term 19] converted to follower
+2023/10/11 19:59:18 [1 term 19] converted to follower
+2023/10/11 19:59:18 [1 term 19] Received append[len 0] from leader[3 commit 70] [index 70 term 19]==[index 70 term 19]
+2023/10/11 19:59:18 [0 term 19] Received append[len 0] from leader[3 commit 70] [index 70 term 19]==[index 70 term 19]
+2023/10/11 19:59:18 [** 3 term 19] replicated on [1] total replicated [[70 70 0 -1 0]] next [[71 71 52 -1 52]]
+2023/10/11 19:59:18 [** 3 term 19] replicated on [0] total replicated [[70 70 0 -1 0]] next [[71 71 52 -1 52]]
+2023/10/11 19:59:18 [** 3 term 19] Got new entry[71] to replicate
+2023/10/11 19:59:18 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:18 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:18 [0 term 19] converted to follower
+2023/10/11 19:59:18 [0 term 19] Received append[len 1] from leader[3 commit 70] [index 70 term 19]==[index 70 term 19]
+2023/10/11 19:59:18 [1 term 19] converted to follower
+2023/10/11 19:59:18 [1 term 19] Received append[len 1] from leader[3 commit 70] [index 70 term 19]==[index 70 term 19]
+2023/10/11 19:59:18 [** 3 term 19] replicated on [0] total replicated [[71 70 0 -1 0]] next [[72 71 52 -1 52]]
+2023/10/11 19:59:18 [** 3 term 19] replicated on [1] total replicated [[71 71 0 -1 0]] next [[72 72 52 -1 52]]
+2023/10/11 19:59:18 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:18 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:18 [0 term 19] converted to follower
+2023/10/11 19:59:18 [0 term 19] Received append[len 0] from leader[3 commit 71] [index 71 term 19]==[index 71 term 19]
+2023/10/11 19:59:18 [** 3 term 19] replicated on [0] total replicated [[71 71 0 -1 0]] next [[72 72 52 -1 52]]
+2023/10/11 19:59:18 [1 term 19] converted to follower
+2023/10/11 19:59:18 [1 term 19] Received append[len 0] from leader[3 commit 71] [index 71 term 19]==[index 71 term 19]
+2023/10/11 19:59:18 [** 3 term 19] replicated on [1] total replicated [[71 71 0 -1 0]] next [[72 72 52 -1 52]]
+2023/10/11 19:59:18 [** 3 term 19] Got new entry[72] to replicate
+2023/10/11 19:59:18 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:18 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:18 [0 term 19] converted to follower
+2023/10/11 19:59:18 [1 term 19] converted to follower
+2023/10/11 19:59:18 [0 term 19] Received append[len 1] from leader[3 commit 71] [index 71 term 19]==[index 71 term 19]
+2023/10/11 19:59:18 [1 term 19] Received append[len 1] from leader[3 commit 71] [index 71 term 19]==[index 71 term 19]
+2023/10/11 19:59:18 [** 3 term 19] replicated on [0] total replicated [[72 71 0 -1 0]] next [[73 72 52 -1 52]]
+2023/10/11 19:59:18 [** 3 term 19] replicated on [1] total replicated [[72 72 0 -1 0]] next [[73 73 52 -1 52]]
+2023/10/11 19:59:18 [4 term 11] Goroutine awake and election timed out
+2023/10/11 19:59:18 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:18 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:18 [1 term 19] converted to follower
+2023/10/11 19:59:18 [1 term 19] Received append[len 0] from leader[3 commit 72] [index 72 term 19]==[index 72 term 19]
+2023/10/11 19:59:18 [** 3 term 19] replicated on [1] total replicated [[72 72 0 -1 0]] next [[73 73 52 -1 52]]
+2023/10/11 19:59:18 [0 term 19] converted to follower
+2023/10/11 19:59:18 [0 term 19] Received append[len 0] from leader[3 commit 72] [index 72 term 19]==[index 72 term 19]
+2023/10/11 19:59:18 [** 3 term 19] replicated on [0] total replicated [[72 72 0 -1 0]] next [[73 73 52 -1 52]]
+2023/10/11 19:59:18 [** 3 term 19] Got new entry[73] to replicate
+2023/10/11 19:59:19 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:19 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:19 [0 term 19] converted to follower
+2023/10/11 19:59:19 [0 term 19] Received append[len 1] from leader[3 commit 72] [index 72 term 19]==[index 72 term 19]
+2023/10/11 19:59:19 [** 3 term 19] replicated on [0] total replicated [[73 72 0 -1 0]] next [[74 73 52 -1 52]]
+2023/10/11 19:59:19 [1 term 19] converted to follower
+2023/10/11 19:59:19 [1 term 19] Received append[len 1] from leader[3 commit 72] [index 72 term 19]==[index 72 term 19]
+2023/10/11 19:59:19 [** 3 term 19] replicated on [1] total replicated [[73 73 0 -1 0]] next [[74 74 52 -1 52]]
+2023/10/11 19:59:19 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:19 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:19 [1 term 19] converted to follower
+2023/10/11 19:59:19 [1 term 19] Received append[len 0] from leader[3 commit 73] [index 73 term 19]==[index 73 term 19]
+2023/10/11 19:59:19 [** 3 term 19] replicated on [1] total replicated [[73 73 0 -1 0]] next [[74 74 52 -1 52]]
+2023/10/11 19:59:19 [0 term 19] converted to follower
+2023/10/11 19:59:19 [0 term 19] Received append[len 0] from leader[3 commit 73] [index 73 term 19]==[index 73 term 19]
+2023/10/11 19:59:19 [** 3 term 19] replicated on [0] total replicated [[73 73 0 -1 0]] next [[74 74 52 -1 52]]
+2023/10/11 19:59:19 [** 3 term 19] Got new entry[74] to replicate
+2023/10/11 19:59:19 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:19 [1 term 19] converted to follower
+2023/10/11 19:59:19 [1 term 19] Received append[len 1] from leader[3 commit 73] [index 73 term 19]==[index 73 term 19]
+2023/10/11 19:59:19 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:19 [0 term 19] converted to follower
+2023/10/11 19:59:19 [0 term 19] Received append[len 1] from leader[3 commit 73] [index 73 term 19]==[index 73 term 19]
+2023/10/11 19:59:19 [** 3 term 19] replicated on [1] total replicated [[73 74 0 -1 0]] next [[74 75 52 -1 52]]
+2023/10/11 19:59:19 [** 3 term 19] replicated on [0] total replicated [[74 74 0 -1 0]] next [[75 75 52 -1 52]]
+2023/10/11 19:59:19 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:19 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:19 [1 term 19] converted to follower
+2023/10/11 19:59:19 [1 term 19] Received append[len 0] from leader[3 commit 74] [index 74 term 19]==[index 74 term 19]
+2023/10/11 19:59:19 [0 term 19] converted to follower
+2023/10/11 19:59:19 [0 term 19] Received append[len 0] from leader[3 commit 74] [index 74 term 19]==[index 74 term 19]
+2023/10/11 19:59:19 [** 3 term 19] replicated on [1] total replicated [[74 74 0 -1 0]] next [[75 75 52 -1 52]]
+2023/10/11 19:59:19 [** 3 term 19] replicated on [0] total replicated [[74 74 0 -1 0]] next [[75 75 52 -1 52]]
+2023/10/11 19:59:19 [** 3 term 19] Got new entry[75] to replicate
+2023/10/11 19:59:19 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:19 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:19 [1 term 19] converted to follower
+2023/10/11 19:59:19 [0 term 19] converted to follower
+2023/10/11 19:59:19 [0 term 19] Received append[len 1] from leader[3 commit 74] [index 74 term 19]==[index 74 term 19]
+2023/10/11 19:59:19 [1 term 19] Received append[len 1] from leader[3 commit 74] [index 74 term 19]==[index 74 term 19]
+2023/10/11 19:59:19 [** 3 term 19] replicated on [0] total replicated [[75 74 0 -1 0]] next [[76 75 52 -1 52]]
+2023/10/11 19:59:19 [** 3 term 19] replicated on [1] total replicated [[75 75 0 -1 0]] next [[76 76 52 -1 52]]
+2023/10/11 19:59:19 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:19 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:19 [1 term 19] converted to follower
+2023/10/11 19:59:19 [0 term 19] converted to follower
+2023/10/11 19:59:19 [0 term 19] Received append[len 0] from leader[3 commit 75] [index 75 term 19]==[index 75 term 19]
+2023/10/11 19:59:19 [1 term 19] Received append[len 0] from leader[3 commit 75] [index 75 term 19]==[index 75 term 19]
+2023/10/11 19:59:19 [** 3 term 19] replicated on [1] total replicated [[75 75 0 -1 0]] next [[76 76 52 -1 52]]
+2023/10/11 19:59:19 [** 3 term 19] replicated on [0] total replicated [[75 75 0 -1 0]] next [[76 76 52 -1 52]]
+2023/10/11 19:59:19 [** 3 term 19] Got new entry[76] to replicate
+2023/10/11 19:59:19 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:19 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:19 [1 term 19] converted to follower
+2023/10/11 19:59:19 [1 term 19] Received append[len 1] from leader[3 commit 75] [index 75 term 19]==[index 75 term 19]
+2023/10/11 19:59:19 [0 term 19] converted to follower
+2023/10/11 19:59:19 [0 term 19] Received append[len 1] from leader[3 commit 75] [index 75 term 19]==[index 75 term 19]
+2023/10/11 19:59:19 [** 3 term 19] replicated on [1] total replicated [[75 76 0 -1 0]] next [[76 77 52 -1 52]]
+2023/10/11 19:59:19 [** 3 term 19] replicated on [0] total replicated [[76 76 0 -1 0]] next [[77 77 52 -1 52]]
+2023/10/11 19:59:19 [4 term 12] Goroutine awake and election timed out
+2023/10/11 19:59:19 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:19 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:19 [0 term 19] converted to follower
+2023/10/11 19:59:19 [0 term 19] Received append[len 0] from leader[3 commit 76] [index 76 term 19]==[index 76 term 19]
+2023/10/11 19:59:19 [** 3 term 19] replicated on [0] total replicated [[76 76 0 -1 0]] next [[77 77 52 -1 52]]
+2023/10/11 19:59:19 [1 term 19] converted to follower
+2023/10/11 19:59:19 [1 term 19] Received append[len 0] from leader[3 commit 76] [index 76 term 19]==[index 76 term 19]
+2023/10/11 19:59:19 [** 3 term 19] replicated on [1] total replicated [[76 76 0 -1 0]] next [[77 77 52 -1 52]]
+2023/10/11 19:59:19 [** 3 term 19] Got new entry[77] to replicate
+2023/10/11 19:59:19 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:19 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:19 [0 term 19] converted to follower
+2023/10/11 19:59:19 [0 term 19] Received append[len 1] from leader[3 commit 76] [index 76 term 19]==[index 76 term 19]
+2023/10/11 19:59:19 [1 term 19] converted to follower
+2023/10/11 19:59:19 [1 term 19] Received append[len 1] from leader[3 commit 76] [index 76 term 19]==[index 76 term 19]
+2023/10/11 19:59:19 [** 3 term 19] replicated on [0] total replicated [[77 76 0 -1 0]] next [[78 77 52 -1 52]]
+2023/10/11 19:59:19 [** 3 term 19] replicated on [1] total replicated [[77 77 0 -1 0]] next [[78 78 52 -1 52]]
+2023/10/11 19:59:19 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:19 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:19 [0 term 19] converted to follower
+2023/10/11 19:59:19 [0 term 19] Received append[len 0] from leader[3 commit 77] [index 77 term 19]==[index 77 term 19]
+2023/10/11 19:59:19 [1 term 19] converted to follower
+2023/10/11 19:59:19 [1 term 19] Received append[len 0] from leader[3 commit 77] [index 77 term 19]==[index 77 term 19]
+2023/10/11 19:59:19 [** 3 term 19] replicated on [0] total replicated [[77 77 0 -1 0]] next [[78 78 52 -1 52]]
+2023/10/11 19:59:19 [** 3 term 19] replicated on [1] total replicated [[77 77 0 -1 0]] next [[78 78 52 -1 52]]
+2023/10/11 19:59:19 [** 3 term 19] Got new entry[78] to replicate
+2023/10/11 19:59:20 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:20 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:20 [1 term 19] converted to follower
+2023/10/11 19:59:20 [1 term 19] Received append[len 1] from leader[3 commit 77] [index 77 term 19]==[index 77 term 19]
+2023/10/11 19:59:20 [** 3 term 19] replicated on [1] total replicated [[77 78 0 -1 0]] next [[78 79 52 -1 52]]
+2023/10/11 19:59:20 [0 term 19] converted to follower
+2023/10/11 19:59:20 [0 term 19] Received append[len 1] from leader[3 commit 77] [index 77 term 19]==[index 77 term 19]
+2023/10/11 19:59:20 [** 3 term 19] replicated on [0] total replicated [[78 78 0 -1 0]] next [[79 79 52 -1 52]]
+2023/10/11 19:59:20 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:20 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:20 [1 term 19] converted to follower
+2023/10/11 19:59:20 [0 term 19] converted to follower
+2023/10/11 19:59:20 [0 term 19] Received append[len 0] from leader[3 commit 78] [index 78 term 19]==[index 78 term 19]
+2023/10/11 19:59:20 [1 term 19] Received append[len 0] from leader[3 commit 78] [index 78 term 19]==[index 78 term 19]
+2023/10/11 19:59:20 [** 3 term 19] replicated on [0] total replicated [[78 78 0 -1 0]] next [[79 79 52 -1 52]]
+2023/10/11 19:59:20 [** 3 term 19] replicated on [1] total replicated [[78 78 0 -1 0]] next [[79 79 52 -1 52]]
+2023/10/11 19:59:20 [** 3 term 19] Got new entry[79] to replicate
+2023/10/11 19:59:20 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:20 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:20 [0 term 19] converted to follower
+2023/10/11 19:59:20 [0 term 19] Received append[len 1] from leader[3 commit 78] [index 78 term 19]==[index 78 term 19]
+2023/10/11 19:59:20 [1 term 19] converted to follower
+2023/10/11 19:59:20 [1 term 19] Received append[len 1] from leader[3 commit 78] [index 78 term 19]==[index 78 term 19]
+2023/10/11 19:59:20 [** 3 term 19] replicated on [0] total replicated [[79 78 0 -1 0]] next [[80 79 52 -1 52]]
+2023/10/11 19:59:20 [** 3 term 19] replicated on [1] total replicated [[79 79 0 -1 0]] next [[80 80 52 -1 52]]
+2023/10/11 19:59:20 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:20 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:20 [1 term 19] converted to follower
+2023/10/11 19:59:20 [1 term 19] Received append[len 0] from leader[3 commit 79] [index 79 term 19]==[index 79 term 19]
+2023/10/11 19:59:20 [0 term 19] converted to follower
+2023/10/11 19:59:20 [0 term 19] Received append[len 0] from leader[3 commit 79] [index 79 term 19]==[index 79 term 19]
+2023/10/11 19:59:20 [** 3 term 19] replicated on [1] total replicated [[79 79 0 -1 0]] next [[80 80 52 -1 52]]
+2023/10/11 19:59:20 [** 3 term 19] replicated on [0] total replicated [[79 79 0 -1 0]] next [[80 80 52 -1 52]]
+2023/10/11 19:59:20 [** 3 term 19] Got new entry[80] to replicate
+2023/10/11 19:59:20 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:20 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:20 [0 term 19] converted to follower
+2023/10/11 19:59:20 [0 term 19] Received append[len 1] from leader[3 commit 79] [index 79 term 19]==[index 79 term 19]
+2023/10/11 19:59:20 [1 term 19] converted to follower
+2023/10/11 19:59:20 [** 3 term 19] replicated on [0] total replicated [[80 79 0 -1 0]] next [[81 80 52 -1 52]]
+2023/10/11 19:59:20 [1 term 19] Received append[len 1] from leader[3 commit 79] [index 79 term 19]==[index 79 term 19]
+2023/10/11 19:59:20 [** 3 term 19] replicated on [1] total replicated [[80 80 0 -1 0]] next [[81 81 52 -1 52]]
+2023/10/11 19:59:20 [4 term 13] Goroutine awake and election timed out
+2023/10/11 19:59:20 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:20 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:20 [0 term 19] converted to follower
+2023/10/11 19:59:20 [0 term 19] Received append[len 0] from leader[3 commit 80] [index 80 term 19]==[index 80 term 19]
+2023/10/11 19:59:20 [1 term 19] converted to follower
+2023/10/11 19:59:20 [1 term 19] Received append[len 0] from leader[3 commit 80] [index 80 term 19]==[index 80 term 19]
+2023/10/11 19:59:20 [** 3 term 19] replicated on [0] total replicated [[80 80 0 -1 0]] next [[81 81 52 -1 52]]
+2023/10/11 19:59:20 [** 3 term 19] replicated on [1] total replicated [[80 80 0 -1 0]] next [[81 81 52 -1 52]]
+2023/10/11 19:59:20 [** 3 term 19] Got new entry[81] to replicate
+2023/10/11 19:59:20 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:20 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:20 [0 term 19] converted to follower
+2023/10/11 19:59:20 [0 term 19] Received append[len 1] from leader[3 commit 80] [index 80 term 19]==[index 80 term 19]
+2023/10/11 19:59:20 [1 term 19] converted to follower
+2023/10/11 19:59:20 [** 3 term 19] replicated on [0] total replicated [[81 80 0 -1 0]] next [[82 81 52 -1 52]]
+2023/10/11 19:59:20 [1 term 19] Received append[len 1] from leader[3 commit 80] [index 80 term 19]==[index 80 term 19]
+2023/10/11 19:59:20 [** 3 term 19] replicated on [1] total replicated [[81 81 0 -1 0]] next [[82 82 52 -1 52]]
+2023/10/11 19:59:20 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:20 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:20 [0 term 19] converted to follower
+2023/10/11 19:59:20 [0 term 19] Received append[len 0] from leader[3 commit 81] [index 81 term 19]==[index 81 term 19]
+2023/10/11 19:59:20 [1 term 19] converted to follower
+2023/10/11 19:59:20 [1 term 19] Received append[len 0] from leader[3 commit 81] [index 81 term 19]==[index 81 term 19]
+2023/10/11 19:59:20 [** 3 term 19] replicated on [0] total replicated [[81 81 0 -1 0]] next [[82 82 52 -1 52]]
+2023/10/11 19:59:20 [** 3 term 19] replicated on [1] total replicated [[81 81 0 -1 0]] next [[82 82 52 -1 52]]
+2023/10/11 19:59:20 [** 3 term 19] Got new entry[82] to replicate
+2023/10/11 19:59:20 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:20 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:20 [0 term 19] converted to follower
+2023/10/11 19:59:20 [0 term 19] Received append[len 1] from leader[3 commit 81] [index 81 term 19]==[index 81 term 19]
+2023/10/11 19:59:20 [** 3 term 19] replicated on [0] total replicated [[82 81 0 -1 0]] next [[83 82 52 -1 52]]
+2023/10/11 19:59:20 [1 term 19] converted to follower
+2023/10/11 19:59:20 [1 term 19] Received append[len 1] from leader[3 commit 81] [index 81 term 19]==[index 81 term 19]
+2023/10/11 19:59:20 [** 3 term 19] replicated on [1] total replicated [[82 82 0 -1 0]] next [[83 83 52 -1 52]]
+2023/10/11 19:59:20 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:20 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:20 [1 term 19] converted to follower
+2023/10/11 19:59:20 [1 term 19] Received append[len 0] from leader[3 commit 82] [index 82 term 19]==[index 82 term 19]
+2023/10/11 19:59:20 [0 term 19] converted to follower
+2023/10/11 19:59:20 [0 term 19] Received append[len 0] from leader[3 commit 82] [index 82 term 19]==[index 82 term 19]
+2023/10/11 19:59:20 [** 3 term 19] replicated on [1] total replicated [[82 82 0 -1 0]] next [[83 83 52 -1 52]]
+2023/10/11 19:59:20 [** 3 term 19] replicated on [0] total replicated [[82 82 0 -1 0]] next [[83 83 52 -1 52]]
+2023/10/11 19:59:20 [** 3 term 19] Got new entry[83] to replicate
+2023/10/11 19:59:21 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:21 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:21 [1 term 19] converted to follower
+2023/10/11 19:59:21 [1 term 19] Received append[len 1] from leader[3 commit 82] [index 82 term 19]==[index 82 term 19]
+2023/10/11 19:59:21 [0 term 19] converted to follower
+2023/10/11 19:59:21 [0 term 19] Received append[len 1] from leader[3 commit 82] [index 82 term 19]==[index 82 term 19]
+2023/10/11 19:59:21 [** 3 term 19] replicated on [1] total replicated [[82 83 0 -1 0]] next [[83 84 52 -1 52]]
+2023/10/11 19:59:21 [** 3 term 19] replicated on [0] total replicated [[83 83 0 -1 0]] next [[84 84 52 -1 52]]
+2023/10/11 19:59:21 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:21 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:21 [0 term 19] converted to follower
+2023/10/11 19:59:21 [0 term 19] Received append[len 0] from leader[3 commit 83] [index 83 term 19]==[index 83 term 19]
+2023/10/11 19:59:21 [1 term 19] converted to follower
+2023/10/11 19:59:21 [1 term 19] Received append[len 0] from leader[3 commit 83] [index 83 term 19]==[index 83 term 19]
+2023/10/11 19:59:21 [** 3 term 19] replicated on [0] total replicated [[83 83 0 -1 0]] next [[84 84 52 -1 52]]
+2023/10/11 19:59:21 [** 3 term 19] replicated on [1] total replicated [[83 83 0 -1 0]] next [[84 84 52 -1 52]]
+2023/10/11 19:59:21 [** 3 term 19] Got new entry[84] to replicate
+2023/10/11 19:59:21 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:21 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:21 [1 term 19] converted to follower
+2023/10/11 19:59:21 [1 term 19] Received append[len 1] from leader[3 commit 83] [index 83 term 19]==[index 83 term 19]
+2023/10/11 19:59:21 [** 3 term 19] replicated on [1] total replicated [[83 84 0 -1 0]] next [[84 85 52 -1 52]]
+2023/10/11 19:59:21 [0 term 19] converted to follower
+2023/10/11 19:59:21 [0 term 19] Received append[len 1] from leader[3 commit 83] [index 83 term 19]==[index 83 term 19]
+2023/10/11 19:59:21 [** 3 term 19] replicated on [0] total replicated [[84 84 0 -1 0]] next [[85 85 52 -1 52]]
+2023/10/11 19:59:21 [4 term 14] Goroutine awake and election timed out
+2023/10/11 19:59:21 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:21 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:21 [1 term 19] converted to follower
+2023/10/11 19:59:21 [0 term 19] converted to follower
+2023/10/11 19:59:21 [0 term 19] Received append[len 0] from leader[3 commit 84] [index 84 term 19]==[index 84 term 19]
+2023/10/11 19:59:21 [1 term 19] Received append[len 0] from leader[3 commit 84] [index 84 term 19]==[index 84 term 19]
+2023/10/11 19:59:21 [** 3 term 19] replicated on [1] total replicated [[84 84 0 -1 0]] next [[85 85 52 -1 52]]
+2023/10/11 19:59:21 [** 3 term 19] replicated on [0] total replicated [[84 84 0 -1 0]] next [[85 85 52 -1 52]]
+2023/10/11 19:59:21 [** 3 term 19] Got new entry[85] to replicate
+2023/10/11 19:59:21 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:21 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:21 [0 term 19] converted to follower
+2023/10/11 19:59:21 [0 term 19] Received append[len 1] from leader[3 commit 84] [index 84 term 19]==[index 84 term 19]
+2023/10/11 19:59:21 [1 term 19] converted to follower
+2023/10/11 19:59:21 [1 term 19] Received append[len 1] from leader[3 commit 84] [index 84 term 19]==[index 84 term 19]
+2023/10/11 19:59:21 [** 3 term 19] replicated on [0] total replicated [[85 84 0 -1 0]] next [[86 85 52 -1 52]]
+2023/10/11 19:59:21 [** 3 term 19] replicated on [1] total replicated [[85 85 0 -1 0]] next [[86 86 52 -1 52]]
+2023/10/11 19:59:21 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:21 [0 term 19] converted to follower
+2023/10/11 19:59:21 [0 term 19] Received append[len 0] from leader[3 commit 85] [index 85 term 19]==[index 85 term 19]
+2023/10/11 19:59:21 [1 term 19] converted to follower
+2023/10/11 19:59:21 [1 term 19] Received append[len 0] from leader[3 commit 85] [index 85 term 19]==[index 85 term 19]
+2023/10/11 19:59:21 [** 3 term 19] replicated on [0] total replicated [[85 85 0 -1 0]] next [[86 86 52 -1 52]]
+2023/10/11 19:59:21 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:21 [** 3 term 19] replicated on [1] total replicated [[85 85 0 -1 0]] next [[86 86 52 -1 52]]
+2023/10/11 19:59:21 [** 3 term 19] Got new entry[86] to replicate
+2023/10/11 19:59:21 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:21 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:21 [0 term 19] converted to follower
+2023/10/11 19:59:21 [0 term 19] Received append[len 1] from leader[3 commit 85] [index 85 term 19]==[index 85 term 19]
+2023/10/11 19:59:21 [1 term 19] converted to follower
+2023/10/11 19:59:21 [1 term 19] Received append[len 1] from leader[3 commit 85] [index 85 term 19]==[index 85 term 19]
+2023/10/11 19:59:21 [** 3 term 19] replicated on [0] total replicated [[86 85 0 -1 0]] next [[87 86 52 -1 52]]
+2023/10/11 19:59:21 [** 3 term 19] replicated on [1] total replicated [[86 86 0 -1 0]] next [[87 87 52 -1 52]]
+2023/10/11 19:59:21 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:21 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:21 [0 term 19] converted to follower
+2023/10/11 19:59:21 [0 term 19] Received append[len 0] from leader[3 commit 86] [index 86 term 19]==[index 86 term 19]
+2023/10/11 19:59:21 [1 term 19] converted to follower
+2023/10/11 19:59:21 [1 term 19] Received append[len 0] from leader[3 commit 86] [index 86 term 19]==[index 86 term 19]
+2023/10/11 19:59:21 [** 3 term 19] replicated on [0] total replicated [[86 86 0 -1 0]] next [[87 87 52 -1 52]]
+2023/10/11 19:59:21 [** 3 term 19] replicated on [1] total replicated [[86 86 0 -1 0]] next [[87 87 52 -1 52]]
+2023/10/11 19:59:21 [** 3 term 19] Got new entry[87] to replicate
+2023/10/11 19:59:21 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:21 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:21 [0 term 19] converted to follower
+2023/10/11 19:59:21 [0 term 19] Received append[len 1] from leader[3 commit 86] [index 86 term 19]==[index 86 term 19]
+2023/10/11 19:59:21 [1 term 19] converted to follower
+2023/10/11 19:59:21 [1 term 19] Received append[len 1] from leader[3 commit 86] [index 86 term 19]==[index 86 term 19]
+2023/10/11 19:59:21 [** 3 term 19] replicated on [0] total replicated [[87 86 0 -1 0]] next [[88 87 52 -1 52]]
+2023/10/11 19:59:21 [** 3 term 19] replicated on [1] total replicated [[87 87 0 -1 0]] next [[88 88 52 -1 52]]
+2023/10/11 19:59:21 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:21 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:21 [1 term 19] converted to follower
+2023/10/11 19:59:21 [1 term 19] Received append[len 0] from leader[3 commit 87] [index 87 term 19]==[index 87 term 19]
+2023/10/11 19:59:21 [0 term 19] converted to follower
+2023/10/11 19:59:21 [** 3 term 19] replicated on [1] total replicated [[87 87 0 -1 0]] next [[88 88 52 -1 52]]
+2023/10/11 19:59:21 [0 term 19] Received append[len 0] from leader[3 commit 87] [index 87 term 19]==[index 87 term 19]
+2023/10/11 19:59:21 [** 3 term 19] replicated on [0] total replicated [[87 87 0 -1 0]] next [[88 88 52 -1 52]]
+2023/10/11 19:59:21 [** 3 term 19] Got new entry[88] to replicate
+2023/10/11 19:59:22 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:22 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:22 [1 term 19] converted to follower
+2023/10/11 19:59:22 [1 term 19] Received append[len 1] from leader[3 commit 87] [index 87 term 19]==[index 87 term 19]
+2023/10/11 19:59:22 [** 3 term 19] replicated on [1] total replicated [[87 88 0 -1 0]] next [[88 89 52 -1 52]]
+2023/10/11 19:59:22 [0 term 19] converted to follower
+2023/10/11 19:59:22 [0 term 19] Received append[len 1] from leader[3 commit 87] [index 87 term 19]==[index 87 term 19]
+2023/10/11 19:59:22 [** 3 term 19] replicated on [0] total replicated [[88 88 0 -1 0]] next [[89 89 52 -1 52]]
+2023/10/11 19:59:22 [4 term 15] Goroutine awake and election timed out
+2023/10/11 19:59:22 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:22 [0 term 19] converted to follower
+2023/10/11 19:59:22 [0 term 19] Received append[len 0] from leader[3 commit 88] [index 88 term 19]==[index 88 term 19]
+2023/10/11 19:59:22 [1 term 19] converted to follower
+2023/10/11 19:59:22 [1 term 19] Received append[len 0] from leader[3 commit 88] [index 88 term 19]==[index 88 term 19]
+2023/10/11 19:59:22 [** 3 term 19] replicated on [0] total replicated [[88 88 0 -1 0]] next [[89 89 52 -1 52]]
+2023/10/11 19:59:22 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:22 [** 3 term 19] replicated on [1] total replicated [[88 88 0 -1 0]] next [[89 89 52 -1 52]]
+2023/10/11 19:59:22 [** 3 term 19] Got new entry[89] to replicate
+2023/10/11 19:59:22 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:22 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:22 [1 term 19] converted to follower
+2023/10/11 19:59:22 [1 term 19] Received append[len 1] from leader[3 commit 88] [index 88 term 19]==[index 88 term 19]
+2023/10/11 19:59:22 [** 3 term 19] replicated on [1] total replicated [[88 89 0 -1 0]] next [[89 90 52 -1 52]]
+2023/10/11 19:59:22 [0 term 19] converted to follower
+2023/10/11 19:59:22 [0 term 19] Received append[len 1] from leader[3 commit 88] [index 88 term 19]==[index 88 term 19]
+2023/10/11 19:59:22 [** 3 term 19] replicated on [0] total replicated [[89 89 0 -1 0]] next [[90 90 52 -1 52]]
+2023/10/11 19:59:22 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:22 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:22 [1 term 19] converted to follower
+2023/10/11 19:59:22 [1 term 19] Received append[len 0] from leader[3 commit 89] [index 89 term 19]==[index 89 term 19]
+2023/10/11 19:59:22 [0 term 19] converted to follower
+2023/10/11 19:59:22 [0 term 19] Received append[len 0] from leader[3 commit 89] [index 89 term 19]==[index 89 term 19]
+2023/10/11 19:59:22 [** 3 term 19] replicated on [1] total replicated [[89 89 0 -1 0]] next [[90 90 52 -1 52]]
+2023/10/11 19:59:22 [** 3 term 19] replicated on [0] total replicated [[89 89 0 -1 0]] next [[90 90 52 -1 52]]
+2023/10/11 19:59:22 [** 3 term 19] Got new entry[90] to replicate
+2023/10/11 19:59:22 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:22 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:22 [1 term 19] converted to follower
+2023/10/11 19:59:22 [1 term 19] Received append[len 1] from leader[3 commit 89] [index 89 term 19]==[index 89 term 19]
+2023/10/11 19:59:22 [0 term 19] converted to follower
+2023/10/11 19:59:22 [0 term 19] Received append[len 1] from leader[3 commit 89] [index 89 term 19]==[index 89 term 19]
+2023/10/11 19:59:22 [** 3 term 19] replicated on [1] total replicated [[89 90 0 -1 0]] next [[90 91 52 -1 52]]
+2023/10/11 19:59:22 [** 3 term 19] replicated on [0] total replicated [[90 90 0 -1 0]] next [[91 91 52 -1 52]]
+2023/10/11 19:59:22 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:22 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:22 [0 term 19] converted to follower
+2023/10/11 19:59:22 [0 term 19] Received append[len 0] from leader[3 commit 90] [index 90 term 19]==[index 90 term 19]
+2023/10/11 19:59:22 [1 term 19] converted to follower
+2023/10/11 19:59:22 [1 term 19] Received append[len 0] from leader[3 commit 90] [index 90 term 19]==[index 90 term 19]
+2023/10/11 19:59:22 [** 3 term 19] replicated on [0] total replicated [[90 90 0 -1 0]] next [[91 91 52 -1 52]]
+2023/10/11 19:59:22 [** 3 term 19] replicated on [1] total replicated [[90 90 0 -1 0]] next [[91 91 52 -1 52]]
+2023/10/11 19:59:22 [** 3 term 19] Got new entry[91] to replicate
+2023/10/11 19:59:22 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:22 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:22 [1 term 19] converted to follower
+2023/10/11 19:59:22 [1 term 19] Received append[len 1] from leader[3 commit 90] [index 90 term 19]==[index 90 term 19]
+2023/10/11 19:59:22 [0 term 19] converted to follower
+2023/10/11 19:59:22 [0 term 19] Received append[len 1] from leader[3 commit 90] [index 90 term 19]==[index 90 term 19]
+2023/10/11 19:59:22 [** 3 term 19] replicated on [1] total replicated [[90 91 0 -1 0]] next [[91 92 52 -1 52]]
+2023/10/11 19:59:22 [** 3 term 19] replicated on [0] total replicated [[91 91 0 -1 0]] next [[92 92 52 -1 52]]
+2023/10/11 19:59:22 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:22 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:22 [0 term 19] converted to follower
+2023/10/11 19:59:22 [0 term 19] Received append[len 0] from leader[3 commit 91] [index 91 term 19]==[index 91 term 19]
+2023/10/11 19:59:22 [1 term 19] converted to follower
+2023/10/11 19:59:22 [1 term 19] Received append[len 0] from leader[3 commit 91] [index 91 term 19]==[index 91 term 19]
+2023/10/11 19:59:22 [** 3 term 19] replicated on [0] total replicated [[91 91 0 -1 0]] next [[92 92 52 -1 52]]
+2023/10/11 19:59:22 [** 3 term 19] replicated on [1] total replicated [[91 91 0 -1 0]] next [[92 92 52 -1 52]]
+2023/10/11 19:59:22 [** 3 term 19] Got new entry[92] to replicate
+2023/10/11 19:59:22 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:22 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:22 [1 term 19] converted to follower
+2023/10/11 19:59:22 [1 term 19] Received append[len 1] from leader[3 commit 91] [index 91 term 19]==[index 91 term 19]
+2023/10/11 19:59:22 [0 term 19] converted to follower
+2023/10/11 19:59:22 [0 term 19] Received append[len 1] from leader[3 commit 91] [index 91 term 19]==[index 91 term 19]
+2023/10/11 19:59:22 [** 3 term 19] replicated on [1] total replicated [[91 92 0 -1 0]] next [[92 93 52 -1 52]]
+2023/10/11 19:59:22 [** 3 term 19] replicated on [0] total replicated [[92 92 0 -1 0]] next [[93 93 52 -1 52]]
+2023/10/11 19:59:22 [4 term 16] Goroutine awake and election timed out
+2023/10/11 19:59:22 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:22 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:22 [0 term 19] converted to follower
+2023/10/11 19:59:22 [1 term 19] converted to follower
+2023/10/11 19:59:22 [1 term 19] Received append[len 0] from leader[3 commit 92] [index 92 term 19]==[index 92 term 19]
+2023/10/11 19:59:22 [** 3 term 19] replicated on [1] total replicated [[92 92 0 -1 0]] next [[93 93 52 -1 52]]
+2023/10/11 19:59:22 [0 term 19] Received append[len 0] from leader[3 commit 92] [index 92 term 19]==[index 92 term 19]
+2023/10/11 19:59:22 [** 3 term 19] replicated on [0] total replicated [[92 92 0 -1 0]] next [[93 93 52 -1 52]]
+2023/10/11 19:59:22 [** 3 term 19] Got new entry[93] to replicate
+2023/10/11 19:59:23 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:23 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:23 [0 term 19] converted to follower
+2023/10/11 19:59:23 [0 term 19] Received append[len 1] from leader[3 commit 92] [index 92 term 19]==[index 92 term 19]
+2023/10/11 19:59:23 [** 3 term 19] replicated on [0] total replicated [[93 92 0 -1 0]] next [[94 93 52 -1 52]]
+2023/10/11 19:59:23 [1 term 19] converted to follower
+2023/10/11 19:59:23 [1 term 19] Received append[len 1] from leader[3 commit 92] [index 92 term 19]==[index 92 term 19]
+2023/10/11 19:59:23 [** 3 term 19] replicated on [1] total replicated [[93 93 0 -1 0]] next [[94 94 52 -1 52]]
+2023/10/11 19:59:23 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:23 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:23 [0 term 19] converted to follower
+2023/10/11 19:59:23 [0 term 19] Received append[len 0] from leader[3 commit 93] [index 93 term 19]==[index 93 term 19]
+2023/10/11 19:59:23 [** 3 term 19] replicated on [0] total replicated [[93 93 0 -1 0]] next [[94 94 52 -1 52]]
+2023/10/11 19:59:23 [1 term 19] converted to follower
+2023/10/11 19:59:23 [1 term 19] Received append[len 0] from leader[3 commit 93] [index 93 term 19]==[index 93 term 19]
+2023/10/11 19:59:23 [** 3 term 19] replicated on [1] total replicated [[93 93 0 -1 0]] next [[94 94 52 -1 52]]
+2023/10/11 19:59:23 [** 3 term 19] Got new entry[94] to replicate
+2023/10/11 19:59:23 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:23 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:23 [1 term 19] converted to follower
+2023/10/11 19:59:23 [1 term 19] Received append[len 1] from leader[3 commit 93] [index 93 term 19]==[index 93 term 19]
+2023/10/11 19:59:23 [0 term 19] converted to follower
+2023/10/11 19:59:23 [0 term 19] Received append[len 1] from leader[3 commit 93] [index 93 term 19]==[index 93 term 19]
+2023/10/11 19:59:23 [** 3 term 19] replicated on [1] total replicated [[93 94 0 -1 0]] next [[94 95 52 -1 52]]
+2023/10/11 19:59:23 [** 3 term 19] replicated on [0] total replicated [[94 94 0 -1 0]] next [[95 95 52 -1 52]]
+2023/10/11 19:59:23 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:23 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:23 [1 term 19] converted to follower
+2023/10/11 19:59:23 [1 term 19] Received append[len 0] from leader[3 commit 94] [index 94 term 19]==[index 94 term 19]
+2023/10/11 19:59:23 [** 3 term 19] replicated on [1] total replicated [[94 94 0 -1 0]] next [[95 95 52 -1 52]]
+2023/10/11 19:59:23 [0 term 19] converted to follower
+2023/10/11 19:59:23 [0 term 19] Received append[len 0] from leader[3 commit 94] [index 94 term 19]==[index 94 term 19]
+2023/10/11 19:59:23 [** 3 term 19] replicated on [0] total replicated [[94 94 0 -1 0]] next [[95 95 52 -1 52]]
+2023/10/11 19:59:23 [** 3 term 19] Got new entry[95] to replicate
+2023/10/11 19:59:23 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:23 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:23 [0 term 19] converted to follower
+2023/10/11 19:59:23 [0 term 19] Received append[len 1] from leader[3 commit 94] [index 94 term 19]==[index 94 term 19]
+2023/10/11 19:59:23 [1 term 19] converted to follower
+2023/10/11 19:59:23 [1 term 19] Received append[len 1] from leader[3 commit 94] [index 94 term 19]==[index 94 term 19]
+2023/10/11 19:59:23 [** 3 term 19] replicated on [0] total replicated [[95 94 0 -1 0]] next [[96 95 52 -1 52]]
+2023/10/11 19:59:23 [** 3 term 19] replicated on [1] total replicated [[95 95 0 -1 0]] next [[96 96 52 -1 52]]
+2023/10/11 19:59:23 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:23 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:23 [0 term 19] converted to follower
+2023/10/11 19:59:23 [0 term 19] Received append[len 0] from leader[3 commit 95] [index 95 term 19]==[index 95 term 19]
+2023/10/11 19:59:23 [1 term 19] converted to follower
+2023/10/11 19:59:23 [1 term 19] Received append[len 0] from leader[3 commit 95] [index 95 term 19]==[index 95 term 19]
+2023/10/11 19:59:23 [** 3 term 19] replicated on [0] total replicated [[95 95 0 -1 0]] next [[96 96 52 -1 52]]
+2023/10/11 19:59:23 [** 3 term 19] replicated on [1] total replicated [[95 95 0 -1 0]] next [[96 96 52 -1 52]]
+2023/10/11 19:59:23 [** 3 term 19] Got new entry[96] to replicate
+2023/10/11 19:59:23 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:23 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:23 [1 term 19] converted to follower
+2023/10/11 19:59:23 [1 term 19] Received append[len 1] from leader[3 commit 95] [index 95 term 19]==[index 95 term 19]
+2023/10/11 19:59:23 [** 3 term 19] replicated on [1] total replicated [[95 96 0 -1 0]] next [[96 97 52 -1 52]]
+2023/10/11 19:59:23 [0 term 19] converted to follower
+2023/10/11 19:59:23 [0 term 19] Received append[len 1] from leader[3 commit 95] [index 95 term 19]==[index 95 term 19]
+2023/10/11 19:59:23 [** 3 term 19] replicated on [0] total replicated [[96 96 0 -1 0]] next [[97 97 52 -1 52]]
+2023/10/11 19:59:23 [4 term 17] Goroutine awake and election timed out
+2023/10/11 19:59:23 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:23 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:23 [0 term 19] converted to follower
+2023/10/11 19:59:23 [0 term 19] Received append[len 0] from leader[3 commit 96] [index 96 term 19]==[index 96 term 19]
+2023/10/11 19:59:23 [1 term 19] converted to follower
+2023/10/11 19:59:23 [1 term 19] Received append[len 0] from leader[3 commit 96] [index 96 term 19]==[index 96 term 19]
+2023/10/11 19:59:23 [** 3 term 19] replicated on [0] total replicated [[96 96 0 -1 0]] next [[97 97 52 -1 52]]
+2023/10/11 19:59:23 [** 3 term 19] replicated on [1] total replicated [[96 96 0 -1 0]] next [[97 97 52 -1 52]]
+2023/10/11 19:59:23 [** 3 term 19] Got new entry[97] to replicate
+2023/10/11 19:59:23 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:23 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:23 [1 term 19] converted to follower
+2023/10/11 19:59:23 [1 term 19] Received append[len 1] from leader[3 commit 96] [index 96 term 19]==[index 96 term 19]
+2023/10/11 19:59:23 [0 term 19] converted to follower
+2023/10/11 19:59:23 [0 term 19] Received append[len 1] from leader[3 commit 96] [index 96 term 19]==[index 96 term 19]
+2023/10/11 19:59:23 [** 3 term 19] replicated on [1] total replicated [[96 97 0 -1 0]] next [[97 98 52 -1 52]]
+2023/10/11 19:59:23 [** 3 term 19] replicated on [0] total replicated [[97 97 0 -1 0]] next [[98 98 52 -1 52]]
+2023/10/11 19:59:23 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:23 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:23 [0 term 19] converted to follower
+2023/10/11 19:59:23 [1 term 19] converted to follower
+2023/10/11 19:59:23 [1 term 19] Received append[len 0] from leader[3 commit 97] [index 97 term 19]==[index 97 term 19]
+2023/10/11 19:59:23 [** 3 term 19] replicated on [1] total replicated [[97 97 0 -1 0]] next [[98 98 52 -1 52]]
+2023/10/11 19:59:23 [0 term 19] Received append[len 0] from leader[3 commit 97] [index 97 term 19]==[index 97 term 19]
+2023/10/11 19:59:23 [** 3 term 19] replicated on [0] total replicated [[97 97 0 -1 0]] next [[98 98 52 -1 52]]
+2023/10/11 19:59:24 [** 3 term 19] Got new entry[98] to replicate
+2023/10/11 19:59:24 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:24 [0 term 19] converted to follower
+2023/10/11 19:59:24 [0 term 19] Received append[len 1] from leader[3 commit 97] [index 97 term 19]==[index 97 term 19]
+2023/10/11 19:59:24 [1 term 19] converted to follower
+2023/10/11 19:59:24 [** 3 term 19] replicated on [0] total replicated [[98 97 0 -1 0]] next [[99 98 52 -1 52]]
+2023/10/11 19:59:24 [1 term 19] Received append[len 1] from leader[3 commit 97] [index 97 term 19]==[index 97 term 19]
+2023/10/11 19:59:24 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:24 [** 3 term 19] replicated on [1] total replicated [[98 98 0 -1 0]] next [[99 99 52 -1 52]]
+2023/10/11 19:59:24 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:24 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:24 [1 term 19] converted to follower
+2023/10/11 19:59:24 [1 term 19] Received append[len 0] from leader[3 commit 98] [index 98 term 19]==[index 98 term 19]
+2023/10/11 19:59:24 [0 term 19] converted to follower
+2023/10/11 19:59:24 [0 term 19] Received append[len 0] from leader[3 commit 98] [index 98 term 19]==[index 98 term 19]
+2023/10/11 19:59:24 [** 3 term 19] replicated on [1] total replicated [[98 98 0 -1 0]] next [[99 99 52 -1 52]]
+2023/10/11 19:59:24 [** 3 term 19] replicated on [0] total replicated [[98 98 0 -1 0]] next [[99 99 52 -1 52]]
+2023/10/11 19:59:24 [** 3 term 19] Got new entry[99] to replicate
+2023/10/11 19:59:24 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:24 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:24 [1 term 19] converted to follower
+2023/10/11 19:59:24 [1 term 19] Received append[len 1] from leader[3 commit 98] [index 98 term 19]==[index 98 term 19]
+2023/10/11 19:59:24 [** 3 term 19] replicated on [1] total replicated [[98 99 0 -1 0]] next [[99 100 52 -1 52]]
+2023/10/11 19:59:24 [0 term 19] converted to follower
+2023/10/11 19:59:24 [0 term 19] Received append[len 1] from leader[3 commit 98] [index 98 term 19]==[index 98 term 19]
+2023/10/11 19:59:24 [** 3 term 19] replicated on [0] total replicated [[99 99 0 -1 0]] next [[100 100 52 -1 52]]
+2023/10/11 19:59:24 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:24 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:24 [1 term 19] converted to follower
+2023/10/11 19:59:24 [1 term 19] Received append[len 0] from leader[3 commit 99] [index 99 term 19]==[index 99 term 19]
+2023/10/11 19:59:24 [0 term 19] converted to follower
+2023/10/11 19:59:24 [0 term 19] Received append[len 0] from leader[3 commit 99] [index 99 term 19]==[index 99 term 19]
+2023/10/11 19:59:24 [** 3 term 19] replicated on [1] total replicated [[99 99 0 -1 0]] next [[100 100 52 -1 52]]
+2023/10/11 19:59:24 [** 3 term 19] replicated on [0] total replicated [[99 99 0 -1 0]] next [[100 100 52 -1 52]]
+2023/10/11 19:59:24 [** 3 term 19] Got new entry[100] to replicate
+2023/10/11 19:59:24 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:24 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:24 [0 term 19] converted to follower
+2023/10/11 19:59:24 [0 term 19] Received append[len 1] from leader[3 commit 99] [index 99 term 19]==[index 99 term 19]
+2023/10/11 19:59:24 [** 3 term 19] replicated on [0] total replicated [[100 99 0 -1 0]] next [[101 100 52 -1 52]]
+2023/10/11 19:59:24 [1 term 19] converted to follower
+2023/10/11 19:59:24 [1 term 19] Received append[len 1] from leader[3 commit 99] [index 99 term 19]==[index 99 term 19]
+2023/10/11 19:59:24 [** 3 term 19] replicated on [1] total replicated [[100 100 0 -1 0]] next [[101 101 52 -1 52]]
+2023/10/11 19:59:24 [4 term 18] Goroutine awake and election timed out
+2023/10/11 19:59:24 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:24 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:24 [1 term 19] converted to follower
+2023/10/11 19:59:24 [1 term 19] Received append[len 0] from leader[3 commit 100] [index 100 term 19]==[index 100 term 19]
+2023/10/11 19:59:24 [** 3 term 19] replicated on [1] total replicated [[100 100 0 -1 0]] next [[101 101 52 -1 52]]
+2023/10/11 19:59:24 [0 term 19] converted to follower
+2023/10/11 19:59:24 [0 term 19] Received append[len 0] from leader[3 commit 100] [index 100 term 19]==[index 100 term 19]
+2023/10/11 19:59:24 [** 3 term 19] replicated on [0] total replicated [[100 100 0 -1 0]] next [[101 101 52 -1 52]]
+2023/10/11 19:59:24 [** 3 term 19] Got new entry[101] to replicate
+2023/10/11 19:59:24 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:24 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:24 [1 term 19] converted to follower
+2023/10/11 19:59:24 [1 term 19] Received append[len 1] from leader[3 commit 100] [index 100 term 19]==[index 100 term 19]
+2023/10/11 19:59:24 [0 term 19] converted to follower
+2023/10/11 19:59:24 [0 term 19] Received append[len 1] from leader[3 commit 100] [index 100 term 19]==[index 100 term 19]
+2023/10/11 19:59:24 [** 3 term 19] replicated on [1] total replicated [[100 101 0 -1 0]] next [[101 102 52 -1 52]]
+2023/10/11 19:59:24 [** 3 term 19] replicated on [0] total replicated [[101 101 0 -1 0]] next [[102 102 52 -1 52]]
+2023/10/11 19:59:24 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:24 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:24 [1 term 19] converted to follower
+2023/10/11 19:59:24 [1 term 19] Received append[len 0] from leader[3 commit 101] [index 101 term 19]==[index 101 term 19]
+2023/10/11 19:59:24 [0 term 19] converted to follower
+2023/10/11 19:59:24 [0 term 19] Received append[len 0] from leader[3 commit 101] [index 101 term 19]==[index 101 term 19]
+2023/10/11 19:59:24 [** 3 term 19] replicated on [0] total replicated [[101 101 0 -1 0]] next [[102 102 52 -1 52]]
+2023/10/11 19:59:24 [** 3 term 19] replicated on [1] total replicated [[101 101 0 -1 0]] next [[102 102 52 -1 52]]
+2023/10/11 19:59:24 [** 2 term 4] Got new entry[102] to replicate
+2023/10/11 19:59:24 [** 3 term 19] sent a new wave of appends!
+2023/10/11 19:59:24 [** 2 term 4] sent a new wave of appends!
+2023/10/11 19:59:24 [1 term 19] converted to follower
+2023/10/11 19:59:24 [1 term 19] Received append[len 0] from leader[3 commit 101] [index 101 term 19]==[index 101 term 19]
+2023/10/11 19:59:24 [4 term 19] converted to follower
+2023/10/11 19:59:24 [2 term 19] converted to follower
+2023/10/11 19:59:24 [2 term 19] converted to follower
+2023/10/11 19:59:24 [2 term 19] Received append[len 50] from leader[3 commit 101] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:24 [4 term 19] Received append[len 50] from leader[3 commit 101] [index 51 term 4]==[index 51 term 4]
+2023/10/11 19:59:24 [0 term 19] converted to follower
+2023/10/11 19:59:24 [0 term 19] Received append[len 0] from leader[3 commit 101] [index 101 term 19]==[index 101 term 19]
+2023/10/11 19:59:24 [** 3 term 19] replicated on [1] total replicated [[101 101 0 -1 0]] next [[102 102 52 -1 52]]
+2023/10/11 19:59:24 [** 3 term 19] replicated on [2] total replicated [[101 101 101 -1 0]] next [[102 102 102 -1 52]]
+2023/10/11 19:59:24 [** 3 term 19] replicated on [4] total replicated [[101 101 101 -1 101]] next [[102 102 102 -1 102]]
+2023/10/11 19:59:24 [3 term 19] converted to follower
+2023/10/11 19:59:24 [3 term 19] Received append[len 51] from leader[2 commit 51] [index 51 term 4]==[index 51 term 4]
+panic: log access with out of bound 102 len 102
+
+goroutine 12344 [running]:
+dsys/raft.(*RaftLog).get(0xc000314660?, 0x61923c?)
+	/home/ruichen/mit/mit6824/6.824/src/raft/raft_log.go:48 +0xc8
+dsys/raft.(*Raft).leaderCheckAndUpdateCommit(0xc00010ea00, 0x66)
+	/home/ruichen/mit/mit6824/6.824/src/raft/raft_leader.go:150 +0x34
+dsys/raft.(*Raft).handleValidAppendReply(0xc00010ea00, 0x3, 0x3c?, 0x5cf700?)
+	/home/ruichen/mit/mit6824/6.824/src/raft/raft_leader.go:103 +0xa9
+dsys/raft.(*Raft).waitAppendEntry(0xc00010ea00, 0x3)
+	/home/ruichen/mit/mit6824/6.824/src/raft/raft_leader.go:82 +0x13c
+created by dsys/raft.(*Raft).startLeader
+	/home/ruichen/mit/mit6824/6.824/src/raft/raft_leader.go:64 +0x2b7
+exit status 2
+FAIL	dsys/raft	51.042s
