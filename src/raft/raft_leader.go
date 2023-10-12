@@ -29,7 +29,18 @@ func GetSendTime() time.Duration {
 }
 
 func (rf *Raft) sendAppendEntry(server int, args *AppendEntryArgs, reply *AppendEntryReply) bool {
+	DelaySchedule(RPCAppendDelay)
+
 	ok := rf.peers[server].Call("Raft.AppendEntry", args, reply)
+
+	rf.mu.Lock()
+	defer rf.mu.Unlock()
+
+	if !rf.checkValidAppendReply(args, reply) {
+		return false
+	}
+	rf.handleValidAppendReply(server, args, reply)
+
 	return ok
 }
 
@@ -60,27 +71,11 @@ func (rf *Raft) startLeader() {
 			if i == rf.me {
 				continue
 			}
-			go rf.waitAppendEntry(i)
+			go rf.sendAppendEntry(i, rf.makeAppendEntryArgs(i), rf.makeAppendEntryReply())
 		}
 		DPrintf("[** %d term %d] sent a new wave of appends!", rf.me, rf.currentTerm)
 		rf.UnlockAndSleepFor(GetSendTime())
 	}
-}
-
-//Remeber to finish
-func (rf *Raft) waitAppendEntry(server int) {
-	DelaySchedule(RPCAppendDelay)
-	args := rf.makeAppendEntryArgs(server)
-	reply := rf.makeAppendEntryReply()
-	rf.sendAppendEntry(server, args, reply)
-	rf.mu.Lock()
-	defer rf.mu.Unlock()
-
-	if !rf.checkValidAppendReply(args, reply) {
-		return
-	}
-	rf.handleValidAppendReply(server, args, reply)
-
 }
 
 func (rf *Raft) checkValidAppendReply(args *AppendEntryArgs, reply *AppendEntryReply) bool {

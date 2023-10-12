@@ -16,7 +16,7 @@ const (
 )
 
 const Debug = 0
-const DebugSchedule = DefinedDelay
+const DebugSchedule = NoDelay
 const RPCAppendDelay = 100
 const RPCVoteDelay = 100
 const ElectionDelay = 2000

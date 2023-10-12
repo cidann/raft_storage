@@ -8,7 +8,6 @@ import (
 /*
 Raft is locked and unlocked at:
 startWaitForResponse
-collectVote
 sendRequestVote RPC response
 */
 
@@ -28,9 +27,9 @@ func (rf *Raft) startWaitForResponse() {
 		defer rf.mu.Unlock()
 		rf.stateCond.Broadcast()
 	}()
-	for {
+	for !rf.killed() {
 		//Halt election clock if state is not candidate or followerer
-		for rf.killed() || rf.state == LEADER {
+		for rf.state == LEADER {
 			rf.stateCond.Wait()
 		}
 		if rf.lastRecord.HasElapsed(GetElectionTime()) {
@@ -47,7 +46,7 @@ func (rf *Raft) startElection() {
 		if i == rf.me {
 			continue
 		}
-		go rf.waitForVote(i)
+		go rf.sendRequestVote(i, rf.makeRequestVoteArg(), rf.makeRequestVoteReply())
 	}
 }
 
@@ -67,21 +66,6 @@ func (rf *Raft) initCandidateState() {
 		rf.matchIndex[i] = 0
 	}
 	rf.lastRecord.RecordTime()
-}
-
-func (rf *Raft) waitForVote(server int) {
-	DelaySchedule(RPCVoteDelay)
-	args := rf.makeRequestVoteArg()
-	reply := rf.makeRequestVoteReply()
-	rf.sendRequestVote(server, args, reply)
-	rf.mu.Lock()
-	defer rf.mu.Unlock()
-
-	if !rf.checkValidVoteReply(args, reply) {
-		return
-	}
-	rf.handleValidVoteReply(args, reply)
-	DPrintf("[%d term %d] Goroutine to collect vote. Current count: %d", rf.me, rf.currentTerm, rf.voteCount)
 }
 
 type RequestVoteArgs struct {
@@ -124,7 +108,19 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 // look at the comments in ../labrpc/labrpc.go for more details.
 //
 func (rf *Raft) sendRequestVote(server int, args *RequestVoteArgs, reply *RequestVoteReply) bool {
+	DelaySchedule(RPCVoteDelay)
+
 	ok := rf.peers[server].Call("Raft.RequestVote", args, reply)
+
+	rf.mu.Lock()
+	defer rf.mu.Unlock()
+
+	if !rf.checkValidVoteReply(args, reply) {
+		return false
+	}
+	rf.handleValidVoteReply(args, reply)
+	DPrintf("[%d term %d] Goroutine to collect vote. Current count: %d", rf.me, rf.currentTerm, rf.voteCount)
+
 	return ok
 }
 

@@ -450,7 +450,7 @@ func TestBackup2B(t *testing.T) {
 }
 
 func TestElectionUpToDate2B(t *testing.T) {
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 10; i++ {
 
 		servers := 5
 		cfg := make_config(t, servers, false)

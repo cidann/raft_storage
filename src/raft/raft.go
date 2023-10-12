@@ -194,6 +194,10 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 func (rf *Raft) Kill() {
 	atomic.StoreInt32(&rf.dead, 1)
 	// Your code here, if desired.
+	rf.mu.Lock()
+	defer rf.mu.Unlock()
+	rf.stateCond.Broadcast()
+	rf.commitCond.Broadcast()
 }
 
 func (rf *Raft) killed() bool {
