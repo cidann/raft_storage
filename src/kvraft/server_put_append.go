@@ -1,17 +1,8 @@
 package kvraft
 
-import "sync/atomic"
-
-var PutAppendCount uint64 = 0
-
 func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
-	atomic.AddUint64(&PutAppendCount, 1)
 	Lock(kv, lock_trace, "PutAppend")
 	defer Unlock(kv, lock_trace, "PutAppend")
-	defer func() {
-		atomic.StoreUint64(&PutAppendCount, atomic.LoadUint64(&PutAppendCount)-1)
-		DPrintf("[%d] PutAppendCount %d", kv.me, atomic.LoadUint64(&PutAppendCount))
-	}()
 
 	if leader, isLeader := kv.GetLeader(); !isLeader {
 		reply.Success = false
@@ -30,7 +21,7 @@ func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 
 	result_chan := make(chan string)
 
-	kv.tracker.RecordRequest(operation, result_chan)
+	kv.tracker.RecordRequest(&operation, result_chan)
 	start_and_wait := func() {
 		kv.rf.Start(operation)
 		WaitUntilChanReceive(result_chan)
