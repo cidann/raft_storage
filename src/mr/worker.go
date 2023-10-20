@@ -1,14 +1,16 @@
 package mr
 
-import "fmt"
-import "log"
-import "net/rpc"
-import "hash/fnv"
-import "time"
-import "io/ioutil"
-import "sort"
-import "encoding/json"
-import "os"
+import (
+	"encoding/json"
+	"fmt"
+	"hash/fnv"
+	"io/ioutil"
+	"log"
+	"net/rpc"
+	"os"
+	"sort"
+	"time"
+)
 
 //
 // Map functions return a slice of KeyValue.
@@ -27,7 +29,9 @@ func ihash(key string) int {
 	h.Write([]byte(key))
 	return int(h.Sum32() & 0x7fffffff)
 }
+
 type ByKey []KeyValue
+
 func (a ByKey) Len() int           { return len(a) }
 func (a ByKey) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a ByKey) Less(i, j int) bool { return a[i].Key < a[j].Key }
@@ -37,17 +41,17 @@ func (a ByKey) Less(i, j int) bool { return a[i].Key < a[j].Key }
 //
 func Worker(mapf func(string, string) []KeyValue,
 	reducef func(string, []string) string) {
-	for{
-		response:=RequestResponse()
-		if response.JobDone{
+	for {
+		response := RequestResponse()
+		if response.JobDone {
 			return
-		} else if response.MapJob!=nil{
-			filename:=response.MapJob.Filename
-			taskNum:=response.MapJob.TaskNum
-			nReduce:=response.MapJob.NReduce
+		} else if response.MapJob != nil {
+			filename := response.MapJob.Filename
+			taskNum := response.MapJob.TaskNum
+			nReduce := response.MapJob.NReduce
 
 			intermediate := make(map[int][]KeyValue)
-			
+
 			file, err := os.Open(filename)
 			if err != nil {
 				log.Fatalf("cannot open %v", filename)
@@ -58,59 +62,59 @@ func Worker(mapf func(string, string) []KeyValue,
 			}
 			file.Close()
 			kva := mapf(filename, string(content))
-			for _,i:=range kva{
-				k:=i.Key
-				hash:=ihash(k)%nReduce
-				_,ok:=intermediate[hash]
-				if !ok{
-					intermediate[hash]=make([]KeyValue,0)
-				} 
-				intermediate[hash]=append(intermediate[hash],i)
+			for _, i := range kva {
+				k := i.Key
+				hash := ihash(k) % nReduce
+				_, ok := intermediate[hash]
+				if !ok {
+					intermediate[hash] = make([]KeyValue, 0)
+				}
+				intermediate[hash] = append(intermediate[hash], i)
 			}
 
-			for r:=0;r<nReduce;r++{
-				oname := fmt.Sprintf("mr-%d-%d",taskNum,r)
-				file,_:=os.Create(oname)
+			for r := 0; r < nReduce; r++ {
+				oname := fmt.Sprintf("mr-%d-%d", taskNum, r)
+				file, _ := os.Create(oname)
 				enc := json.NewEncoder(file)
-				if _,ok:=intermediate[r];!ok{
+				if _, ok := intermediate[r]; !ok {
 					continue
 				}
-				for _,kvs:=range intermediate[r]{
+				for _, kvs := range intermediate[r] {
 					if writeErr := enc.Encode(&kvs); writeErr != nil {
 						fmt.Println("writeErr")
 						return
 					}
 				}
-				
+
 			}
 
-			TellDone("map",taskNum)
+			TellDone("map", taskNum)
 
-		} else if response.ReduceJob!=nil{
-			rangeBound:=response.ReduceJob.RangeBound
-			reduceNum:=response.ReduceJob.ReduceNum
-			
+		} else if response.ReduceJob != nil {
+			rangeBound := response.ReduceJob.RangeBound
+			reduceNum := response.ReduceJob.ReduceNum
+
 			intermediate := []KeyValue{}
-			for r:=0;r<rangeBound;r++{
-				filename := fmt.Sprintf("mr-%d-%d",r,reduceNum)
+			for r := 0; r < rangeBound; r++ {
+				filename := fmt.Sprintf("mr-%d-%d", r, reduceNum)
 				file, openErr := os.Open(filename)
 				if openErr != nil {
 					log.Fatalf("cannot open %v", filename)
 				}
 				dec := json.NewDecoder(file)
-				for{
+				for {
 					var kv KeyValue
 					if readErr := dec.Decode(&kv); readErr != nil {
 						break
 					}
-					
+
 					intermediate = append(intermediate, kv)
 				}
 				file.Close()
 
 			}
 			sort.Sort(ByKey(intermediate))
-			oname := fmt.Sprintf("mr-out-%d",reduceNum)
+			oname := fmt.Sprintf("mr-out-%d", reduceNum)
 			ofile, _ := os.Create(oname)
 
 			i := 0
@@ -133,10 +137,10 @@ func Worker(mapf func(string, string) []KeyValue,
 
 			ofile.Close()
 
-			TellDone("reduce",reduceNum)
+			TellDone("reduce", reduceNum)
 
-		} else{
-			time.Sleep(10*time.Second)
+		} else {
+			time.Sleep(10 * time.Second)
 		}
 	}
 }
@@ -146,7 +150,7 @@ func Worker(mapf func(string, string) []KeyValue,
 //
 // the RPC argument and reply types are defined in rpc.go.
 //
-func RequestResponse() *JobResponse{
+func RequestResponse() *JobResponse {
 
 	// declare an argument structure.
 	args := JobRequest{}
@@ -158,9 +162,9 @@ func RequestResponse() *JobResponse{
 	return &reply
 }
 
-func TellDone(jobType string,taskDone int){
+func TellDone(jobType string, taskDone int) {
 	// declare an argument structure.
-	args := JobDone{jobType,taskDone}
+	args := JobDone{jobType, taskDone}
 
 	// declare a reply structure.
 	reply := JobResponse{}

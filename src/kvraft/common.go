@@ -10,24 +10,26 @@ type Err string
 
 // Put or Append
 type PutAppendArgs struct {
-	Key   string
-	Value string
-	Op    string // "Put" or "Append"
-	// You'll have to add definitions here.
-	// Field names must start with capital letters,
-	// otherwise RPC will break.
+	Key    string
+	Value  string
+	Type   OperationType
+	Serial int
+	Sid    int
 }
 
 type PutAppendReply struct {
-	Err Err
+	Success    bool
+	LeaderHint int
 }
 
 type GetArgs struct {
-	Key string
-	// You'll have to add definitions here.
+	Key    string
+	Serial int
+	Sid    int
 }
 
 type GetReply struct {
-	Err   Err
-	Value string
+	Success    bool
+	Value      string
+	LeaderHint int
 }

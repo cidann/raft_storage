@@ -1,0 +1,560 @@
+Test (2C): Figure 8 ...
+labgob warning: Decoding into a non-default variable/field Term may not work
+2023/10/12 04:07:27 [1] Start goroutine to start the election process
+2023/10/12 04:07:27 [1 term 95] Goroutine awake and election timed out
+2023/10/12 04:07:27 [4] Start goroutine to start the election process
+2023/10/12 04:07:27 [** 1 term 96] not leader
+2023/10/12 04:07:27 [** 2 term 96] not leader
+2023/10/12 04:07:27 [** 3 term 96] not leader
+2023/10/12 04:07:27 [4 term 91] Goroutine awake and election timed out
+2023/10/12 04:07:27 [** 4 term 92] not leader
+2023/10/12 04:07:27 [** 0 term 96] not leader
+2023/10/12 04:07:27 [0 term 96] Received vote from more up to date server [index 15 term 95]>[index 26 term 93]
+2023/10/12 04:07:27 [1 term 96] Goroutine to collect vote. Current count: 1
+2023/10/12 04:07:27 [1 term 96] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:27 [1 term 96] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:27 [4 term 96] converted to follower
+2023/10/12 04:07:27 [4 term 96] Goroutine to collect vote. Current count: 1
+2023/10/12 04:07:27 [4 term 96] Received vote from more up to date server [index 15 term 95]>[index 22 term 91]
+2023/10/12 04:07:27 [1 term 96] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:27 [** 1 term 96] [16 -1 16 16 16] is now leader!
+2023/10/12 04:07:27 [** 1 term 96] sent a new wave of appends!
+2023/10/12 04:07:27 [** 1 term 96] Got new entry[16] to replicate
+2023/10/12 04:07:27 [** 1 term 96] sent a new wave of appends!
+2023/10/12 04:07:27 [** 1 term 96] sent a new wave of appends!
+2023/10/12 04:07:27 [2 term 96] Goroutine awake and election timed out
+2023/10/12 04:07:27 [4 term 97] converted to follower
+2023/10/12 04:07:27 [1 term 97] converted to follower
+2023/10/12 04:07:27 [0 term 97] converted to follower
+2023/10/12 04:07:27 [2 term 97] Goroutine to collect vote. Current count: 1
+2023/10/12 04:07:27 [2 term 97] Goroutine to collect vote. Current count: 1
+2023/10/12 04:07:27 [3 term 97] converted to follower
+2023/10/12 04:07:27 [2 term 97] Goroutine to collect vote. Current count: 1
+2023/10/12 04:07:27 [3 term 97] Received vote from more up to date server [index 3 term 6]>[index 3 term 6]
+2023/10/12 04:07:27 [2 term 97] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:28 [3 term 97] Goroutine awake and election timed out
+2023/10/12 04:07:28 [2 term 98] converted to follower
+2023/10/12 04:07:28 [4 term 98] converted to follower
+2023/10/12 04:07:28 [1 term 98] converted to follower
+2023/10/12 04:07:28 [3 term 98] Goroutine to collect vote. Current count: 1
+2023/10/12 04:07:28 [0 term 98] converted to follower
+2023/10/12 04:07:28 [2 term 98] Received vote from more up to date server [index 3 term 6]>[index 3 term 6]
+2023/10/12 04:07:28 [3 term 98] Goroutine to collect vote. Current count: 1
+2023/10/12 04:07:28 [3 term 98] Goroutine to collect vote. Current count: 1
+2023/10/12 04:07:28 [3 term 98] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:28 [1 term 98] Goroutine awake and election timed out
+2023/10/12 04:07:28 [4 term 99] converted to follower
+2023/10/12 04:07:28 [3 term 99] converted to follower
+2023/10/12 04:07:28 [0 term 99] converted to follower
+2023/10/12 04:07:28 [4 term 99] Received vote from more up to date server [index 16 term 96]>[index 22 term 91]
+2023/10/12 04:07:28 [0 term 99] Received vote from more up to date server [index 16 term 96]>[index 26 term 93]
+2023/10/12 04:07:28 [3 term 99] Received vote from more up to date server [index 16 term 96]>[index 3 term 6]
+2023/10/12 04:07:28 [2 term 99] converted to follower
+2023/10/12 04:07:28 [1 term 99] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:28 [2 term 99] Received vote from more up to date server [index 16 term 96]>[index 3 term 6]
+2023/10/12 04:07:28 [1 term 99] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:28 [1 term 99] Goroutine to collect vote. Current count: 4
+2023/10/12 04:07:28 [** 1 term 99] [17 -1 17 17 17] is now leader!
+2023/10/12 04:07:28 [** 1 term 99] sent a new wave of appends!
+2023/10/12 04:07:28 [1 term 99] Goroutine to collect vote. Current count: 5
+2023/10/12 04:07:28 [** 1 term 99] sent a new wave of appends!
+2023/10/12 04:07:28 [** 1 term 99] sent a new wave of appends!
+2023/10/12 04:07:28 [** 1 term 99] sent a new wave of appends!
+2023/10/12 04:07:28 [** 1 term 99] sent a new wave of appends!
+2023/10/12 04:07:28 [** 1 term 99] sent a new wave of appends!
+2023/10/12 04:07:28 [** 1 term 99] sent a new wave of appends!
+2023/10/12 04:07:28 [3 term 99] Goroutine awake and election timed out
+2023/10/12 04:07:28 [4 term 100] converted to follower
+2023/10/12 04:07:28 [1 term 100] converted to follower
+2023/10/12 04:07:28 [3 term 100] Goroutine to collect vote. Current count: 1
+2023/10/12 04:07:28 [1 term 100] Goroutine awake and election timed out
+2023/10/12 04:07:28 [3 term 100] Goroutine to collect vote. Current count: 1
+2023/10/12 04:07:28 [0 term 100] converted to follower
+2023/10/12 04:07:28 [2 term 100] converted to follower
+2023/10/12 04:07:28 [4 term 101] converted to follower
+2023/10/12 04:07:28 [2 term 100] Received vote from more up to date server [index 3 term 6]>[index 3 term 6]
+2023/10/12 04:07:28 [4 term 101] Received vote from more up to date server [index 16 term 96]>[index 22 term 91]
+2023/10/12 04:07:28 [2 term 101] converted to follower
+2023/10/12 04:07:28 [2 term 101] Received vote from more up to date server [index 16 term 96]>[index 3 term 6]
+2023/10/12 04:07:28 [1 term 101] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:28 [3 term 101] converted to follower
+2023/10/12 04:07:28 [1 term 101] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:28 [0 term 101] converted to follower
+2023/10/12 04:07:28 [** 1 term 101] [17 -1 17 17 17] is now leader!
+2023/10/12 04:07:28 [3 term 101] Received vote from more up to date server [index 16 term 96]>[index 3 term 6]
+2023/10/12 04:07:28 [0 term 101] Received vote from more up to date server [index 16 term 96]>[index 26 term 93]
+2023/10/12 04:07:28 [** 1 term 101] sent a new wave of appends!
+2023/10/12 04:07:28 [1 term 101] Goroutine to collect vote. Current count: 4
+2023/10/12 04:07:28 [1 term 101] Goroutine to collect vote. Current count: 5
+2023/10/12 04:07:28 [** 1 term 101] sent a new wave of appends!
+2023/10/12 04:07:28 [** 1 term 101] sent a new wave of appends!
+2023/10/12 04:07:28 [** 1 term 101] sent a new wave of appends!
+2023/10/12 04:07:28 [** 1 term 101] sent a new wave of appends!
+2023/10/12 04:07:29 [** 1 term 101] sent a new wave of appends!
+2023/10/12 04:07:29 [** 1 term 101] sent a new wave of appends!
+2023/10/12 04:07:29 [** 1 term 101] sent a new wave of appends!
+2023/10/12 04:07:29 [** 1 term 101] sent a new wave of appends!
+2023/10/12 04:07:29 [** 1 term 101] sent a new wave of appends!
+2023/10/12 04:07:29 [** 1 term 101] sent a new wave of appends!
+2023/10/12 04:07:29 [** 1 term 101] sent a new wave of appends!
+2023/10/12 04:07:29 [** 2 term 101] not leader
+2023/10/12 04:07:29 [** 3 term 101] not leader
+2023/10/12 04:07:29 [** 4 term 101] not leader
+2023/10/12 04:07:29 [** 0 term 101] not leader
+2023/10/12 04:07:29 [** 1 term 101] Got new entry[17] to replicate
+2023/10/12 04:07:29 [** 1 term 101] sent a new wave of appends!
+2023/10/12 04:07:29 [** 1 term 101] sent a new wave of appends!
+2023/10/12 04:07:29 [3 term 101] Goroutine awake and election timed out
+2023/10/12 04:07:29 [2 term 102] converted to follower
+2023/10/12 04:07:29 [2 term 102] Received vote from more up to date server [index 3 term 6]>[index 3 term 6]
+2023/10/12 04:07:29 [1 term 102] converted to follower
+2023/10/12 04:07:29 [4 term 102] converted to follower
+2023/10/12 04:07:29 [3 term 102] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:29 [0 term 102] converted to follower
+2023/10/12 04:07:29 [3 term 102] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:29 [3 term 102] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:29 [3 term 102] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:29 [4 term 102] Goroutine awake and election timed out
+2023/10/12 04:07:29 [3 term 103] converted to follower
+2023/10/12 04:07:29 [0 term 103] converted to follower
+2023/10/12 04:07:29 [2 term 103] converted to follower
+2023/10/12 04:07:29 [3 term 103] Received vote from more up to date server [index 22 term 91]>[index 3 term 6]
+2023/10/12 04:07:29 [2 term 103] Received vote from more up to date server [index 22 term 91]>[index 3 term 6]
+2023/10/12 04:07:29 [1 term 103] converted to follower
+2023/10/12 04:07:29 [4 term 103] Goroutine to collect vote. Current count: 1
+2023/10/12 04:07:29 [4 term 103] Goroutine to collect vote. Current count: 1
+2023/10/12 04:07:29 [4 term 103] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:29 [4 term 103] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:29 [** 4 term 103] [23 23 23 23 -1] is now leader!
+2023/10/12 04:07:29 [** 4 term 103] sent a new wave of appends!
+2023/10/12 04:07:29 [** 4 term 103] sent a new wave of appends!
+2023/10/12 04:07:29 [** 4 term 103] sent a new wave of appends!
+2023/10/12 04:07:29 [** 4 term 103] sent a new wave of appends!
+2023/10/12 04:07:29 [** 4 term 103] sent a new wave of appends!
+2023/10/12 04:07:29 [** 4 term 103] sent a new wave of appends!
+2023/10/12 04:07:29 [3 term 103] Goroutine awake and election timed out
+2023/10/12 04:07:29 [4 term 104] converted to follower
+2023/10/12 04:07:29 [1 term 104] converted to follower
+2023/10/12 04:07:29 [3 term 104] Goroutine to collect vote. Current count: 1
+2023/10/12 04:07:29 [0 term 104] converted to follower
+2023/10/12 04:07:29 [2 term 104] converted to follower
+2023/10/12 04:07:29 [2 term 104] Received vote from more up to date server [index 3 term 6]>[index 3 term 6]
+2023/10/12 04:07:29 [3 term 104] Goroutine to collect vote. Current count: 1
+2023/10/12 04:07:29 [3 term 104] Goroutine to collect vote. Current count: 1
+2023/10/12 04:07:29 [3 term 104] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:30 [0 term 104] Goroutine awake and election timed out
+2023/10/12 04:07:30 [3 term 105] converted to follower
+2023/10/12 04:07:30 [3 term 105] Received vote from more up to date server [index 26 term 93]>[index 3 term 6]
+2023/10/12 04:07:30 [0 term 105] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:30 [2 term 105] converted to follower
+2023/10/12 04:07:30 [1 term 105] converted to follower
+2023/10/12 04:07:30 [2 term 105] Received vote from more up to date server [index 26 term 93]>[index 3 term 6]
+2023/10/12 04:07:30 [0 term 105] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:30 [0 term 105] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:30 [** 0 term 105] [-1 27 27 27 27] is now leader!
+2023/10/12 04:07:30 [** 0 term 105] sent a new wave of appends!
+2023/10/12 04:07:30 [4 term 105] converted to follower
+2023/10/12 04:07:30 [4 term 105] Received vote from more up to date server [index 26 term 93]>[index 22 term 91]
+2023/10/12 04:07:30 [0 term 105] Goroutine to collect vote. Current count: 4
+2023/10/12 04:07:30 [1 term 105] Goroutine awake and election timed out
+2023/10/12 04:07:30 [4 term 106] converted to follower
+2023/10/12 04:07:30 [2 term 106] converted to follower
+2023/10/12 04:07:30 [2 term 106] Received vote from more up to date server [index 17 term 101]>[index 3 term 6]
+2023/10/12 04:07:30 [4 term 106] Received vote from more up to date server [index 17 term 101]>[index 22 term 91]
+2023/10/12 04:07:30 [1 term 106] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:30 [1 term 106] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:30 [3 term 106] converted to follower
+2023/10/12 04:07:30 [** 1 term 106] [18 -1 18 18 18] is now leader!
+2023/10/12 04:07:30 [** 1 term 106] sent a new wave of appends!
+2023/10/12 04:07:30 [3 term 106] Received vote from more up to date server [index 17 term 101]>[index 3 term 6]
+2023/10/12 04:07:30 [0 term 106] converted to follower
+2023/10/12 04:07:30 [1 term 106] Goroutine to collect vote. Current count: 4
+2023/10/12 04:07:30 [0 term 106] Received vote from more up to date server [index 17 term 101]>[index 26 term 93]
+2023/10/12 04:07:30 [1 term 106] Goroutine to collect vote. Current count: 5
+2023/10/12 04:07:30 [** 1 term 106] sent a new wave of appends!
+2023/10/12 04:07:30 [** 1 term 106] sent a new wave of appends!
+2023/10/12 04:07:30 [** 1 term 106] sent a new wave of appends!
+2023/10/12 04:07:30 [** 1 term 106] sent a new wave of appends!
+2023/10/12 04:07:30 [** 1 term 106] sent a new wave of appends!
+2023/10/12 04:07:30 [** 1 term 106] sent a new wave of appends!
+2023/10/12 04:07:30 [** 1 term 106] sent a new wave of appends!
+2023/10/12 04:07:30 [0 term 106] Goroutine awake and election timed out
+2023/10/12 04:07:30 [4 term 107] converted to follower
+2023/10/12 04:07:30 [2 term 107] converted to follower
+2023/10/12 04:07:30 [3 term 107] converted to follower
+2023/10/12 04:07:30 [2 term 107] Received vote from more up to date server [index 26 term 93]>[index 3 term 6]
+2023/10/12 04:07:30 [1 term 107] converted to follower
+2023/10/12 04:07:30 [3 term 107] Received vote from more up to date server [index 26 term 93]>[index 3 term 6]
+2023/10/12 04:07:30 [0 term 107] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:30 [1 term 107] Goroutine awake and election timed out
+2023/10/12 04:07:30 [4 term 107] Received vote from more up to date server [index 26 term 93]>[index 22 term 91]
+2023/10/12 04:07:30 [0 term 107] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:30 [** 0 term 107] [-1 27 27 27 27] is now leader!
+2023/10/12 04:07:30 [** 0 term 107] sent a new wave of appends!
+2023/10/12 04:07:30 [0 term 107] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:30 [0 term 107] Goroutine to collect vote. Current count: 4
+2023/10/12 04:07:30 [2 term 108] converted to follower
+2023/10/12 04:07:30 [4 term 108] converted to follower
+2023/10/12 04:07:30 [2 term 108] Received vote from more up to date server [index 17 term 101]>[index 3 term 6]
+2023/10/12 04:07:30 [0 term 108] converted to follower
+2023/10/12 04:07:30 [1 term 108] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:30 [4 term 108] Received vote from more up to date server [index 17 term 101]>[index 22 term 91]
+2023/10/12 04:07:30 [1 term 108] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:30 [0 term 108] Received vote from more up to date server [index 17 term 101]>[index 26 term 93]
+2023/10/12 04:07:30 [** 1 term 108] [18 -1 18 18 18] is now leader!
+2023/10/12 04:07:30 [** 1 term 108] sent a new wave of appends!
+2023/10/12 04:07:30 [3 term 108] converted to follower
+2023/10/12 04:07:30 [1 term 108] Goroutine to collect vote. Current count: 4
+2023/10/12 04:07:30 [3 term 108] Received vote from more up to date server [index 17 term 101]>[index 3 term 6]
+2023/10/12 04:07:30 [1 term 108] Goroutine to collect vote. Current count: 5
+2023/10/12 04:07:30 [** 1 term 108] sent a new wave of appends!
+2023/10/12 04:07:30 [** 1 term 108] sent a new wave of appends!
+2023/10/12 04:07:30 [** 1 term 108] sent a new wave of appends!
+2023/10/12 04:07:31 [** 1 term 108] sent a new wave of appends!
+2023/10/12 04:07:31 [** 1 term 108] sent a new wave of appends!
+2023/10/12 04:07:31 [** 1 term 108] sent a new wave of appends!
+2023/10/12 04:07:31 [** 1 term 108] sent a new wave of appends!
+2023/10/12 04:07:31 [** 1 term 108] sent a new wave of appends!
+2023/10/12 04:07:31 [** 1 term 108] sent a new wave of appends!
+2023/10/12 04:07:31 [** 1 term 108] sent a new wave of appends!
+2023/10/12 04:07:31 [** 1 term 108] sent a new wave of appends!
+2023/10/12 04:07:31 [4 term 108] Goroutine awake and election timed out
+2023/10/12 04:07:31 [2 term 109] converted to follower
+2023/10/12 04:07:31 [2 term 109] Received vote from more up to date server [index 22 term 91]>[index 3 term 6]
+2023/10/12 04:07:31 [3 term 109] converted to follower
+2023/10/12 04:07:31 [1 term 109] converted to follower
+2023/10/12 04:07:31 [4 term 109] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:31 [3 term 109] Received vote from more up to date server [index 22 term 91]>[index 3 term 6]
+2023/10/12 04:07:31 [0 term 109] converted to follower
+2023/10/12 04:07:31 [4 term 109] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:31 [4 term 109] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:31 [** 4 term 109] [23 23 23 23 -1] is now leader!
+2023/10/12 04:07:31 [** 4 term 109] sent a new wave of appends!
+2023/10/12 04:07:31 [4 term 109] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:31 [** 2 term 109] not leader
+2023/10/12 04:07:31 [** 3 term 109] not leader
+2023/10/12 04:07:31 [** 4 term 109] Got new entry[23] to replicate
+2023/10/12 04:07:31 [** 4 term 109] sent a new wave of appends!
+2023/10/12 04:07:31 [0 term 109] Goroutine awake and election timed out
+2023/10/12 04:07:31 [4 term 110] converted to follower
+2023/10/12 04:07:31 [3 term 110] converted to follower
+2023/10/12 04:07:31 [3 term 110] Received vote from more up to date server [index 26 term 93]>[index 3 term 6]
+2023/10/12 04:07:31 [0 term 110] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:31 [2 term 110] converted to follower
+2023/10/12 04:07:31 [2 term 110] Received vote from more up to date server [index 26 term 93]>[index 3 term 6]
+2023/10/12 04:07:31 [0 term 110] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:31 [** 0 term 110] [-1 27 27 27 27] is now leader!
+2023/10/12 04:07:31 [** 0 term 110] sent a new wave of appends!
+2023/10/12 04:07:31 [0 term 110] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:31 [1 term 110] converted to follower
+2023/10/12 04:07:31 [0 term 110] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:31 [** 0 term 110] sent a new wave of appends!
+2023/10/12 04:07:31 [** 0 term 110] sent a new wave of appends!
+2023/10/12 04:07:31 [** 0 term 110] sent a new wave of appends!
+2023/10/12 04:07:31 [** 0 term 110] sent a new wave of appends!
+2023/10/12 04:07:32 [** 0 term 110] sent a new wave of appends!
+2023/10/12 04:07:32 [** 0 term 110] sent a new wave of appends!
+2023/10/12 04:07:32 [4 term 110] Goroutine awake and election timed out
+2023/10/12 04:07:32 [3 term 111] converted to follower
+2023/10/12 04:07:32 [3 term 111] Received vote from more up to date server [index 23 term 109]>[index 3 term 6]
+2023/10/12 04:07:32 [1 term 111] converted to follower
+2023/10/12 04:07:32 [1 term 111] Received vote from more up to date server [index 23 term 109]>[index 17 term 101]
+2023/10/12 04:07:32 [2 term 111] converted to follower
+2023/10/12 04:07:32 [4 term 111] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:32 [2 term 111] Received vote from more up to date server [index 23 term 109]>[index 3 term 6]
+2023/10/12 04:07:32 [4 term 111] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:32 [** 4 term 111] [24 24 24 24 -1] is now leader!
+2023/10/12 04:07:32 [** 4 term 111] sent a new wave of appends!
+2023/10/12 04:07:32 [0 term 111] converted to follower
+2023/10/12 04:07:32 [4 term 111] Goroutine to collect vote. Current count: 4
+2023/10/12 04:07:32 [0 term 111] Received vote from more up to date server [index 23 term 109]>[index 26 term 93]
+2023/10/12 04:07:32 [4 term 111] Goroutine to collect vote. Current count: 5
+2023/10/12 04:07:32 [** 4 term 111] sent a new wave of appends!
+2023/10/12 04:07:32 [** 4 term 111] sent a new wave of appends!
+2023/10/12 04:07:32 [** 4 term 111] sent a new wave of appends!
+2023/10/12 04:07:32 [** 4 term 111] sent a new wave of appends!
+2023/10/12 04:07:32 [** 4 term 111] sent a new wave of appends!
+2023/10/12 04:07:32 [** 4 term 111] sent a new wave of appends!
+2023/10/12 04:07:32 [** 4 term 111] sent a new wave of appends!
+2023/10/12 04:07:32 [1 term 111] Goroutine awake and election timed out
+2023/10/12 04:07:32 [4 term 112] converted to follower
+2023/10/12 04:07:32 [2 term 112] converted to follower
+2023/10/12 04:07:32 [2 term 112] Received vote from more up to date server [index 17 term 101]>[index 3 term 6]
+2023/10/12 04:07:32 [4 term 112] Goroutine awake and election timed out
+2023/10/12 04:07:32 [1 term 112] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:32 [3 term 112] converted to follower
+2023/10/12 04:07:32 [0 term 112] converted to follower
+2023/10/12 04:07:32 [1 term 112] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:32 [3 term 112] Received vote from more up to date server [index 17 term 101]>[index 3 term 6]
+2023/10/12 04:07:32 [0 term 112] Received vote from more up to date server [index 17 term 101]>[index 26 term 93]
+2023/10/12 04:07:32 [3 term 113] converted to follower
+2023/10/12 04:07:32 [3 term 113] Received vote from more up to date server [index 23 term 109]>[index 3 term 6]
+2023/10/12 04:07:32 [2 term 113] converted to follower
+2023/10/12 04:07:32 [1 term 113] converted to follower
+2023/10/12 04:07:32 [4 term 113] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:32 [1 term 113] Received vote from more up to date server [index 23 term 109]>[index 17 term 101]
+2023/10/12 04:07:32 [2 term 113] Received vote from more up to date server [index 23 term 109]>[index 3 term 6]
+2023/10/12 04:07:32 [0 term 113] converted to follower
+2023/10/12 04:07:32 [4 term 113] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:32 [** 4 term 113] [24 24 24 24 -1] is now leader!
+2023/10/12 04:07:32 [0 term 113] Received vote from more up to date server [index 23 term 109]>[index 26 term 93]
+2023/10/12 04:07:32 [** 4 term 113] sent a new wave of appends!
+2023/10/12 04:07:32 [4 term 113] Goroutine to collect vote. Current count: 4
+2023/10/12 04:07:32 [4 term 113] Goroutine to collect vote. Current count: 5
+2023/10/12 04:07:32 [** 4 term 113] sent a new wave of appends!
+2023/10/12 04:07:33 [** 4 term 113] sent a new wave of appends!
+2023/10/12 04:07:33 [** 4 term 113] sent a new wave of appends!
+2023/10/12 04:07:33 [** 4 term 113] sent a new wave of appends!
+2023/10/12 04:07:33 [** 4 term 113] sent a new wave of appends!
+2023/10/12 04:07:33 [** 4 term 113] sent a new wave of appends!
+2023/10/12 04:07:33 [0 term 113] Goroutine awake and election timed out
+2023/10/12 04:07:33 [2 term 114] converted to follower
+2023/10/12 04:07:33 [1 term 114] converted to follower
+2023/10/12 04:07:33 [4 term 114] converted to follower
+2023/10/12 04:07:33 [2 term 114] Received vote from more up to date server [index 26 term 93]>[index 3 term 6]
+2023/10/12 04:07:33 [0 term 114] Goroutine to collect vote. Current count: 1
+2023/10/12 04:07:33 [0 term 114] Goroutine to collect vote. Current count: 1
+2023/10/12 04:07:33 [3 term 114] converted to follower
+2023/10/12 04:07:33 [0 term 114] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:33 [3 term 114] Received vote from more up to date server [index 26 term 93]>[index 3 term 6]
+2023/10/12 04:07:33 [0 term 114] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:33 [** 0 term 114] [-1 27 27 27 27] is now leader!
+2023/10/12 04:07:33 [** 0 term 114] sent a new wave of appends!
+2023/10/12 04:07:33 [** 0 term 114] sent a new wave of appends!
+2023/10/12 04:07:33 [** 0 term 114] Got new entry[27] to replicate
+2023/10/12 04:07:33 [** 0 term 114] sent a new wave of appends!
+2023/10/12 04:07:33 [1 term 114] Goroutine awake and election timed out
+2023/10/12 04:07:33 [3 term 115] converted to follower
+2023/10/12 04:07:33 [2 term 115] converted to follower
+2023/10/12 04:07:33 [3 term 115] Received vote from more up to date server [index 17 term 101]>[index 3 term 6]
+2023/10/12 04:07:33 [2 term 115] Received vote from more up to date server [index 17 term 101]>[index 3 term 6]
+2023/10/12 04:07:33 [4 term 115] converted to follower
+2023/10/12 04:07:33 [1 term 115] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:33 [1 term 115] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:33 [1 term 115] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:33 [** 1 term 115] [18 -1 18 18 18] is now leader!
+2023/10/12 04:07:33 [0 term 115] converted to follower
+2023/10/12 04:07:33 [** 1 term 115] sent a new wave of appends!
+2023/10/12 04:07:33 [1 term 115] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:33 [** 1 term 115] sent a new wave of appends!
+2023/10/12 04:07:33 [** 1 term 115] sent a new wave of appends!
+2023/10/12 04:07:33 [** 1 term 115] sent a new wave of appends!
+2023/10/12 04:07:33 [** 1 term 115] sent a new wave of appends!
+2023/10/12 04:07:34 [** 1 term 115] sent a new wave of appends!
+2023/10/12 04:07:34 [4 term 115] Goroutine awake and election timed out
+2023/10/12 04:07:34 [3 term 116] converted to follower
+2023/10/12 04:07:34 [3 term 116] Received vote from more up to date server [index 23 term 109]>[index 3 term 6]
+2023/10/12 04:07:34 [4 term 116] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:34 [1 term 116] converted to follower
+2023/10/12 04:07:34 [0 term 116] converted to follower
+2023/10/12 04:07:34 [1 term 116] Received vote from more up to date server [index 23 term 109]>[index 17 term 101]
+2023/10/12 04:07:34 [4 term 116] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:34 [2 term 116] converted to follower
+2023/10/12 04:07:34 [4 term 116] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:34 [** 4 term 116] [24 24 24 24 -1] is now leader!
+2023/10/12 04:07:34 [** 4 term 116] sent a new wave of appends!
+2023/10/12 04:07:34 [2 term 116] Received vote from more up to date server [index 23 term 109]>[index 3 term 6]
+2023/10/12 04:07:34 [4 term 116] Goroutine to collect vote. Current count: 4
+2023/10/12 04:07:34 [** 4 term 116] sent a new wave of appends!
+2023/10/12 04:07:34 [** 4 term 116] sent a new wave of appends!
+2023/10/12 04:07:34 [** 4 term 116] sent a new wave of appends!
+2023/10/12 04:07:34 [0 term 116] Goroutine awake and election timed out
+2023/10/12 04:07:34 [3 term 117] converted to follower
+2023/10/12 04:07:34 [2 term 117] converted to follower
+2023/10/12 04:07:34 [3 term 117] Received vote from more up to date server [index 27 term 114]>[index 3 term 6]
+2023/10/12 04:07:34 [4 term 117] converted to follower
+2023/10/12 04:07:34 [2 term 117] Received vote from more up to date server [index 27 term 114]>[index 3 term 6]
+2023/10/12 04:07:34 [1 term 117] converted to follower
+2023/10/12 04:07:34 [0 term 117] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:34 [1 term 117] Received vote from more up to date server [index 27 term 114]>[index 17 term 101]
+2023/10/12 04:07:34 [0 term 117] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:34 [4 term 117] Received vote from more up to date server [index 27 term 114]>[index 23 term 109]
+2023/10/12 04:07:34 [** 0 term 117] [-1 28 28 28 28] is now leader!
+2023/10/12 04:07:34 [** 0 term 117] sent a new wave of appends!
+2023/10/12 04:07:34 [0 term 117] Goroutine to collect vote. Current count: 4
+2023/10/12 04:07:34 [0 term 117] Goroutine to collect vote. Current count: 5
+2023/10/12 04:07:34 [** 0 term 117] sent a new wave of appends!
+2023/10/12 04:07:34 [** 0 term 117] sent a new wave of appends!
+2023/10/12 04:07:34 [** 0 term 117] sent a new wave of appends!
+2023/10/12 04:07:34 [** 0 term 117] sent a new wave of appends!
+2023/10/12 04:07:34 [** 0 term 117] sent a new wave of appends!
+2023/10/12 04:07:35 [** 0 term 117] sent a new wave of appends!
+2023/10/12 04:07:35 [** 0 term 117] sent a new wave of appends!
+2023/10/12 04:07:35 [3 term 117] Goroutine awake and election timed out
+2023/10/12 04:07:35 [2 term 118] converted to follower
+2023/10/12 04:07:35 [0 term 118] converted to follower
+2023/10/12 04:07:35 [4 term 118] converted to follower
+2023/10/12 04:07:35 [2 term 118] Received vote from more up to date server [index 3 term 6]>[index 3 term 6]
+2023/10/12 04:07:35 [1 term 118] converted to follower
+2023/10/12 04:07:35 [3 term 118] Goroutine to collect vote. Current count: 1
+2023/10/12 04:07:35 [0 term 118] Goroutine awake and election timed out
+2023/10/12 04:07:35 [3 term 118] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:35 [3 term 118] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:35 [3 term 118] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:35 [4 term 119] converted to follower
+2023/10/12 04:07:35 [2 term 119] converted to follower
+2023/10/12 04:07:35 [4 term 119] Received vote from more up to date server [index 27 term 114]>[index 23 term 109]
+2023/10/12 04:07:35 [1 term 119] converted to follower
+2023/10/12 04:07:35 [2 term 119] Received vote from more up to date server [index 27 term 114]>[index 3 term 6]
+2023/10/12 04:07:35 [1 term 119] Received vote from more up to date server [index 27 term 114]>[index 17 term 101]
+2023/10/12 04:07:35 [0 term 119] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:35 [3 term 119] converted to follower
+2023/10/12 04:07:35 [3 term 119] Received vote from more up to date server [index 27 term 114]>[index 3 term 6]
+2023/10/12 04:07:35 [0 term 119] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:35 [0 term 119] Goroutine to collect vote. Current count: 4
+2023/10/12 04:07:35 [** 0 term 119] [-1 28 28 28 28] is now leader!
+2023/10/12 04:07:35 [** 0 term 119] sent a new wave of appends!
+2023/10/12 04:07:35 [0 term 119] Goroutine to collect vote. Current count: 5
+2023/10/12 04:07:35 [** 0 term 119] sent a new wave of appends!
+2023/10/12 04:07:35 [** 0 term 119] sent a new wave of appends!
+2023/10/12 04:07:35 [** 0 term 119] sent a new wave of appends!
+2023/10/12 04:07:35 [** 0 term 119] sent a new wave of appends!
+2023/10/12 04:07:35 [** 0 term 119] sent a new wave of appends!
+2023/10/12 04:07:35 [** 0 term 119] sent a new wave of appends!
+2023/10/12 04:07:35 [** 1 term 119] not leader
+2023/10/12 04:07:35 [** 2 term 119] not leader
+2023/10/12 04:07:35 [** 3 term 119] not leader
+2023/10/12 04:07:35 [** 4 term 119] not leader
+2023/10/12 04:07:35 [** 0 term 119] Got new entry[28] to replicate
+2023/10/12 04:07:35 [** 0 term 119] sent a new wave of appends!
+2023/10/12 04:07:35 [** 0 term 119] sent a new wave of appends!
+2023/10/12 04:07:35 [** 0 term 119] sent a new wave of appends!
+2023/10/12 04:07:35 [** 0 term 119] sent a new wave of appends!
+2023/10/12 04:07:35 [2 term 119] Goroutine awake and election timed out
+2023/10/12 04:07:35 [4 term 120] converted to follower
+2023/10/12 04:07:35 [3 term 120] converted to follower
+2023/10/12 04:07:35 [1 term 120] converted to follower
+2023/10/12 04:07:35 [2 term 120] Goroutine to collect vote. Current count: 1
+2023/10/12 04:07:35 [0 term 120] converted to follower
+2023/10/12 04:07:35 [2 term 120] Goroutine to collect vote. Current count: 1
+2023/10/12 04:07:35 [0 term 120] Goroutine awake and election timed out
+2023/10/12 04:07:35 [2 term 120] Goroutine to collect vote. Current count: 1
+2023/10/12 04:07:35 [3 term 120] Received vote from more up to date server [index 3 term 6]>[index 3 term 6]
+2023/10/12 04:07:35 [2 term 120] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:35 [2 term 121] converted to follower
+2023/10/12 04:07:35 [4 term 121] converted to follower
+2023/10/12 04:07:35 [2 term 121] Received vote from more up to date server [index 28 term 119]>[index 3 term 6]
+2023/10/12 04:07:35 [4 term 121] Received vote from more up to date server [index 28 term 119]>[index 23 term 109]
+2023/10/12 04:07:35 [0 term 121] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:35 [1 term 121] converted to follower
+2023/10/12 04:07:35 [3 term 121] converted to follower
+2023/10/12 04:07:35 [1 term 121] Received vote from more up to date server [index 28 term 119]>[index 17 term 101]
+2023/10/12 04:07:35 [0 term 121] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:35 [3 term 121] Received vote from more up to date server [index 28 term 119]>[index 3 term 6]
+2023/10/12 04:07:35 [** 0 term 121] [-1 29 29 29 29] is now leader!
+2023/10/12 04:07:35 [** 0 term 121] sent a new wave of appends!
+2023/10/12 04:07:35 [0 term 121] Goroutine to collect vote. Current count: 4
+2023/10/12 04:07:35 [0 term 121] Goroutine to collect vote. Current count: 5
+2023/10/12 04:07:35 [** 0 term 121] sent a new wave of appends!
+2023/10/12 04:07:35 [** 0 term 121] sent a new wave of appends!
+2023/10/12 04:07:35 [** 0 term 121] sent a new wave of appends!
+2023/10/12 04:07:35 [** 0 term 121] sent a new wave of appends!
+2023/10/12 04:07:35 [** 0 term 121] sent a new wave of appends!
+2023/10/12 04:07:35 [** 0 term 121] sent a new wave of appends!
+2023/10/12 04:07:35 [** 0 term 121] sent a new wave of appends!
+2023/10/12 04:07:35 [** 0 term 121] sent a new wave of appends!
+2023/10/12 04:07:36 [** 0 term 121] sent a new wave of appends!
+2023/10/12 04:07:36 [** 0 term 121] sent a new wave of appends!
+2023/10/12 04:07:36 [** 0 term 121] sent a new wave of appends!
+2023/10/12 04:07:36 [** 0 term 121] sent a new wave of appends!
+2023/10/12 04:07:36 [** 0 term 121] sent a new wave of appends!
+2023/10/12 04:07:36 [** 0 term 121] sent a new wave of appends!
+2023/10/12 04:07:36 [** 0 term 121] sent a new wave of appends!
+2023/10/12 04:07:36 [4 term 121] Goroutine awake and election timed out
+2023/10/12 04:07:36 [3 term 122] converted to follower
+2023/10/12 04:07:36 [0 term 122] converted to follower
+2023/10/12 04:07:36 [1 term 122] converted to follower
+2023/10/12 04:07:36 [1 term 122] Received vote from more up to date server [index 23 term 109]>[index 17 term 101]
+2023/10/12 04:07:36 [4 term 122] Goroutine to collect vote. Current count: 1
+2023/10/12 04:07:36 [3 term 122] Received vote from more up to date server [index 23 term 109]>[index 3 term 6]
+2023/10/12 04:07:36 [0 term 122] Goroutine awake and election timed out
+2023/10/12 04:07:36 [2 term 122] converted to follower
+2023/10/12 04:07:36 [4 term 122] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:36 [2 term 122] Received vote from more up to date server [index 23 term 109]>[index 3 term 6]
+2023/10/12 04:07:36 [4 term 122] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:36 [** 4 term 122] [24 24 24 24 -1] is now leader!
+2023/10/12 04:07:36 [** 4 term 122] sent a new wave of appends!
+2023/10/12 04:07:36 [4 term 122] Goroutine to collect vote. Current count: 4
+2023/10/12 04:07:36 [4 term 123] converted to follower
+2023/10/12 04:07:36 [1 term 123] converted to follower
+2023/10/12 04:07:36 [4 term 123] Received vote from more up to date server [index 28 term 119]>[index 23 term 109]
+2023/10/12 04:07:36 [1 term 123] Received vote from more up to date server [index 28 term 119]>[index 17 term 101]
+2023/10/12 04:07:36 [2 term 123] converted to follower
+2023/10/12 04:07:36 [2 term 123] Received vote from more up to date server [index 28 term 119]>[index 3 term 6]
+2023/10/12 04:07:36 [3 term 123] converted to follower
+2023/10/12 04:07:36 [0 term 123] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:36 [0 term 123] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:36 [0 term 123] Goroutine to collect vote. Current count: 4
+2023/10/12 04:07:36 [3 term 123] Received vote from more up to date server [index 28 term 119]>[index 3 term 6]
+2023/10/12 04:07:36 [** 0 term 123] [-1 29 29 29 29] is now leader!
+2023/10/12 04:07:36 [** 0 term 123] sent a new wave of appends!
+2023/10/12 04:07:36 [0 term 123] Goroutine to collect vote. Current count: 5
+2023/10/12 04:07:36 [** 0 term 123] sent a new wave of appends!
+2023/10/12 04:07:36 [** 0 term 123] sent a new wave of appends!
+2023/10/12 04:07:36 [** 0 term 123] sent a new wave of appends!
+2023/10/12 04:07:36 [** 0 term 123] sent a new wave of appends!
+2023/10/12 04:07:36 [** 0 term 123] sent a new wave of appends!
+2023/10/12 04:07:36 [** 0 term 123] sent a new wave of appends!
+2023/10/12 04:07:36 [** 0 term 123] sent a new wave of appends!
+2023/10/12 04:07:36 [** 0 term 123] sent a new wave of appends!
+2023/10/12 04:07:36 [** 0 term 123] sent a new wave of appends!
+2023/10/12 04:07:36 [** 0 term 123] sent a new wave of appends!
+2023/10/12 04:07:36 [** 0 term 123] sent a new wave of appends!
+2023/10/12 04:07:36 [** 0 term 123] sent a new wave of appends!
+2023/10/12 04:07:36 [** 0 term 123] sent a new wave of appends!
+2023/10/12 04:07:36 [** 0 term 123] sent a new wave of appends!
+2023/10/12 04:07:36 [4 term 123] Goroutine awake and election timed out
+2023/10/12 04:07:36 [2 term 124] converted to follower
+2023/10/12 04:07:36 [1 term 124] converted to follower
+2023/10/12 04:07:36 [2 term 124] Received vote from more up to date server [index 23 term 109]>[index 3 term 6]
+2023/10/12 04:07:36 [3 term 124] converted to follower
+2023/10/12 04:07:36 [0 term 124] converted to follower
+2023/10/12 04:07:36 [1 term 124] Received vote from more up to date server [index 23 term 109]>[index 17 term 101]
+2023/10/12 04:07:36 [3 term 124] Received vote from more up to date server [index 23 term 109]>[index 3 term 6]
+2023/10/12 04:07:36 [4 term 124] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:36 [4 term 124] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:36 [** 4 term 124] [24 24 24 24 -1] is now leader!
+2023/10/12 04:07:36 [** 4 term 124] sent a new wave of appends!
+2023/10/12 04:07:36 [4 term 124] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:36 [4 term 124] Goroutine to collect vote. Current count: 4
+2023/10/12 04:07:36 [** 4 term 124] sent a new wave of appends!
+2023/10/12 04:07:36 [** 4 term 124] sent a new wave of appends!
+2023/10/12 04:07:36 [** 4 term 124] sent a new wave of appends!
+2023/10/12 04:07:36 [** 4 term 124] sent a new wave of appends!
+2023/10/12 04:07:36 [1 term 124] Goroutine awake and election timed out
+2023/10/12 04:07:36 [2 term 125] converted to follower
+2023/10/12 04:07:36 [4 term 125] converted to follower
+2023/10/12 04:07:36 [2 term 125] Received vote from more up to date server [index 17 term 101]>[index 3 term 6]
+2023/10/12 04:07:36 [0 term 125] converted to follower
+2023/10/12 04:07:36 [3 term 125] converted to follower
+2023/10/12 04:07:36 [3 term 125] Received vote from more up to date server [index 17 term 101]>[index 3 term 6]
+2023/10/12 04:07:36 [1 term 125] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:36 [1 term 125] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:36 [1 term 125] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:36 [1 term 125] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:36 [** 1 term 125] [18 -1 18 18 18] is now leader!
+2023/10/12 04:07:36 [** 1 term 125] sent a new wave of appends!
+2023/10/12 04:07:37 [** 1 term 125] sent a new wave of appends!
+2023/10/12 04:07:37 [** 1 term 125] sent a new wave of appends!
+2023/10/12 04:07:37 [** 1 term 125] sent a new wave of appends!
+2023/10/12 04:07:37 [0 term 125] Goroutine awake and election timed out
+2023/10/12 04:07:37 [3 term 126] converted to follower
+2023/10/12 04:07:37 [2 term 126] converted to follower
+2023/10/12 04:07:37 [4 term 126] converted to follower
+2023/10/12 04:07:37 [1 term 126] converted to follower
+2023/10/12 04:07:37 [4 term 126] Received vote from more up to date server [index 28 term 119]>[index 23 term 109]
+2023/10/12 04:07:37 [1 term 126] Received vote from more up to date server [index 28 term 119]>[index 17 term 101]
+2023/10/12 04:07:37 [0 term 126] Goroutine to collect vote. Current count: 2
+2023/10/12 04:07:37 [2 term 126] Received vote from more up to date server [index 28 term 119]>[index 3 term 6]
+2023/10/12 04:07:37 [0 term 126] Goroutine to collect vote. Current count: 3
+2023/10/12 04:07:37 [** 0 term 126] [-1 29 29 29 29] is now leader!
+2023/10/12 04:07:37 [** 0 term 126] sent a new wave of appends!
+2023/10/12 04:07:37 [0 term 126] Goroutine to collect vote. Current count: 4
+2023/10/12 04:07:37 [3 term 126] Received vote from more up to date server [index 28 term 119]>[index 3 term 6]
+2023/10/12 04:07:37 [0 term 126] Goroutine to collect vote. Current count: 5
+2023/10/12 04:07:37 [** 0 term 126] sent a new wave of appends!
+--- FAIL: Test2CR (51.08s)
+    config.go:478: one(3903362459138811247) failed to reach agreement
+FAIL
+exit status 1
+FAIL	dsys/raft	51.084s

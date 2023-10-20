@@ -1,10 +1,10 @@
 package kvraft
 
 import (
-	"../labgob"
-	"../labrpc"
-	"log"
-	"../raft"
+	"dsys/labgob"
+	"dsys/labrpc"
+	"dsys/raft"
+	"fmt"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -13,26 +13,29 @@ import (
 	"encoding/gob"
 )
 
-const Debug = 0
+/*
+Lock for application layer is at
+RPCs
+ApplyDaemon that accepts replicated changes and might wake up waiting RPCs
+*/
 
-func DPrintf(format string, a ...interface{}) (n int, err error) {
-	if Debug > 0 {
-		log.Printf(format, a...)
-	}
-	return
-}
+type OperationType int
 
+const (
+	GET OperationType = iota
+	PUT
+	APPEND
+)
 
 type Op struct {
 	// Your definitions here.
 	// Field names must start with capital letters,
 	// otherwise RPC will break.
-	Serial string
-	Type int
-	Key string
-	Value string
-	WaitId string
-	RequestID int
+	Serial int
+	Sid    int
+	Type   OperationType
+	Key    string
+	Value  string
 }
 
 type KVServer struct {
@@ -43,16 +46,45 @@ type KVServer struct {
 	dead    int32 // set by Kill()
 
 	maxraftstate int // snapshot if log grows this big
+	tracker      *RequestTracker
+	state        *ServerState
 
-	// Your definitions here.
-	store map[string]string
-	applied map[string]bool
-	waiting map[string]chan bool
 
-	waitingNum int
+	num_raft int
+}
+
+//
+// the tester calls Kill() when a KVServer instance won't
+// be needed again. for your convenience, we supply
+// code to set rf.dead (without needing a lock),
+// and a killed() method to test rf.dead in
+// long-running loops. you can also add your own
+// code to Kill(). you're not required to do anything
+// about this, but it may be convenient (for example)
+// to suppress debug output from a Kill()ed instance.
+//
+func (kv *KVServer) Kill() {
+	atomic.StoreInt32(&kv.dead, 1)
+	/*
+		kv.rf.Kill()
+		for i := 0; i < len(kv.tracker.request_chan); i++ {
+			if kv.tracker.request_chan[i] != nil {
+				close(kv.tracker.request_chan[i])
+			}
+		}
+		raft.DPrintfl2("[%d] killed %d", kv.me, kv.num_raft)
+	*/
+
+}
+
 
 	latestIndex int
 	latestTerm int
+}
+
+func (kv *KVServer) GetLeader() (int, bool) {
+	_, leader, isLeader := kv.rf.GetStateAndLeader()
+	return leader, isLeader
 }
 
 //
@@ -82,6 +114,10 @@ func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persiste
 
 	kv.applyCh = make(chan raft.ApplyMsg)
 	kv.rf = raft.Make(servers, me, persister, kv.applyCh)
+	kv.tracker = NewRequestTracker()
+	kv.state = NewServerState()
+	kv.num_raft = len(servers)
+	go kv.ApplyDaemon()
 
 	// You may need initialization code here.
 	kv.store=map[string]string{}
@@ -93,158 +129,22 @@ func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persiste
 }
 
 
-func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
-	// Your code here.
-	kv.mu.Lock()
-	DPrintf("[%d] Read received\n",kv.me)
-	defer kv.mu.Unlock()
-	if term,isLeader:=kv.rf.GetState();!isLeader{
-		DPrintf("[%d] defer not leader term %d\n",kv.me,term)
-		reply.Ok=false
-	} else{
-		waitNum:=kv.GetUniqueWaitNum()
-		wait:=make(chan bool,1)
-		kv.waiting[waitNum]=wait
-		op:=Op{
-			args.Serial,
-			0,
-			args.Key,
-			"",
-			waitNum,
-			kv.me,
-		}
-		kv.rf.TryRead(op)
-		DPrintf("[%d] Try to apply read",kv.me)
-		kv.mu.Unlock()
+func (kv *KVServer) PingDebug(args *GetArgs, reply *GetReply) {
+	Lock(kv, lock_trace)
+	defer Unlock(kv, lock_trace)
 
-		timeout:=raft.GetMaxEletionTime()
-		select{	
-		case <-wait:
-			reply.Ok=true
-		case <-time.After(timeout):
-			reply.Ok=false
-		}
-
-		kv.mu.Lock()
-		reply.Value=kv.store[args.Key]
-		DPrintf("[%d] Done trying to apply read result(%t)",kv.me,reply.Ok)
-	}
-	return 
+	DPrintf("[%d to %d]", args.Sid, kv.me)
 }
 
-func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
-	
-	// Your code here.
+func (kv *KVServer) Lock() {
 	kv.mu.Lock()
-	DPrintf("[%d] Write received\n",kv.me)
-	defer kv.mu.Unlock()
-	var action int
-	if args.Op=="Put"{
-		action=1
-	} else if args.Op=="Append"{
-		action=2
-	}
-	if term,isLeader:=kv.rf.GetState();!isLeader{
-		DPrintf("[%d] defer not leader term %d\n",kv.me,term)
-		reply.Ok=false
-	} else{
-		waitNum:=kv.GetUniqueWaitNum()
-		wait:=make(chan bool,1)
-		kv.waiting[waitNum]=wait
-		op:=Op{
-			args.Serial,
-			action,
-			args.Key,
-			args.Value,
-			waitNum,
-			kv.me,
-		}
-		kv.rf.Start(op)
-		DPrintf("[%d] Try to apply write",kv.me)
-		kv.mu.Unlock()
-
-		timeout:=raft.GetMaxEletionTime()
-		select{	
-		case <-wait:
-			reply.Ok=true
-		case <-time.After(timeout):
-			reply.Ok=false
-		}
-
-		kv.mu.Lock()
-		DPrintf("[%d] Done trying to apply write result(%t)",kv.me,reply.Ok)
-	}
-	return 
 }
 
-
-
-func (kv *KVServer)ProcessCommits(){
-	kv.mu.Lock()
-	for !kv.killed(){
-		kv.mu.Unlock()
-		commit:=<-kv.applyCh
-		command:=commit.Command.(Op)
-		kv.mu.Lock()
-		DPrintf(
-			"[%d] commited command| Serial(%v),Type(%v),Key(%v),Value(%v),WaitId(%v)\n",
-			kv.me,
-			command.Serial,
-			command.Type,
-			command.Key,
-			command.Value,
-			command.WaitId,
-		)
-		kv.latestIndex=commit.CommandIndex
-		kv.latestTerm=commit.CommandTerm
-
-		if !kv.applied[command.Serial]{
-			if command.Type==1{
-				kv.store[command.Key]=command.Value
-			} else if command.Type==2{
-				kv.store[command.Key]+=command.Value
-			}
-			DPrintf("[%d] applied command %v:(%v)/(%v) Serial[%s]\n",kv.me,command.Type,command.Key,command.Value,command.Serial)
-			kv.applied[command.Serial]=true
-		}
-
-		if c,ok:=kv.waiting[command.WaitId];ok{
-			c<-true
-			DPrintf("[%d] signal channel(%v) to respond to client\n",kv.me,command.WaitId)
-			delete(kv.waiting,command.WaitId)
-		}
-	}
+func (kv *KVServer) Unlock() {
 	kv.mu.Unlock()
 }
 
+func (kv *KVServer) Identity() string {
+	return fmt.Sprintf("[%d]", kv.me)
 
-func (kv *KVServer) Kill() {
-	atomic.StoreInt32(&kv.dead, 1)
-	kv.rf.Kill()
-	DPrintf("[%d] %v\n\n\n",kv.me,kv.store)
-	// Your code here, if desired.
-}
-
-func (kv *KVServer) killed() bool {
-	z := atomic.LoadInt32(&kv.dead)
-	return z == 1
-}
-
-func (kv *KVServer) GetUniqueWaitNum() string {
-	kv.waitingNum+=1
-	return fmt.Sprintf("%p%d",kv,kv.waitingNum)
-}
-
-func (kv *KVServer) Compaction(){
-	if kv.maxraftstate<=0{
-		return
-	}
-	if kv.rf.GetPersister().RaftStateSize()>=kv.maxraftstate{
-		w := new(bytes.Buffer)
-		e := gob.NewEncoder(w)
-		e.Encode(kv.store)
-		data := w.Bytes()
-		newSnapshot:=raft.Snapshot{LastIndex:kv.latestIndex,LastTerm:kv.latestTerm,SnapBytes:data}
-		kv.rf.SetSnapshot(&newSnapshot)
-	}
 }
