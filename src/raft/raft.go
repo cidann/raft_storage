@@ -98,11 +98,27 @@ func (rf *Raft) GetState() (int, bool) {
 	defer rf.mu.Unlock()
 	var term int
 	var isleader bool
-	// Your code here (2A).
+
 	term = rf.currentTerm
 	isleader = rf.state == LEADER
+	DPrintf("[%d] state %v", rf.me, rf.state)
 
 	return term, isleader
+}
+
+func (rf *Raft) GetStateAndLeader() (int, int, bool) {
+	rf.mu.Lock()
+	defer rf.mu.Unlock()
+	var term int
+	var leader int
+	var isleader bool
+
+	term = rf.currentTerm
+	leader = rf.leader
+	isleader = rf.state == LEADER
+	DPrintf("[%d] state %v leader %d", rf.me, rf.state, rf.leader)
+
+	return term, leader, isleader
 }
 
 //
@@ -157,7 +173,10 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 	index := -1
 	term := -1
 	isLeader := false
-	// Your code here (2B).
+
+	if command == nil {
+		panic("Should not have nil command")
+	}
 	if rf.state == LEADER {
 		index = rf.log.length()
 		term = rf.currentTerm

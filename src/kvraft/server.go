@@ -1,28 +1,37 @@
 package kvraft
 
 import (
-	"../labgob"
-	"../labrpc"
-	"log"
-	"../raft"
+	"dsys/labgob"
+	"dsys/labrpc"
+	"dsys/raft"
+	"fmt"
 	"sync"
 	"sync/atomic"
 )
 
-const Debug = 0
+/*
+Lock for application layer is at
+RPCs
+ApplyDaemon that accepts replicated changes and might wake up waiting RPCs
+*/
 
-func DPrintf(format string, a ...interface{}) (n int, err error) {
-	if Debug > 0 {
-		log.Printf(format, a...)
-	}
-	return
-}
+type OperationType int
 
+const (
+	GET OperationType = iota
+	PUT
+	APPEND
+)
 
 type Op struct {
 	// Your definitions here.
 	// Field names must start with capital letters,
 	// otherwise RPC will break.
+	Serial int
+	Sid    int
+	Type   OperationType
+	Key    string
+	Value  string
 }
 
 type KVServer struct {
@@ -33,17 +42,10 @@ type KVServer struct {
 	dead    int32 // set by Kill()
 
 	maxraftstate int // snapshot if log grows this big
+	tracker      *RequestTracker
+	state        *ServerState
 
-	// Your definitions here.
-}
-
-
-func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
-	// Your code here.
-}
-
-func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
-	// Your code here.
+	num_raft int
 }
 
 //
@@ -58,13 +60,26 @@ func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 //
 func (kv *KVServer) Kill() {
 	atomic.StoreInt32(&kv.dead, 1)
-	kv.rf.Kill()
-	// Your code here, if desired.
+	/*
+		kv.rf.Kill()
+		for i := 0; i < len(kv.tracker.request_chan); i++ {
+			if kv.tracker.request_chan[i] != nil {
+				close(kv.tracker.request_chan[i])
+			}
+		}
+		raft.DPrintfl2("[%d] killed %d", kv.me, kv.num_raft)
+	*/
+
 }
 
 func (kv *KVServer) killed() bool {
 	z := atomic.LoadInt32(&kv.dead)
 	return z == 1
+}
+
+func (kv *KVServer) GetLeader() (int, bool) {
+	_, leader, isLeader := kv.rf.GetStateAndLeader()
+	return leader, isLeader
 }
 
 //
@@ -94,8 +109,31 @@ func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persiste
 
 	kv.applyCh = make(chan raft.ApplyMsg)
 	kv.rf = raft.Make(servers, me, persister, kv.applyCh)
+	kv.tracker = NewRequestTracker()
+	kv.state = NewServerState()
+	kv.num_raft = len(servers)
+	go kv.ApplyDaemon()
 
 	// You may need initialization code here.
 
 	return kv
+}
+
+func (kv *KVServer) PingDebug(args *GetArgs, reply *GetReply) {
+	Lock(kv, lock_trace)
+	defer Unlock(kv, lock_trace)
+
+	DPrintf("[%d to %d]", args.Sid, kv.me)
+}
+
+func (kv *KVServer) Lock() {
+	kv.mu.Lock()
+}
+
+func (kv *KVServer) Unlock() {
+	kv.mu.Unlock()
+}
+
+func (kv *KVServer) Identity() string {
+	return fmt.Sprintf("[%d]", kv.me)
 }

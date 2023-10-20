@@ -1,13 +1,21 @@
 package kvraft
 
-import "../labrpc"
-import "crypto/rand"
-import "math/big"
+import (
+	"crypto/rand"
+	"dsys/labrpc"
+	"dsys/raft"
+	"math/big"
+	"runtime"
+	"time"
+)
 
+var id_counter int = 0
 
 type Clerk struct {
 	servers []*labrpc.ClientEnd
-	// You will have to modify this struct.
+	id      int
+	serial  int
+	tracker *ClientTracker
 }
 
 func nrand() int64 {
@@ -20,7 +28,11 @@ func nrand() int64 {
 func MakeClerk(servers []*labrpc.ClientEnd) *Clerk {
 	ck := new(Clerk)
 	ck.servers = servers
-	// You'll have to add code here.
+	ck.id = id_counter
+	ck.serial = 0
+	ck.tracker = NewClientTracker(len(servers))
+
+	id_counter++
 	return ck
 }
 
@@ -38,27 +50,94 @@ func MakeClerk(servers []*labrpc.ClientEnd) *Clerk {
 //
 func (ck *Clerk) Get(key string) string {
 
-	// You will have to modify this function.
-	return ""
+	for {
+		args := GetArgs{
+			Key:    key,
+			Serial: ck.serial,
+			Sid:    ck.id,
+		}
+		reply := GetReply{
+			Success:    false,
+			Value:      "",
+			LeaderHint: -1,
+		}
+		cpyarg := args
+		cpyreply := reply
+
+		target_server, visited_all := ck.tracker.Next()
+		DPrintf("[%d to %d] before send cur # runtime %d", ck.id, target_server, runtime.NumGoroutine())
+		DPrintf("[%d to %d] try to Get {%s}", ck.id, target_server, args.Key)
+		result_chan := GetChanForFunc[bool](func() { ck.servers[target_server].Call("KVServer.Get", &args, &reply) })
+		timeout_chan := GetChanForTime[bool](raft.GetMaxElectionTime())
+		select {
+		case <-result_chan:
+			if reply.Success {
+				DPrintf("[%d to %d] Successfully got {%s:%s}", ck.id, target_server, args.Key, reply.Value)
+				ck.serial++
+				return reply.Value
+			} else {
+				DPrintf("[%d to %d] Failed got {%s:%s}", ck.id, target_server, args.Key, reply.Value)
+				ck.tracker.RecordInvalid(target_server)
+				if reply.LeaderHint != -1 {
+					ck.tracker.RecordHint(reply.LeaderHint)
+				}
+			}
+		case <-timeout_chan:
+			DPrintf("[%d to %d] timeout got {%s:%s}", ck.id, target_server, cpyarg.Key, cpyreply.Value)
+			ck.tracker.RecordInvalid(target_server)
+		}
+		if visited_all {
+			time.Sleep(raft.GetMaxElectionTime())
+		}
+	}
 }
 
-//
-// shared by Put and Append.
-//
-// you can send an RPC with code like this:
-// ok := ck.servers[i].Call("KVServer.PutAppend", &args, &reply)
-//
-// the types of args and reply (including whether they are pointers)
-// must match the declared types of the RPC handler function's
-// arguments. and reply must be passed as a pointer.
-//
-func (ck *Clerk) PutAppend(key string, value string, op string) {
-	// You will have to modify this function.
+/*
+Remeber to use hint on who is leader later
+*/
+func (ck *Clerk) PutAppend(key string, value string, op OperationType) {
+	for {
+		args := PutAppendArgs{
+			Key:    key,
+			Value:  value,
+			Type:   op,
+			Serial: ck.serial,
+			Sid:    ck.id,
+		}
+		reply := PutAppendReply{
+			Success:    false,
+			LeaderHint: -1,
+		}
+		target_server, visited_all := ck.tracker.Next()
+		DPrintf("[%d to %d] try to PutAppend {%s:%s}", ck.id, target_server, args.Key, args.Value)
+		result_chan := GetChanForFunc[bool](func() { ck.servers[target_server].Call("KVServer.PutAppend", &args, &reply) })
+		timeout_chan := GetChanForTime[bool](raft.GetMaxElectionTime())
+		select {
+		case <-result_chan:
+			if reply.Success {
+				DPrintf("[%d to %d] Successfully apply {%s:%s}", ck.id, target_server, args.Key, args.Value)
+				ck.serial++
+				return
+			} else {
+				DPrintf("[%d to %d] failed apply {%s:%s}", ck.id, target_server, args.Key, args.Value)
+				ck.tracker.RecordInvalid(target_server)
+				if reply.LeaderHint != -1 {
+					ck.tracker.RecordHint(reply.LeaderHint)
+				}
+			}
+		case <-timeout_chan:
+			DPrintf("[%d to %d] timeout apply {%s:%s}", ck.id, target_server, args.Key, args.Value)
+			ck.tracker.RecordInvalid(target_server)
+		}
+		if visited_all {
+			time.Sleep(raft.GetMaxElectionTime())
+		}
+	}
 }
 
 func (ck *Clerk) Put(key string, value string) {
-	ck.PutAppend(key, value, "Put")
+	ck.PutAppend(key, value, PUT)
 }
 func (ck *Clerk) Append(key string, value string) {
-	ck.PutAppend(key, value, "Append")
+	ck.PutAppend(key, value, APPEND)
 }

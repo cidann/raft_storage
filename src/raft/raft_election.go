@@ -29,7 +29,7 @@ func (rf *Raft) startWaitForResponse() {
 	}()
 	for !rf.killed() {
 		//Halt election clock if state is not candidate or followerer
-		for rf.state == LEADER {
+		for rf.state == LEADER && !rf.killed() {
 			rf.stateCond.Wait()
 		}
 		election_time := GetElectionTime()
@@ -82,7 +82,6 @@ type RequestVoteReply struct {
 }
 
 func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
-	// Your code here (2A, 2B).
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
 

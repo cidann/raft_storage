@@ -124,7 +124,6 @@ func (rf *Raft) handleValidAppendRequest(args *AppendEntryArgs, reply *AppendEnt
 		rf.log.replace(args.PrevLogIndex+1, args.Entries...)
 		rf.toFollower()
 		rf.setTerm(args.Term)
-		rf.leader = args.LeaderId
 		if args.LeaderCommit < rf.log.length() {
 			rf.commitIndex = args.LeaderCommit
 		} else {
@@ -136,6 +135,7 @@ func (rf *Raft) handleValidAppendRequest(args *AppendEntryArgs, reply *AppendEnt
 		reply.Success = false
 	}
 
+	rf.leader = args.LeaderId
 	reply.Term = rf.getTerm()
 }
 
@@ -164,7 +164,7 @@ func (rf *Raft) commitDaemon() {
 			rf.lastApplied++
 			entry := rf.log.get(rf.lastApplied).(ApplyMsg)
 			entry.CommandValid = true
-			rf.applyCh <- entry
+			rf.UnlockUntilAppliable(entry)
 		}
 	}
 }
