@@ -90,6 +90,7 @@ func TestReElection2A(t *testing.T) {
 	cfg.end()
 }
 
+
 func TestRepeat2AR(t *testing.T) {
 	if MyTest <= 0 {
 		return
@@ -99,6 +100,7 @@ func TestRepeat2AR(t *testing.T) {
 		TestReElection2A(t)
 	}
 }
+
 
 func TestBasicAgree2B(t *testing.T) {
 	servers := 3

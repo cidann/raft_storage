@@ -17,16 +17,18 @@ package raft
 //   in the same server.
 //
 
+
 import (
 	"bytes"
 	"dsys/labgob"
 	"dsys/labrpc"
 	"sync"
 	"sync/atomic"
+
 )
 
-// import "bytes"
-// import "../labgob"
+import "bytes"
+import "../labgob"
 
 type RaftState int
 
@@ -51,8 +53,13 @@ type ApplyMsg struct {
 	CommandValid bool
 	Command      interface{}
 	CommandIndex int
+
 	CommandTerm  int
+
 }
+
+
+
 
 //
 // A Go object implementing a single Raft peer.
@@ -67,6 +74,7 @@ type Raft struct {
 	// Your data here (2A, 2B, 2C).
 	// Look at the paper's Figure 2 for a description of what
 	// state a Raft server must maintain.
+
 	leader int
 
 	//Persistent state(persist through server failure)
@@ -89,6 +97,7 @@ type Raft struct {
 	commitCond sync.Cond
 
 	applyCh chan ApplyMsg
+
 }
 
 // return currentTerm and whether this server
@@ -98,6 +107,7 @@ func (rf *Raft) GetState() (int, bool) {
 	defer rf.mu.Unlock()
 	var term int
 	var isleader bool
+
 
 	term = rf.currentTerm
 	isleader = rf.state == LEADER
@@ -121,6 +131,7 @@ func (rf *Raft) GetStateAndLeader() (int, int, bool) {
 	return term, leader, isleader
 }
 
+
 //
 // save Raft's persistent state to stable storage,
 // where it can later be retrieved after a crash and restart.
@@ -128,12 +139,16 @@ func (rf *Raft) GetStateAndLeader() (int, int, bool) {
 //
 func (rf *Raft) persist() {
 	// Your code here (2C).
+
 	// Example:
+
 	w := new(bytes.Buffer)
 	e := labgob.NewEncoder(w)
 	e.Encode(rf.currentTerm)
 	e.Encode(rf.votedFor)
+
 	e.Encode(rf.log.log)
+
 	data := w.Bytes()
 	rf.persister.SaveRaftState(data)
 }
@@ -146,12 +161,14 @@ func (rf *Raft) readPersist(data []byte) {
 		return
 	}
 
+
 	r := bytes.NewBuffer(data)
 	d := labgob.NewDecoder(r)
 	d.Decode(&rf.currentTerm)
 	d.Decode(&rf.votedFor)
 	d.Decode(&rf.log.log)
 }
+
 
 //
 // the service using Raft (e.g. a k/v server) wants to start
@@ -174,6 +191,7 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 	term := -1
 	isLeader := false
 
+
 	if command == nil {
 		panic("Should not have nil command")
 	}
@@ -193,6 +211,7 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 
 		DPrintf("[** %d term %d] not leader", rf.me, rf.currentTerm)
 	}
+
 
 	return index, term, isLeader
 }
@@ -254,6 +273,27 @@ func Make(peers []*labrpc.ClientEnd, me int,
 	rf.intializeRaftLog()
 	rf.initializeStructEncode()
 	// Your initialization code here (2A, 2B, 2C).
+	rf.currentTerm=0
+	rf.votedFor=-1
+	rf.log=[]ApplyMsg{}
+
+	//Volatile state on all servers:
+	rf.commitIndex=-1
+	rf.lastApplied=-1
+
+	//Volatile state on leaders:
+	//(Reinitialized after election)
+	rf.nextIndex=make([]int,len(rf.peers))
+	rf.matchIndex=make([]int,len(rf.peers))
+
+	
+	rf.state=3
+	rf.lastAppend=time.Now()
+	rf.applicationChan=applyCh
+
+
+	go rf.WaitForResponse()
+	DPrintf("================ number of goroutine alive %d================\n",runtime.NumGoroutine())
 
 	// initialize from state persisted before a crash
 	rf.readPersist(persister.ReadRaftState())
@@ -265,6 +305,7 @@ func Make(peers []*labrpc.ClientEnd, me int,
 
 	return rf
 }
+
 
 func (rf *Raft) initializeStructEncode() {
 	labgob.Register(ApplyMsg{})
@@ -297,5 +338,6 @@ func (rf *Raft) setTermAndVote(term, vote int) {
 		rf.currentTerm = term
 		rf.votedFor = vote
 		rf.persist()
+
 	}
 }

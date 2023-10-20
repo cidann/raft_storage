@@ -7,6 +7,10 @@ import (
 	"fmt"
 	"sync"
 	"sync/atomic"
+	"time"
+	"fmt"
+	"bytes"
+	"encoding/gob"
 )
 
 /*
@@ -45,6 +49,7 @@ type KVServer struct {
 	tracker      *RequestTracker
 	state        *ServerState
 
+
 	num_raft int
 }
 
@@ -72,9 +77,9 @@ func (kv *KVServer) Kill() {
 
 }
 
-func (kv *KVServer) killed() bool {
-	z := atomic.LoadInt32(&kv.dead)
-	return z == 1
+
+	latestIndex int
+	latestTerm int
 }
 
 func (kv *KVServer) GetLeader() (int, bool) {
@@ -115,9 +120,14 @@ func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persiste
 	go kv.ApplyDaemon()
 
 	// You may need initialization code here.
-
+	kv.store=map[string]string{}
+	kv.applied=map[string]bool{}
+	kv.waiting=map[string]chan bool{}
+	kv.waitingNum=0
+	go kv.ProcessCommits()
 	return kv
 }
+
 
 func (kv *KVServer) PingDebug(args *GetArgs, reply *GetReply) {
 	Lock(kv, lock_trace)
@@ -136,4 +146,5 @@ func (kv *KVServer) Unlock() {
 
 func (kv *KVServer) Identity() string {
 	return fmt.Sprintf("[%d]", kv.me)
+
 }
