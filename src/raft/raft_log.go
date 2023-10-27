@@ -15,16 +15,30 @@ type RaftEntry interface {
 }
 
 type RaftLog struct {
-	log   []RaftEntry
-	owner *Raft
+	log         []RaftEntry
+	owner       *Raft
+	start_index int
 }
 
-func (rf *Raft) intializeRaftLog() {
-	pad := ApplyMsg{
-		CommandIndex: 0,
-		CommandTerm:  0,
+func (rf *Raft) initializeRaftLog(start_index, start_term int) {
+	if rf.log.length() == 0 {
+		rf.log.append(ApplyMsg{
+			CommandIndex: start_index,
+			CommandTerm:  start_term,
+		})
 	}
-	rf.log = NewRaftLog(rf, pad)
+	rf.log.start_index = start_index
+	rf.log.discardUpTo(start_index)
+}
+
+func (rf *Raft) reInitializeRaftLog(start_index, start_term int) {
+	rf.log.log = []RaftEntry{
+		ApplyMsg{
+			CommandIndex: start_index,
+			CommandTerm:  start_term,
+		},
+	}
+	rf.log.start_index = start_index
 }
 
 func NewRaftLog(owner *Raft, entries ...RaftEntry) *RaftLog {
@@ -34,30 +48,51 @@ func NewRaftLog(owner *Raft, entries ...RaftEntry) *RaftLog {
 	}
 }
 
+func (rl *RaftLog) getLogIndex(index int) int {
+	return index - rl.start_index
+}
+
 func (rl *RaftLog) append(msg ...RaftEntry) {
 	rl.log = append(rl.log, msg...)
 	rl.owner.persist()
 }
 
 func (rl *RaftLog) replace(start int, msg ...RaftEntry) {
+	start = rl.getLogIndex(start)
 	rl.log = append(rl.log[:start], msg...)
 	rl.owner.persist()
+}
+
+func (rl *RaftLog) discardUpTo(new_first_index int) {
+	rl.log = rl.log[rl.getLogIndex(new_first_index):]
+	rl.start_index = new_first_index
 }
 
 func (rl *RaftLog) get(index int) RaftEntry {
 	if index < 0 {
 		panic(fmt.Sprintf("log access with negative index %d len %d", index, rl.length()))
 	}
-	if index >= len(rl.log) {
+	if index >= rl.length() {
 		panic(fmt.Sprintf("log access with out of bound %d len %d", index, rl.length()))
 	}
-	return rl.log[index]
+	if rl.getLogIndex(index) < 0 {
+		panic(fmt.Sprintf("log access with negative true index %d global index %d start_index %d", rl.getLogIndex(index), index, rl.start_index))
+	}
+	if rl.getLogIndex(index) >= len(rl.log) {
+		panic(fmt.Sprintf("log access with out of bound true index %d global index %d start_index %d", rl.getLogIndex(index), index, rl.start_index))
+	}
+	return rl.log[rl.getLogIndex(index)]
 }
 func (rl *RaftLog) getLastTermIndex(index int) int {
-	term := rl.get(index).Term()
+	var term int
 	i := index
-	for rl.get(i).Term() == term {
-		i--
+	if index < rl.start_index {
+		i = rl.start_index
+	} else {
+		term = rl.get(index).Term()
+		for i > rl.start_index && rl.get(i).Term() == term {
+			i--
+		}
 	}
 	return i
 }
@@ -72,11 +107,15 @@ func (rl *RaftLog) getTermFirstIndex(index int) int {
 }
 
 func (rl *RaftLog) length() int {
-	return len(rl.log)
+	return len(rl.log) + rl.start_index
 }
 
 func (rl *RaftLog) last() RaftEntry {
-	return rl.get(len(rl.log) - 1)
+	return rl.get(rl.length() - 1)
+}
+
+func (rl *RaftLog) first() RaftEntry {
+	return rl.get(rl.start_index)
 }
 
 func (rl *RaftLog) slice(begin, end int) []RaftEntry {
@@ -87,7 +126,7 @@ func (rl *RaftLog) slice(begin, end int) []RaftEntry {
 		end = rl.length()
 	}
 
-	res := rl.log[begin:end]
+	res := rl.log[rl.getLogIndex(begin):rl.getLogIndex(end)]
 
 	return res
 }
@@ -103,9 +142,9 @@ func (rl *RaftLog) isUpToDate(index, term int) bool {
 func (msg ApplyMsg) OtherUpToDate(other RaftEntry) bool {
 	switch other := other.(type) {
 	case ApplyMsg:
-		if other.CommandTerm > msg.CommandTerm {
+		if other.Term() > msg.Term() {
 			return true
-		} else if other.CommandTerm == msg.CommandTerm && other.CommandIndex >= msg.CommandIndex {
+		} else if other.Term() == msg.Term() && other.Index() >= msg.Index() {
 			return true
 		}
 		return false
@@ -126,7 +165,7 @@ func (rl *RaftLog) checkMatch(index, term int) bool {
 	var other RaftEntry
 	if index < 0 {
 		panic("Don't allow left bound for now")
-	} else if index >= rl.length() {
+	} else if index >= rl.length() || index < rl.start_index {
 		return false
 	} else {
 		other = ApplyMsg{
@@ -144,7 +183,7 @@ func matchRaftEntry(first, second RaftEntry) bool {
 	switch first := first.(type) {
 	case ApplyMsg:
 		second := second.(ApplyMsg)
-		return first.CommandTerm == second.CommandTerm && first.CommandIndex == second.CommandIndex
+		return first.Term() == second.Term() && first.Index() == second.Index()
 	default:
 		panic("should not have other RaftEntry types")
 

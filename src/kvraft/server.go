@@ -1,6 +1,7 @@
 package kvraft
 
 import (
+	"bytes"
 	"dsys/labgob"
 	"dsys/labrpc"
 	"dsys/raft"
@@ -34,6 +35,10 @@ type Op struct {
 	Value  string
 }
 
+type SnapshotData struct {
+	Data []byte
+}
+
 type KVServer struct {
 	mu      sync.Mutex
 	me      int
@@ -46,6 +51,8 @@ type KVServer struct {
 	state        *ServerState
 
 	num_raft int
+
+	snapshot_cond *sync.Cond
 }
 
 //
@@ -82,6 +89,11 @@ func (kv *KVServer) GetLeader() (int, bool) {
 	return leader, isLeader
 }
 
+func (kv *KVServer) LoadPersistKVState(data []byte) (int, int) {
+	kv.LoadSnapshot(data)
+	return kv.state.LastIndex, kv.state.LastTerm
+}
+
 //
 // servers[] contains the ports of the set of
 // servers that will cooperate via Raft to
@@ -107,11 +119,13 @@ func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persiste
 
 	// You may need initialization code here.
 
-	kv.applyCh = make(chan raft.ApplyMsg)
+	kv.applyCh = make(chan raft.ApplyMsg, 100)
 	kv.rf = raft.Make(servers, me, persister, kv.applyCh)
 	kv.tracker = NewRequestTracker()
 	kv.state = NewServerState()
 	kv.num_raft = len(servers)
+	kv.snapshot_cond = sync.NewCond(&kv.mu)
+	kv.LoadSnapshot(persister.ReadSnapshot())
 	go kv.ApplyDaemon()
 
 	// You may need initialization code here.
@@ -135,5 +149,23 @@ func (kv *KVServer) Unlock() {
 }
 
 func (kv *KVServer) Identity() string {
-	return fmt.Sprintf("[%d]", kv.me)
+	return fmt.Sprintf("KV server: [%d]", kv.me)
+}
+
+func (kv *KVServer) CreateSnapshot() []byte {
+	buf := new(bytes.Buffer)
+	encoder := labgob.NewEncoder(buf)
+	encoder.Encode(*kv.state)
+	encoder.Encode(kv.tracker.latest_applied)
+	encoder.Encode(kv.tracker.request_serial)
+	return buf.Bytes()
+}
+
+func (kv *KVServer) LoadSnapshot(snapshot []byte) {
+	buf := bytes.NewBuffer(snapshot)
+	decoder := labgob.NewDecoder(buf)
+	decoder.Decode(kv.state)
+	decoder.Decode(&kv.tracker.latest_applied)
+	decoder.Decode(&kv.tracker.request_serial)
+
 }

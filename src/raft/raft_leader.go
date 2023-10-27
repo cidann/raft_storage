@@ -33,8 +33,8 @@ func (rf *Raft) sendAppendEntry(server int, args *AppendEntryArgs, reply *Append
 
 	ok := rf.peers[server].Call("Raft.AppendEntry", args, reply)
 
-	rf.mu.Lock()
-	defer rf.mu.Unlock()
+	Lock(rf, lock_trace)
+	defer Unlock(rf, lock_trace)
 
 	if !rf.checkValidAppendReply(args, reply) {
 		return false
@@ -46,8 +46,8 @@ func (rf *Raft) sendAppendEntry(server int, args *AppendEntryArgs, reply *Append
 
 func (rf *Raft) AppendEntry(args *AppendEntryArgs, reply *AppendEntryReply) {
 	//Remeber to finish
-	rf.mu.Lock()
-	defer rf.mu.Unlock()
+	Lock(rf, lock_trace)
+	defer Unlock(rf, lock_trace)
 
 	if !rf.checkAppendRequest(args, reply) {
 		return
@@ -56,8 +56,8 @@ func (rf *Raft) AppendEntry(args *AppendEntryArgs, reply *AppendEntryReply) {
 }
 
 func (rf *Raft) startLeader() {
-	rf.mu.Lock()
-	defer rf.mu.Unlock()
+	Lock(rf, lock_trace)
+	defer Unlock(rf, lock_trace)
 
 	if rf.state == LEADER {
 		return
@@ -74,7 +74,12 @@ func (rf *Raft) startLeader() {
 			go rf.sendAppendEntry(i, rf.makeAppendEntryArgs(i), rf.makeAppendEntryReply())
 		}
 		DPrintf("[** %d term %d] sent a new wave of appends!", rf.me, rf.getTerm())
-		rf.UnlockAndSleepFor(GetSendTime())
+		UnlockUntilChanReceive(rf, GetChanForFunc[bool](func() {
+			select {
+			case <-GetChanForTime[bool](GetSendTime()):
+			case <-rf.newEntryChan:
+			}
+		}))
 	}
 }
 
@@ -91,16 +96,30 @@ func (rf *Raft) handleValidAppendReply(server int, args *AppendEntryArgs, reply 
 		rf.toFollower()
 		return
 	}
+
+	//There is not need to worry about redundant snapshot rpcs
+	//since the follower that is processing the snapsho rpc will have the lock and request will timeout
+	//If reply reach this point it means it did not timeout or outdated thus at this point
+	//we can conclude the follower indeed does not have the snapshot if their next index is out of bound
 	if reply.Success {
 		replicated_up_to := getReplicatedIndex(args)
 		rf.matchIndex[server] = replicated_up_to
 		rf.nextIndex[server] = replicated_up_to + 1
+		if rf.log.getLogIndex(replicated_up_to) < 0 {
+			rf.nextIndex[server] = rf.log.first().Index() + 1
+			go rf.sendInstallSnapshot(server, rf.makeInstallSnapshotArgs(), rf.makeInstallSnapshotReply())
+		}
 		rf.leaderCheckAndUpdateCommit(rf.matchIndex[server])
 		rf.commitCond.Broadcast()
 		DPrintf("[** %d term %d] replicated on [%d] total replicated [%v] next [%v]", rf.me, rf.getTerm(), server, rf.matchIndex, rf.nextIndex)
 	} else {
-		//can be optimized
-		rf.nextIndex[server] = rf.log.getLastTermIndex(args.PrevLogIndex) + 1
+		next := rf.log.getLastTermIndex(args.PrevLogIndex) + 1
+		if rf.log.getLogIndex(next) >= 0 {
+			rf.nextIndex[server] = rf.log.first().Index() + 1
+			go rf.sendInstallSnapshot(server, rf.makeInstallSnapshotArgs(), rf.makeInstallSnapshotReply())
+		} else {
+			rf.nextIndex[server] = next
+		}
 	}
 }
 
@@ -119,6 +138,8 @@ func (rf *Raft) checkAppendRequest(args *AppendEntryArgs, reply *AppendEntryRepl
 
 func (rf *Raft) handleValidAppendRequest(args *AppendEntryArgs, reply *AppendEntryReply) {
 	defer rf.lastRecord.RecordTime()
+	DPrintf("[%d term %d] Received append[len %d] from leader[%d commit %d] [index %d term %d]==[index %d term %d]", rf.me, rf.getTerm(), len(args.Entries), args.LeaderId, args.LeaderCommit, args.PrevLogIndex, args.PrevLogTerm, args.PrevLogIndex, args.PrevLogIndex)
+
 	if rf.log.checkMatch(args.PrevLogIndex, args.PrevLogTerm) {
 		reply.Success = true
 		rf.log.replace(args.PrevLogIndex+1, args.Entries...)
@@ -130,7 +151,6 @@ func (rf *Raft) handleValidAppendRequest(args *AppendEntryArgs, reply *AppendEnt
 			rf.commitIndex = rf.log.length()
 		}
 		rf.commitCond.Broadcast()
-		DPrintf("[%d term %d] Received append[len %d] from leader[%d commit %d] [index %d term %d]==[index %d term %d]", rf.me, rf.getTerm(), len(args.Entries), args.LeaderId, args.LeaderCommit, args.PrevLogIndex, args.PrevLogTerm, rf.log.get(args.PrevLogIndex).Index(), rf.log.get(args.PrevLogIndex).Term())
 	} else {
 		reply.Success = false
 	}
@@ -156,8 +176,8 @@ func (rf *Raft) leaderCheckAndUpdateCommit(new_commit_index int) {
 }
 
 func (rf *Raft) commitDaemon() {
-	rf.mu.Lock()
-	defer rf.mu.Unlock()
+	Lock(rf, lock_trace)
+	defer Unlock(rf, lock_trace)
 	for !rf.killed() {
 		rf.commitCond.Wait()
 		for rf.lastApplied < rf.commitIndex {
@@ -170,6 +190,9 @@ func (rf *Raft) commitDaemon() {
 }
 
 func (rf *Raft) makeAppendEntryArgs(server int) *AppendEntryArgs {
+	if rf.nextIndex[server]-1 < rf.log.first().Index() {
+		rf.nextIndex[server] = rf.log.first().Index()
+	}
 	prevEntry := rf.log.get(rf.nextIndex[server] - 1)
 	return &AppendEntryArgs{
 		Term:         rf.getTerm(),

@@ -5,6 +5,7 @@ import (
 	"log"
 	"runtime"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -79,21 +80,21 @@ func Lock(obj Lockable, stack_trace bool, print_args ...interface{}) {
 		builder.WriteString(CreateStackTrace(1))
 		log.Print(builder.String())
 	}
-	defer func() { //defer can be inside if statement since it only calls at end of function
-		if stack_trace {
-			builder := strings.Builder{}
-			builder.WriteString(obj.Identity())
-			builder.WriteString(" Locked ")
-			if len(print_args) >= 1 {
-				builder.WriteString(fmt.Sprintf(print_args[0].(string), print_args[1:]...))
-				builder.WriteRune('\n')
-			}
-			builder.WriteString(CreateStackTrace(1))
-			log.Print(builder.String())
-		}
-	}()
 
 	obj.Lock()
+
+	if stack_trace {
+		builder := strings.Builder{}
+		builder.WriteString(obj.Identity())
+		builder.WriteString(" Locked ")
+		if len(print_args) >= 1 {
+			builder.WriteString(fmt.Sprintf(print_args[0].(string), print_args[1:]...))
+			builder.WriteRune('\n')
+		}
+		builder.WriteString(CreateStackTrace(1))
+		log.Print(builder.String())
+	}
+
 }
 
 func Unlock(obj Lockable, stack_trace bool, print_args ...interface{}) {
@@ -108,6 +109,12 @@ func Unlock(obj Lockable, stack_trace bool, print_args ...interface{}) {
 		log.Print(builder.String())
 	}
 	obj.Unlock()
+}
+
+func CondWait(obj Lockable, cond *sync.Cond) {
+	DPrintf("[%s] cond wait", obj.Identity())
+	cond.Wait()
+	DPrintf("[%s] cond start", obj.Identity())
 }
 
 func CreateStackTrace(frame_skip int) string {

@@ -20,11 +20,11 @@ func GetMaxElectionTime() time.Duration {
 }
 
 func (rf *Raft) startWaitForResponse() {
-	rf.mu.Lock()
-	defer rf.mu.Unlock()
+	Lock(rf, lock_trace)
+	defer Unlock(rf, lock_trace)
 	go func() {
-		rf.mu.Lock()
-		defer rf.mu.Unlock()
+		Lock(rf, lock_trace)
+		defer Unlock(rf, lock_trace)
 		rf.stateCond.Broadcast()
 	}()
 	for !rf.killed() {
@@ -82,8 +82,8 @@ type RequestVoteReply struct {
 }
 
 func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
-	rf.mu.Lock()
-	defer rf.mu.Unlock()
+	Lock(rf, lock_trace)
+	defer Unlock(rf, lock_trace)
 
 	if !rf.checkVoteRequest(args, reply) {
 		return
@@ -112,8 +112,8 @@ func (rf *Raft) sendRequestVote(server int, args *RequestVoteArgs, reply *Reques
 
 	ok := rf.peers[server].Call("Raft.RequestVote", args, reply)
 
-	rf.mu.Lock()
-	defer rf.mu.Unlock()
+	Lock(rf, lock_trace)
+	defer Unlock(rf, lock_trace)
 
 	if !rf.checkValidVoteReply(args, reply) {
 		return false

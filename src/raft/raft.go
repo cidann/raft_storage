@@ -21,6 +21,7 @@ import (
 	"bytes"
 	"dsys/labgob"
 	"dsys/labrpc"
+	"fmt"
 	"sync"
 	"sync/atomic"
 )
@@ -83,10 +84,11 @@ type Raft struct {
 	matchIndex []int // for each server, index of highest log entry known to be replicated on server (initialized to 0, increases monotonically)
 	voteCount  int
 
-	lastRecord *RaftTimer
-	state      RaftState
-	stateCond  sync.Cond
-	commitCond sync.Cond
+	lastRecord   *RaftTimer
+	state        RaftState
+	stateCond    *sync.Cond
+	commitCond   *sync.Cond
+	newEntryChan chan bool
 
 	applyCh chan ApplyMsg
 }
@@ -94,8 +96,8 @@ type Raft struct {
 // return currentTerm and whether this server
 // believes it is the leader.
 func (rf *Raft) GetState() (int, bool) {
-	rf.mu.Lock()
-	defer rf.mu.Unlock()
+	Lock(rf, lock_trace)
+	defer Unlock(rf, lock_trace)
 	var term int
 	var isleader bool
 
@@ -107,8 +109,8 @@ func (rf *Raft) GetState() (int, bool) {
 }
 
 func (rf *Raft) GetStateAndLeader() (int, int, bool) {
-	rf.mu.Lock()
-	defer rf.mu.Unlock()
+	Lock(rf, lock_trace)
+	defer Unlock(rf, lock_trace)
 	var term int
 	var leader int
 	var isleader bool
@@ -126,24 +128,30 @@ func (rf *Raft) GetStateAndLeader() (int, int, bool) {
 // where it can later be retrieved after a crash and restart.
 // see paper's Figure 2 for a description of what should be persistent.
 //
-func (rf *Raft) persist() {
-	// Your code here (2C).
-	// Example:
+func (rf *Raft) getRaftPersistState() []byte {
 	w := new(bytes.Buffer)
 	e := labgob.NewEncoder(w)
 	e.Encode(rf.currentTerm)
 	e.Encode(rf.votedFor)
 	e.Encode(rf.log.log)
-	data := w.Bytes()
-	rf.persister.SaveRaftState(data)
+	e.Encode(rf.log.first().Index())
+	e.Encode(rf.log.first().Term())
+	return w.Bytes()
+}
+
+func (rf *Raft) persist() {
+	// Your code here (2C).
+	// Example:
+	rf.persister.SaveRaftState(rf.getRaftPersistState())
 }
 
 //
 // restore previously persisted state.
 //
-func (rf *Raft) readPersist(data []byte) {
+func (rf *Raft) readPersist(data []byte) (int, int) {
+	snapshot_index, snapshot_term := 0, 0
 	if data == nil || len(data) < 1 { // bootstrap without any state?
-		return
+		return snapshot_index, snapshot_term
 	}
 
 	r := bytes.NewBuffer(data)
@@ -151,6 +159,10 @@ func (rf *Raft) readPersist(data []byte) {
 	d.Decode(&rf.currentTerm)
 	d.Decode(&rf.votedFor)
 	d.Decode(&rf.log.log)
+	d.Decode(&snapshot_index)
+	d.Decode(&snapshot_term)
+
+	return snapshot_index, snapshot_term
 }
 
 //
@@ -168,8 +180,8 @@ func (rf *Raft) readPersist(data []byte) {
 // the leader.
 //
 func (rf *Raft) Start(command interface{}) (int, int, bool) {
-	rf.mu.Lock()
-	defer rf.mu.Unlock()
+	Lock(rf, lock_trace)
+	defer Unlock(rf, lock_trace)
 	index := -1
 	term := -1
 	isLeader := false
@@ -188,7 +200,12 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 			CommandTerm:  term,
 		}
 		rf.log.append(entry)
-		DPrintf("[** %d term %d] Got new entry[%d] to replicate", rf.me, rf.currentTerm, index)
+		select {
+		case rf.newEntryChan <- true:
+		default:
+		}
+
+		DPrintf("[** %d term %d] Got new entry[%d] to replicate log{%d,%d}", rf.me, rf.currentTerm, index, rf.log.start_index, rf.log.length())
 	} else {
 
 		DPrintf("[** %d term %d] not leader", rf.me, rf.currentTerm)
@@ -211,8 +228,8 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 func (rf *Raft) Kill() {
 	atomic.StoreInt32(&rf.dead, 1)
 	// Your code here, if desired.
-	rf.mu.Lock()
-	defer rf.mu.Unlock()
+	Lock(rf, lock_trace)
+	defer Unlock(rf, lock_trace)
 	rf.stateCond.Broadcast()
 	rf.commitCond.Broadcast()
 }
@@ -220,6 +237,28 @@ func (rf *Raft) Kill() {
 func (rf *Raft) killed() bool {
 	z := atomic.LoadInt32(&rf.dead)
 	return z == 1
+}
+
+func (rf *Raft) GetStateSize() int {
+	Lock(rf, lock_trace)
+	defer Unlock(rf, lock_trace)
+	return rf.persister.RaftStateSize()
+}
+
+func (rf *Raft) ApplicationSnapshot(snapshot []byte, last_index, last_term int) {
+	Lock(rf, lock_trace)
+	defer Unlock(rf, lock_trace)
+	if last_index > rf.log.first().Index() {
+		rf.PersistSnapshot(snapshot, last_index, last_term)
+	}
+}
+
+func (rf *Raft) PersistSnapshot(snapshot []byte, last_index, last_term int) {
+	rf.log.discardUpTo(last_index)
+	for i := range rf.peers {
+		rf.nextIndex[i] = Max(last_index+1, rf.nextIndex[i])
+	}
+	rf.persister.SaveStateAndSnapshot(rf.getRaftPersistState(), snapshot)
 }
 
 //
@@ -241,22 +280,27 @@ func Make(peers []*labrpc.ClientEnd, me int,
 	rf.persister = persister
 	rf.me = me
 	rf.currentTerm = 0
-	rf.lastRecord = &RaftTimer{}
 	rf.votedFor = -1
 	rf.state = CANDIDATE
-	rf.stateCond = *sync.NewCond(&rf.mu)
+	rf.lastRecord = &RaftTimer{}
+	rf.stateCond = sync.NewCond(&rf.mu)
+	rf.commitCond = sync.NewCond(&rf.mu)
+	rf.newEntryChan = make(chan bool, 1)
+	rf.applyCh = applyCh
+
+	rf.log = NewRaftLog(rf)
+	snapshot_index, snapshot_term := rf.readPersist(persister.ReadRaftState())
+
+	rf.initializeStructEncode()
+
+	rf.initializeRaftLog(snapshot_index, snapshot_term)
+	rf.commitIndex = snapshot_index
+	rf.lastApplied = snapshot_index
 	rf.nextIndex = make([]int, len(rf.peers))
 	rf.matchIndex = make([]int, len(rf.peers))
-	rf.commitIndex = 0
-	rf.lastApplied = 0
-	rf.commitCond = *sync.NewCond(&rf.mu)
-	rf.applyCh = applyCh
-	rf.intializeRaftLog()
-	rf.initializeStructEncode()
-	// Your initialization code here (2A, 2B, 2C).
-
-	// initialize from state persisted before a crash
-	rf.readPersist(persister.ReadRaftState())
+	for i := range rf.peers {
+		rf.nextIndex[i] = rf.log.length()
+	}
 
 	go rf.startWaitForResponse()
 	go rf.commitDaemon()
@@ -298,4 +342,16 @@ func (rf *Raft) setTermAndVote(term, vote int) {
 		rf.votedFor = vote
 		rf.persist()
 	}
+}
+
+func (rf *Raft) Lock() {
+	rf.mu.Lock()
+}
+
+func (rf *Raft) Unlock() {
+	rf.mu.Unlock()
+}
+
+func (rf *Raft) Identity() string {
+	return fmt.Sprintf("[%d]", rf.me)
 }

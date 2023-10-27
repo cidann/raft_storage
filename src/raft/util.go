@@ -21,6 +21,7 @@ const RPCAppendDelay = 100
 const RPCVoteDelay = 100
 const ElectionDelay = 2000
 const CommitDelay = 2000
+const lock_trace = false
 
 func DPrintf(format string, a ...interface{}) (n int, err error) {
 	if Debug > 0 {
@@ -46,4 +47,18 @@ func DelaySchedule(t int) {
 	if DebugSchedule == RandomDelay {
 		time.Sleep((time.Duration)(rand.Int()%t) * time.Millisecond)
 	}
+}
+
+func Min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+func Max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
 }

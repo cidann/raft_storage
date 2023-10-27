@@ -1,28 +1,34 @@
 package kvraft
 
 type ServerState struct {
-	kvState map[string]string
+	KvState   map[string]string
+	LastIndex int
+	LastTerm  int
 }
 
 func NewServerState() *ServerState {
 	return &ServerState{
-		kvState: make(map[string]string),
+		KvState: make(map[string]string),
 	}
 }
 
 func (ss *ServerState) Put(k, v string) {
-	ss.kvState[k] = v
+	ss.KvState[k] = v
 }
 
 func (ss *ServerState) Append(k, v string) {
-	ss.kvState[k] += v
+	ss.KvState[k] += v
 }
 
 func (ss *ServerState) Get(k string) string {
-	return ss.kvState[k]
+	return ss.KvState[k]
 }
 
-func (ss *ServerState) Apply(operation Op, server int) string {
+func (ss *ServerState) Apply(operation Op, index, term, server int) string {
+	defer func() {
+		ss.LastIndex = index
+		ss.LastTerm = term
+	}()
 	switch operation.Type {
 	case GET:
 		DPrintf("[%d] Apply Replicated Get {%s}", server, operation.Key)
