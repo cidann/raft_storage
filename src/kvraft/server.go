@@ -8,6 +8,10 @@ import (
 	"fmt"
 	"sync"
 	"sync/atomic"
+	"time"
+	"fmt"
+	"bytes"
+	"encoding/gob"
 )
 
 /*
@@ -45,11 +49,13 @@ type KVServer struct {
 
 	maxraftstate int // snapshot if log grows this big
 
+
 	tracker *RequestTracker
 	state   *ServerState
 
 	num_raft          int
 	non_snapshot_size int //size of entries that is commited but not discarded from snapshot
+
 }
 
 //
@@ -74,9 +80,9 @@ func (kv *KVServer) Kill() {
 	atomic.StoreInt32(&kv.dead, 1)
 }
 
-func (kv *KVServer) killed() bool {
-	z := atomic.LoadInt32(&kv.dead)
-	return z == 1
+
+	latestIndex int
+	latestTerm int
 }
 
 func (kv *KVServer) GetLeader() (int, bool) {
@@ -118,9 +124,14 @@ func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persiste
 	go kv.ApplyDaemon()
 
 	// You may need initialization code here.
-
+	kv.store=map[string]string{}
+	kv.applied=map[string]bool{}
+	kv.waiting=map[string]chan bool{}
+	kv.waitingNum=0
+	go kv.ProcessCommits()
 	return kv
 }
+
 
 func (kv *KVServer) PingDebug(args *GetArgs, reply *GetReply) {
 	Lock(kv, lock_trace)
@@ -138,6 +149,7 @@ func (kv *KVServer) Unlock() {
 }
 
 func (kv *KVServer) Identity() string {
+
 	return fmt.Sprintf("KV server: [%d]", kv.me)
 }
 
@@ -164,4 +176,5 @@ func (kv *KVServer) getOperationSize(operation *Op) int {
 	encoder := labgob.NewEncoder(buf)
 	encoder.Encode(*operation)
 	return len(buf.Bytes())
+
 }

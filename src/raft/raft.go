@@ -17,6 +17,7 @@ package raft
 //   in the same server.
 //
 
+
 import (
 	"bytes"
 	"dsys/labgob"
@@ -24,10 +25,11 @@ import (
 	"fmt"
 	"sync"
 	"sync/atomic"
+
 )
 
-// import "bytes"
-// import "../labgob"
+import "bytes"
+import "../labgob"
 
 type RaftState int
 
@@ -53,8 +55,13 @@ type ApplyMsg struct {
 	CommandValid bool
 	Command      interface{}
 	CommandIndex int
+
 	CommandTerm  int
+
 }
+
+
+
 
 //
 // A Go object implementing a single Raft peer.
@@ -69,6 +76,7 @@ type Raft struct {
 	// Your data here (2A, 2B, 2C).
 	// Look at the paper's Figure 2 for a description of what
 	// state a Raft server must maintain.
+
 	leader int
 
 	//Persistent state(persist through server failure)
@@ -92,6 +100,7 @@ type Raft struct {
 	newEntryChan chan bool
 
 	applyCh chan ApplyMsg
+
 }
 
 // return currentTerm and whether this server
@@ -101,6 +110,7 @@ func (rf *Raft) GetState() (int, bool) {
 	defer Unlock(rf, lock_trace)
 	var term int
 	var isleader bool
+
 
 	term = rf.currentTerm
 	isleader = rf.state == LEADER
@@ -124,17 +134,22 @@ func (rf *Raft) GetStateAndLeader() (int, int, bool) {
 	return term, leader, isleader
 }
 
+
 //
 // save Raft's persistent state to stable storage,
 // where it can later be retrieved after a crash and restart.
 // see paper's Figure 2 for a description of what should be persistent.
 //
+
 func (rf *Raft) getRaftPersistState() []byte {
+
 	w := new(bytes.Buffer)
 	e := labgob.NewEncoder(w)
 	e.Encode(rf.currentTerm)
 	e.Encode(rf.votedFor)
+
 	e.Encode(rf.log.log)
+
 	e.Encode(rf.log.first().Index())
 	e.Encode(rf.log.first().Term())
 	return w.Bytes()
@@ -142,6 +157,7 @@ func (rf *Raft) getRaftPersistState() []byte {
 
 func (rf *Raft) persist() {
 	rf.persister.SaveRaftState(rf.getRaftPersistState())
+
 }
 
 //
@@ -153,6 +169,7 @@ func (rf *Raft) readPersist(data []byte) (int, int) {
 		return snapshot_index, snapshot_term
 	}
 
+
 	r := bytes.NewBuffer(data)
 	d := labgob.NewDecoder(r)
 	d.Decode(&rf.currentTerm)
@@ -163,6 +180,7 @@ func (rf *Raft) readPersist(data []byte) (int, int) {
 
 	return snapshot_index, snapshot_term
 }
+
 
 //
 // the service using Raft (e.g. a k/v server) wants to start
@@ -184,6 +202,7 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 	index := -1
 	term := -1
 	isLeader := false
+
 
 	if command == nil {
 		panic("Should not have nil command")
@@ -209,6 +228,7 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 
 		DPrintf("[** %d term %d] not leader", rf.me, rf.currentTerm)
 	}
+
 
 	return index, term, isLeader
 }
@@ -293,6 +313,8 @@ func Make(peers []*labrpc.ClientEnd, me int,
 
 	rf.initializeStructEncode()
 
+
+
 	rf.initializeRaftLog(snapshot_index, snapshot_term)
 	rf.commitIndex = snapshot_index
 	rf.lastApplied = snapshot_index
@@ -306,6 +328,7 @@ func Make(peers []*labrpc.ClientEnd, me int,
 
 	return rf
 }
+
 
 func (rf *Raft) initializeStructEncode() {
 	labgob.Register(ApplyMsg{})
@@ -338,6 +361,7 @@ func (rf *Raft) setTermAndVote(term, vote int) {
 		rf.currentTerm = term
 		rf.votedFor = vote
 		rf.persist()
+
 	}
 }
 
