@@ -69,14 +69,18 @@ func (rf *Raft) startLeader() {
 	DPrintf("[** %d term %d] %v is now leader!", rf.me, rf.getTerm(), rf.nextIndex)
 
 	for rf.state == LEADER && !rf.killed() {
-		for i := range rf.peers {
-			if i == rf.me {
-				continue
-			}
-			go rf.sendAppendEntry(i, rf.makeAppendEntryArgs(i), rf.makeAppendEntryReply())
-		}
+		rf.sendAppendToFollowers()
 		DPrintf("[** %d term %d] sent a new wave of appends!", rf.me, rf.getTerm())
 		UnlockAndSleepFor(rf, GetSendTime())
+	}
+}
+
+func (rf *Raft) sendAppendToFollowers() {
+	for i := range rf.peers {
+		if i == rf.me {
+			continue
+		}
+		go rf.sendAppendEntry(i, rf.makeAppendEntryArgs(i), rf.makeAppendEntryReply())
 	}
 }
 

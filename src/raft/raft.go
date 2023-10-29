@@ -198,6 +198,7 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 			CommandTerm:  term,
 		}
 		rf.log.append(entry)
+		rf.sendAppendToFollowers()
 
 		DPrintf("[** %d term %d] Got new entry[%d] to replicate log{%d,%d}", rf.me, rf.currentTerm, index, rf.log.start_index, rf.log.length())
 	} else {

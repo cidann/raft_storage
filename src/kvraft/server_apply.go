@@ -53,8 +53,9 @@ func (kv *KVServer) handleSnapshot(msg *raft.ApplyMsg) {
 	snapshot := msg.Command.(raft.SnapshotData)
 	if snapshot.LastIndex > kv.state.LastIndex {
 		kv.LoadSnapshot(snapshot.Data)
-	}
-	if snapshot.LastIndex != kv.state.LastIndex {
-		panic(fmt.Sprintf("snapshot index mismatch state index %d snapshot last index %d", kv.state.LastIndex, snapshot.LastIndex))
+
+		if snapshot.LastIndex != kv.state.LastIndex {
+			panic(fmt.Sprintf("snapshot index mismatch state index %d snapshot last index %d", kv.state.LastIndex, snapshot.LastIndex))
+		}
 	}
 }

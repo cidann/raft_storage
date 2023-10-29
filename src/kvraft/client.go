@@ -64,7 +64,7 @@ func (ck *Clerk) Get(key string) string {
 		target_server, visited_all := ck.tracker.Next()
 		DPrintf("[%d to %d] try to Get {%s}", ck.id, target_server, args.Key)
 		result_chan := GetChanForFunc[bool](func() { ck.servers[target_server].Call("KVServer.Get", &args, &reply) })
-		timeout_chan := GetChanForTime[bool](raft.GetSendTime() * 2)
+		timeout_chan := GetChanForTime[bool](raft.GetSendTime())
 		select {
 		case <-result_chan:
 			if reply.Success {
@@ -107,7 +107,7 @@ func (ck *Clerk) PutAppend(key string, value string, op OperationType) {
 		target_server, visited_all := ck.tracker.Next()
 		DPrintf("[%d to %d] try to PutAppend {%s:%s}", ck.id, target_server, args.Key, args.Value)
 		result_chan := GetChanForFunc[bool](func() { ck.servers[target_server].Call("KVServer.PutAppend", &args, &reply) })
-		timeout_chan := GetChanForTime[bool](raft.GetSendTime() * 2)
+		timeout_chan := GetChanForTime[bool](raft.GetSendTime())
 		select {
 		case <-result_chan:
 			if reply.Success {

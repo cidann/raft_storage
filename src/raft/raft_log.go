@@ -62,8 +62,19 @@ func (rl *RaftLog) replace(start int, msg ...RaftEntry) {
 		msg = msg[-start:]
 		start = 0
 	}
-	rl.log = append(rl.log[:start], msg...)
-	rl.owner.persist()
+	for i := range msg {
+		if i+start+rl.start_index < rl.length() {
+			if rl.log[i+start] != msg[i] {
+				rl.log = append(rl.log[:i+start], msg[i:]...)
+				rl.owner.persist()
+				break
+			}
+		} else {
+			rl.log = append(rl.log[:i+start], msg[i:]...)
+			rl.owner.persist()
+			break
+		}
+	}
 }
 
 func (rl *RaftLog) discardUpTo(new_first_index int) {
