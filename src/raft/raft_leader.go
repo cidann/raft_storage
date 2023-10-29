@@ -76,12 +76,7 @@ func (rf *Raft) startLeader() {
 			go rf.sendAppendEntry(i, rf.makeAppendEntryArgs(i), rf.makeAppendEntryReply())
 		}
 		DPrintf("[** %d term %d] sent a new wave of appends!", rf.me, rf.getTerm())
-		UnlockUntilChanReceive(rf, GetChanForFunc[bool](func() {
-			select {
-			case <-GetChanForTime[bool](GetSendTime()):
-			case <-rf.newEntryChan:
-			}
-		}))
+		UnlockAndSleepFor(rf, GetSendTime())
 	}
 }
 

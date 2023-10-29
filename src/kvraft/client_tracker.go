@@ -7,9 +7,10 @@ type ClientTracker struct {
 	hint         int
 	server_retry []int
 	retry        int
+	owner_id     int
 }
 
-func NewClientTracker(server_num int, retry int) *ClientTracker {
+func NewClientTracker(server_num int, retry int, owner_id int) *ClientTracker {
 	return &ClientTracker{
 		servers:      make([]bool, server_num),
 		curFlag:      false,
@@ -17,6 +18,7 @@ func NewClientTracker(server_num int, retry int) *ClientTracker {
 		hint:         -1,
 		server_retry: make([]int, server_num),
 		retry:        retry,
+		owner_id:     owner_id,
 	}
 }
 
@@ -34,7 +36,6 @@ func (ct *ClientTracker) Next() (int, bool) {
 		}
 		nxt_index = ct.cur
 	}
-
 	return nxt_index, visited_all
 }
 

@@ -85,11 +85,10 @@ type Raft struct {
 	matchIndex []int // for each server, index of highest log entry known to be replicated on server (initialized to 0, increases monotonically)
 	voteCount  int
 
-	lastRecord   *RaftTimer
-	state        RaftState
-	stateCond    *sync.Cond
-	commitCond   *sync.Cond
-	newEntryChan chan bool
+	lastRecord *RaftTimer
+	state      RaftState
+	stateCond  *sync.Cond
+	commitCond *sync.Cond
 
 	applyCh chan ApplyMsg
 }
@@ -199,10 +198,6 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 			CommandTerm:  term,
 		}
 		rf.log.append(entry)
-		select {
-		case rf.newEntryChan <- true:
-		default:
-		}
 
 		DPrintf("[** %d term %d] Got new entry[%d] to replicate log{%d,%d}", rf.me, rf.currentTerm, index, rf.log.start_index, rf.log.length())
 	} else {
@@ -285,7 +280,6 @@ func Make(peers []*labrpc.ClientEnd, me int,
 	rf.lastRecord = &RaftTimer{}
 	rf.stateCond = sync.NewCond(&rf.mu)
 	rf.commitCond = sync.NewCond(&rf.mu)
-	rf.newEntryChan = make(chan bool, 1)
 	rf.applyCh = applyCh
 
 	rf.log = NewRaftLog(rf)
