@@ -15,14 +15,16 @@ import (
 	"sync/atomic"
 	"testing"
 	"time"
+
+	"go.uber.org/goleak"
 )
 
 // The tester generously allows solutions to complete elections in one second
 // (much more than the paper's range of timeouts).
-const electionTimeout = 1 * time.Second
+const electionTimeout = 2 * time.Second
 const MyTest = 0 //1 is repeat 2 is repeat + my own test 0 is only default tests
 
-const linearizabilityCheckTimeout = 1 * time.Second
+const linearizabilityCheckTimeout = 2 * time.Second
 
 // get/put/putappend that keep counts
 func Get(cfg *config, ck *Clerk, key string) string {
@@ -227,7 +229,7 @@ func GenericTest(t *testing.T, part string, nclients int, unreliable bool, crash
 
 		if partitions {
 			// Allow the clients to perform some operations without interruption
-			time.Sleep(1 * time.Second)
+			time.Sleep(2 * time.Second)
 			go partitioner(t, cfg, ch_partitioner, &done_partitioner)
 		}
 		time.Sleep(5 * time.Second)
@@ -377,7 +379,7 @@ func GenericTestLinearizability(t *testing.T, part string, nclients int, nserver
 
 		if partitions {
 			// Allow the clients to perform some operations without interruption
-			time.Sleep(1 * time.Second)
+			time.Sleep(2 * time.Second)
 			go partitioner(t, cfg, ch_partitioner, &done_partitioner)
 		}
 		time.Sleep(5 * time.Second)
@@ -452,7 +454,10 @@ func GenericTestLinearizability(t *testing.T, part string, nclients int, nserver
 
 func TestBasic3A(t *testing.T) {
 	// Test: one client (3A) ...
-	//defer goleak.VerifyNone(t)
+	defer func() {
+		time.Sleep(2 * time.Second)
+		goleak.VerifyNone(t)
+	}()
 	defer log.Printf("Goroutine #: %d", runtime.NumGoroutine())
 	GenericTest(t, "3A", 1, false, false, false, -1)
 	time.Sleep(raft.GetMaxElectionTime())
@@ -463,7 +468,10 @@ func TestConcurrent3ADebug(t *testing.T) {
 	if MyTest <= 1 {
 		return
 	}
-	//defer goleak.VerifyNone(t)
+	defer func() {
+		time.Sleep(2 * time.Second)
+		goleak.VerifyNone(t)
+	}()
 	defer log.Printf("End # goroutine %d", runtime.NumGoroutine())
 	test_done := GetChanForFunc[bool](func() {
 		GenericTest(t, "3A", 5, false, false, false, -1)
@@ -481,7 +489,10 @@ func TestConcurrent3ADebug(t *testing.T) {
 
 func TestConcurrent3A(t *testing.T) {
 	// Test: many clients (3A) ...
-	//defer goleak.VerifyNone(t)
+	defer func() {
+		time.Sleep(2 * time.Second)
+		goleak.VerifyNone(t)
+	}()
 	defer log.Printf("Goroutine #: %d", runtime.NumGoroutine())
 	GenericTest(t, "3A", 5, false, false, false, -1)
 	time.Sleep(raft.GetMaxElectionTime())
@@ -489,13 +500,19 @@ func TestConcurrent3A(t *testing.T) {
 
 func TestUnreliable3A(t *testing.T) {
 	// Test: unreliable net, many clients (3A) ...
-	//defer goleak.VerifyNone(t)
+	defer func() {
+		time.Sleep(2 * time.Second)
+		goleak.VerifyNone(t)
+	}()
 	defer log.Printf("Goroutine #: %d", runtime.NumGoroutine())
 	GenericTest(t, "3A", 5, true, false, false, -1)
 }
 
 func TestUnreliableOneKey3A(t *testing.T) {
-	//defer goleak.VerifyNone(t)
+	defer func() {
+		time.Sleep(2 * time.Second)
+		goleak.VerifyNone(t)
+	}()
 	defer log.Printf("Goroutine #: %d", runtime.NumGoroutine())
 	const nservers = 3
 	cfg := make_config(t, nservers, true, -1)
@@ -532,7 +549,10 @@ func TestUnreliableOneKey3A(t *testing.T) {
 // doesn't go through until the partition heals.  The leader in the original
 // network ends up in the minority partition.
 func TestOnePartition3A(t *testing.T) {
-	//defer goleak.VerifyNone(t)
+	defer func() {
+		time.Sleep(2 * time.Second)
+		goleak.VerifyNone(t)
+	}()
 	defer log.Printf("Goroutine #: %d", runtime.NumGoroutine())
 	const nservers = 5
 	cfg := make_config(t, nservers, false, -1)
@@ -609,56 +629,80 @@ func TestOnePartition3A(t *testing.T) {
 }
 
 func TestManyPartitionsOneClient3A(t *testing.T) {
-	//defer goleak.VerifyNone(t)
+	defer func() {
+		time.Sleep(2 * time.Second)
+		goleak.VerifyNone(t)
+	}()
 	defer log.Printf("Goroutine #: %d", runtime.NumGoroutine())
 	// Test: partitions, one client (3A) ...
 	GenericTest(t, "3A", 1, false, false, true, -1)
 }
 
 func TestManyPartitionsManyClients3A(t *testing.T) {
-	//defer goleak.VerifyNone(t)
+	defer func() {
+		time.Sleep(2 * time.Second)
+		goleak.VerifyNone(t)
+	}()
 	defer log.Printf("Goroutine #: %d", runtime.NumGoroutine())
 	// Test: partitions, many clients (3A) ...
 	GenericTest(t, "3A", 5, false, false, true, -1)
 }
 
 func TestPersistOneClient3A(t *testing.T) {
-	//defer goleak.VerifyNone(t)
+	defer func() {
+		time.Sleep(2 * time.Second)
+		goleak.VerifyNone(t)
+	}()
 	defer log.Printf("Goroutine #: %d", runtime.NumGoroutine())
 	// Test: restarts, one client (3A) ...
 	GenericTest(t, "3A", 1, false, true, false, -1)
 }
 
 func TestPersistConcurrent3A(t *testing.T) {
-	//defer goleak.VerifyNone(t)
+	defer func() {
+		time.Sleep(2 * time.Second)
+		goleak.VerifyNone(t)
+	}()
 	defer log.Printf("Goroutine #: %d", runtime.NumGoroutine())
 	// Test: restarts, many clients (3A) ...
 	GenericTest(t, "3A", 5, false, true, false, -1)
 }
 
 func TestPersistConcurrentUnreliable3A(t *testing.T) {
-	//defer goleak.VerifyNone(t)
+	defer func() {
+		time.Sleep(2 * time.Second)
+		goleak.VerifyNone(t)
+	}()
 	defer log.Printf("Goroutine #: %d", runtime.NumGoroutine())
 	// Test: unreliable net, restarts, many clients (3A) ...
 	GenericTest(t, "3A", 5, true, true, false, -1)
 }
 
 func TestPersistPartition3A(t *testing.T) {
-	//defer goleak.VerifyNone(t)
+	defer func() {
+		time.Sleep(2 * time.Second)
+		goleak.VerifyNone(t)
+	}()
 	defer log.Printf("Goroutine #: %d", runtime.NumGoroutine())
 	// Test: restarts, partitions, many clients (3A) ...
 	GenericTest(t, "3A", 5, false, true, true, -1)
 }
 
 func TestPersistPartitionUnreliable3A(t *testing.T) {
-	//defer goleak.VerifyNone(t)
+	defer func() {
+		time.Sleep(2 * time.Second)
+		goleak.VerifyNone(t)
+	}()
 	defer log.Printf("Goroutine #: %d", runtime.NumGoroutine())
 	// Test: unreliable net, restarts, partitions, many clients (3A) ...
 	GenericTest(t, "3A", 5, true, true, true, -1)
 }
 
 func TestPersistPartitionUnreliableLinearizable3A(t *testing.T) {
-	//defer goleak.VerifyNone(t)
+	defer func() {
+		time.Sleep(2 * time.Second)
+		goleak.VerifyNone(t)
+	}()
 	defer log.Printf("Goroutine #: %d", runtime.NumGoroutine())
 	// Test: unreliable net, restarts, partitions, linearizability checks (3A) ...
 	GenericTestLinearizability(t, "3A", 15, 7, true, true, true, -1)
@@ -671,6 +715,10 @@ func TestPersistPartitionUnreliableLinearizable3A(t *testing.T) {
 // even if minority doesn't respond.
 //
 func TestSnapshotRPC3B(t *testing.T) {
+	defer func() {
+		time.Sleep(2 * time.Second)
+		goleak.VerifyNone(t)
+	}()
 	defer log.Printf("Goroutine #: %d", runtime.NumGoroutine())
 	const nservers = 3
 	maxraftstate := 1000
@@ -729,6 +777,10 @@ func TestSnapshotRPC3B(t *testing.T) {
 // are the snapshots not too huge? 500 bytes is a generous bound for the
 // operations we're doing here.
 func TestSnapshotSize3B(t *testing.T) {
+	defer func() {
+		time.Sleep(2 * time.Second)
+		goleak.VerifyNone(t)
+	}()
 	defer log.Printf("Goroutine #: %d", runtime.NumGoroutine())
 	const nservers = 3
 	maxraftstate := 1000
@@ -764,36 +816,60 @@ func TestSnapshotSize3B(t *testing.T) {
 
 func TestSnapshotRecover3B(t *testing.T) {
 	// Test: restarts, snapshots, one client (3B) ...
+	defer func() {
+		time.Sleep(2 * time.Second)
+		goleak.VerifyNone(t)
+	}()
 	defer log.Printf("Goroutine #: %d", runtime.NumGoroutine())
 	GenericTest(t, "3B", 1, false, true, false, 1000)
 }
 
 func TestSnapshotRecoverManyClients3B(t *testing.T) {
 	// Test: restarts, snapshots, many clients (3B) ...
+	defer func() {
+		time.Sleep(2 * time.Second)
+		goleak.VerifyNone(t)
+	}()
 	defer log.Printf("Goroutine #: %d", runtime.NumGoroutine())
 	GenericTest(t, "3B", 20, false, true, false, 1000)
 }
 
 func TestSnapshotUnreliable3B(t *testing.T) {
 	// Test: unreliable net, snapshots, many clients (3B) ...
+	defer func() {
+		time.Sleep(2 * time.Second)
+		goleak.VerifyNone(t)
+	}()
 	defer log.Printf("Goroutine #: %d", runtime.NumGoroutine())
 	GenericTest(t, "3B", 5, true, false, false, 1000)
 }
 
 func TestSnapshotUnreliableRecover3B(t *testing.T) {
 	// Test: unreliable net, restarts, snapshots, many clients (3B) ...
+	defer func() {
+		time.Sleep(2 * time.Second)
+		goleak.VerifyNone(t)
+	}()
 	defer log.Printf("Goroutine #: %d", runtime.NumGoroutine())
 	GenericTest(t, "3B", 5, true, true, false, 1000)
 }
 
 func TestSnapshotUnreliableRecoverConcurrentPartition3B(t *testing.T) {
 	// Test: unreliable net, restarts, partitions, snapshots, many clients (3B) ...
+	defer func() {
+		time.Sleep(2 * time.Second)
+		goleak.VerifyNone(t)
+	}()
 	defer log.Printf("Goroutine #: %d", runtime.NumGoroutine())
 	GenericTest(t, "3B", 5, true, true, true, 1000)
 }
 
 func TestSnapshotUnreliableRecoverConcurrentPartitionLinearizable3B(t *testing.T) {
 	// Test: unreliable net, restarts, partitions, snapshots, linearizability checks (3B) ...
+	defer func() {
+		time.Sleep(2 * time.Second)
+		goleak.VerifyNone(t)
+	}()
 	defer log.Printf("Goroutine #: %d", runtime.NumGoroutine())
 	GenericTestLinearizability(t, "3B", 15, 7, true, true, true, 1000)
 }

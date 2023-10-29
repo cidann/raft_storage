@@ -17,6 +17,7 @@ ApplyDaemon that accepts replicated changes and might wake up waiting RPCs
 */
 
 type OperationType int
+type StopDaemon int
 
 const (
 	GET OperationType = iota
@@ -35,10 +36,6 @@ type Op struct {
 	Value  string
 }
 
-type SnapshotData struct {
-	Data []byte
-}
-
 type KVServer struct {
 	mu      sync.Mutex
 	me      int
@@ -47,12 +44,12 @@ type KVServer struct {
 	dead    int32 // set by Kill()
 
 	maxraftstate int // snapshot if log grows this big
-	tracker      *RequestTracker
-	state        *ServerState
 
-	num_raft int
+	tracker *RequestTracker
+	state   *ServerState
 
-	snapshot_cond *sync.Cond
+	num_raft          int
+	non_snapshot_size int //size of entries that is commited but not discarded from snapshot
 }
 
 //
@@ -66,17 +63,15 @@ type KVServer struct {
 // to suppress debug output from a Kill()ed instance.
 //
 func (kv *KVServer) Kill() {
+	DPrintf("[%d] kill kv", kv.me)
+	kv.rf.Kill()
+	Lock(kv, false)
+	defer Unlock(kv, false)
+	UnlockUntilChanSend(kv, kv.applyCh, raft.ApplyMsg{Command: StopDaemon(1)})
+	for k := range kv.tracker.request_chan {
+		kv.tracker.DiscardRequestFrom(k)
+	}
 	atomic.StoreInt32(&kv.dead, 1)
-	/*
-		kv.rf.Kill()
-		for i := 0; i < len(kv.tracker.request_chan); i++ {
-			if kv.tracker.request_chan[i] != nil {
-				close(kv.tracker.request_chan[i])
-			}
-		}
-		raft.DPrintfl2("[%d] killed %d", kv.me, kv.num_raft)
-	*/
-
 }
 
 func (kv *KVServer) killed() bool {
@@ -87,11 +82,6 @@ func (kv *KVServer) killed() bool {
 func (kv *KVServer) GetLeader() (int, bool) {
 	_, leader, isLeader := kv.rf.GetStateAndLeader()
 	return leader, isLeader
-}
-
-func (kv *KVServer) LoadPersistKVState(data []byte) (int, int) {
-	kv.LoadSnapshot(data)
-	return kv.state.LastIndex, kv.state.LastTerm
 }
 
 //
@@ -116,7 +106,7 @@ func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persiste
 	kv := new(KVServer)
 	kv.me = me
 	kv.maxraftstate = maxraftstate
-
+	kv.non_snapshot_size = 0
 	// You may need initialization code here.
 
 	kv.applyCh = make(chan raft.ApplyMsg, 100)
@@ -124,7 +114,6 @@ func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persiste
 	kv.tracker = NewRequestTracker()
 	kv.state = NewServerState()
 	kv.num_raft = len(servers)
-	kv.snapshot_cond = sync.NewCond(&kv.mu)
 	kv.LoadSnapshot(persister.ReadSnapshot())
 	go kv.ApplyDaemon()
 
@@ -168,4 +157,11 @@ func (kv *KVServer) LoadSnapshot(snapshot []byte) {
 	decoder.Decode(&kv.tracker.latest_applied)
 	decoder.Decode(&kv.tracker.request_serial)
 
+}
+
+func (kv *KVServer) getOperationSize(operation *Op) int {
+	buf := new(bytes.Buffer)
+	encoder := labgob.NewEncoder(buf)
+	encoder.Encode(*operation)
+	return len(buf.Bytes())
 }

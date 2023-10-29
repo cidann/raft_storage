@@ -1,8 +1,30 @@
-Test: restarts, snapshots, many clients (3B) ...
+Test: one client (3A) ...
 labgob warning: Decoding into a non-default variable/field Term may not work
-2023/10/27 03:43:39 get wrong value, key 10, wanted:
-x 10 0 yx 10 1 yx 10 2 yx 10 3 yx 10 4 yx 10 5 yx 10 6 yx 10 7 yx 10 8 yx 10 9 yx 10 10 yx 10 11 yx 10 12 yx 10 13 yx 10 14 yx 10 15 yx 10 16 yx 10 17 yx 10 18 yx 10 19 yx 10 20 yx 10 21 yx 10 22 yx 10 23 yx 10 24 yx 10 25 yx 10 26 yx 10 27 yx 10 28 yx 10 29 yx 10 30 yx 10 31 yx 10 32 yx 10 33 yx 10 34 yx 10 35 yx 10 36 yx 10 37 yx 10 38 yx 10 39 y
-, got
-x 10 0 yx 10 1 yx 10 2 yx 10 4 yx 10 5 yx 10 6 yx 10 7 yx 10 8 yx 10 9 yx 10 10 yx 10 11 yx 10 12 yx 10 13 yx 10 14 yx 10 15 yx 10 16 yx 10 17 yx 10 18 yx 10 19 yx 10 20 yx 10 21 yx 10 22 yx 10 23 yx 10 24 yx 10 25 yx 10 26 yx 10 27 yx 10 28 yx 10 29 yx 10 30 yx 10 31 yx 10 32 yx 10 33 yx 10 34 yx 10 35 yx 10 36 yx 10 37 yx 10 38 yx 10 39 y
-exit status 1
-FAIL	dsys/kvraft	6.846s
+  ... Passed --  15.0  5 18742 3736
+2023/10/29 02:16:38 Goroutine #: 2
+Test: InstallSnapshot RPC (3B) ...
+  ... Passed --   4.9  3   324   63
+2023/10/29 02:16:45 Goroutine #: 2
+Test: snapshot size is reasonable (3B) ...
+  ... Passed --   1.0  3  2423  800
+2023/10/29 02:16:48 Goroutine #: 2
+Test: restarts, snapshots, one client (3B) ...
+  ... Passed --  24.3  5 216654 43271
+2023/10/29 02:17:14 Goroutine #: 2
+Test: restarts, snapshots, many clients (3B) ...
+  ... Passed --  26.2  5 259432 103961
+2023/10/29 02:17:42 Goroutine #: 2
+Test: unreliable net, snapshots, many clients (3B) ...
+  ... Passed --  17.7  5  6011  841
+2023/10/29 02:18:02 Goroutine #: 2
+Test: unreliable net, restarts, snapshots, many clients (3B) ...
+  ... Passed --  26.9  5  6369  775
+2023/10/29 02:18:31 Goroutine #: 2
+Test: unreliable net, restarts, partitions, snapshots, many clients (3B) ...
+  ... Passed --  43.8  5  6524  459
+2023/10/29 02:19:17 Goroutine #: 2
+Test: unreliable net, restarts, partitions, snapshots, many clients, linearizability checks (3B) ...
+  ... Passed --  36.8  7 18540 1053
+2023/10/29 02:19:56 Goroutine #: 2
+PASS
+ok  	dsys/kvraft	215.464s

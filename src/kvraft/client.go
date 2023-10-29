@@ -5,7 +5,6 @@ import (
 	"dsys/labrpc"
 	"dsys/raft"
 	"math/big"
-	"runtime"
 	"time"
 )
 
@@ -30,7 +29,7 @@ func MakeClerk(servers []*labrpc.ClientEnd) *Clerk {
 	ck.servers = servers
 	ck.id = id_counter
 	ck.serial = 0
-	ck.tracker = NewClientTracker(len(servers))
+	ck.tracker = NewClientTracker(len(servers), 2)
 
 	id_counter++
 	return ck
@@ -61,14 +60,11 @@ func (ck *Clerk) Get(key string) string {
 			Value:      "",
 			LeaderHint: -1,
 		}
-		cpyarg := args
-		cpyreply := reply
 
 		target_server, visited_all := ck.tracker.Next()
-		DPrintf("[%d to %d] before send cur # runtime %d", ck.id, target_server, runtime.NumGoroutine())
 		DPrintf("[%d to %d] try to Get {%s}", ck.id, target_server, args.Key)
 		result_chan := GetChanForFunc[bool](func() { ck.servers[target_server].Call("KVServer.Get", &args, &reply) })
-		timeout_chan := GetChanForTime[bool](raft.GetMaxElectionTime())
+		timeout_chan := GetChanForTime[bool](raft.GetSendTime())
 		select {
 		case <-result_chan:
 			if reply.Success {
@@ -83,7 +79,7 @@ func (ck *Clerk) Get(key string) string {
 				}
 			}
 		case <-timeout_chan:
-			DPrintf("[%d to %d] timeout got {%s:%s}", ck.id, target_server, cpyarg.Key, cpyreply.Value)
+			DPrintf("[%d to %d] timeout", ck.id, target_server)
 			ck.tracker.RecordInvalid(target_server)
 		}
 		if visited_all {
@@ -111,7 +107,7 @@ func (ck *Clerk) PutAppend(key string, value string, op OperationType) {
 		target_server, visited_all := ck.tracker.Next()
 		DPrintf("[%d to %d] try to PutAppend {%s:%s}", ck.id, target_server, args.Key, args.Value)
 		result_chan := GetChanForFunc[bool](func() { ck.servers[target_server].Call("KVServer.PutAppend", &args, &reply) })
-		timeout_chan := GetChanForTime[bool](raft.GetMaxElectionTime())
+		timeout_chan := GetChanForTime[bool](raft.GetSendTime())
 		select {
 		case <-result_chan:
 			if reply.Success {
@@ -126,7 +122,7 @@ func (ck *Clerk) PutAppend(key string, value string, op OperationType) {
 				}
 			}
 		case <-timeout_chan:
-			DPrintf("[%d to %d] timeout apply {%s:%s}", ck.id, target_server, args.Key, args.Value)
+			DPrintf("[%d to %d] timeout", ck.id, target_server)
 			ck.tracker.RecordInvalid(target_server)
 		}
 		if visited_all {

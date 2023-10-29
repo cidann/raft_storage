@@ -24,11 +24,7 @@ func (ss *ServerState) Get(k string) string {
 	return ss.KvState[k]
 }
 
-func (ss *ServerState) Apply(operation Op, index, term, server int) string {
-	defer func() {
-		ss.LastIndex = index
-		ss.LastTerm = term
-	}()
+func (ss *ServerState) Apply(operation Op, server int) string {
 	switch operation.Type {
 	case GET:
 		DPrintf("[%d] Apply Replicated Get {%s}", server, operation.Key)
@@ -41,4 +37,9 @@ func (ss *ServerState) Apply(operation Op, index, term, server int) string {
 		ss.Append(operation.Key, operation.Value)
 	}
 	return ""
+}
+
+func (ss *ServerState) SetLatest(index, term int) {
+	ss.LastIndex = index
+	ss.LastTerm = term
 }

@@ -32,9 +32,10 @@ import (
 type RaftState int
 
 const (
-	LEADER RaftState = iota
+	KILLED RaftState = iota
 	FOLLOWER
 	CANDIDATE
+	LEADER
 )
 
 //
@@ -140,8 +141,6 @@ func (rf *Raft) getRaftPersistState() []byte {
 }
 
 func (rf *Raft) persist() {
-	// Your code here (2C).
-	// Example:
 	rf.persister.SaveRaftState(rf.getRaftPersistState())
 }
 
@@ -232,6 +231,7 @@ func (rf *Raft) Kill() {
 	defer Unlock(rf, lock_trace)
 	rf.stateCond.Broadcast()
 	rf.commitCond.Broadcast()
+	rf.state = KILLED
 }
 
 func (rf *Raft) killed() bool {
@@ -249,14 +249,14 @@ func (rf *Raft) ApplicationSnapshot(snapshot []byte, last_index, last_term int) 
 	Lock(rf, lock_trace)
 	defer Unlock(rf, lock_trace)
 	if last_index > rf.log.first().Index() {
-		rf.PersistSnapshot(snapshot, last_index, last_term)
+		rf.Snapshot(snapshot, last_index, last_term)
 	}
 }
 
-func (rf *Raft) PersistSnapshot(snapshot []byte, last_index, last_term int) {
+func (rf *Raft) Snapshot(snapshot []byte, last_index, last_term int) {
 	rf.log.discardUpTo(last_index)
-	for i := range rf.peers {
-		rf.nextIndex[i] = Max(last_index+1, rf.nextIndex[i])
+	for i := range rf.nextIndex {
+		rf.setNextIndex(i, last_index+1)
 	}
 	rf.persister.SaveStateAndSnapshot(rf.getRaftPersistState(), snapshot)
 }
@@ -298,9 +298,6 @@ func Make(peers []*labrpc.ClientEnd, me int,
 	rf.lastApplied = snapshot_index
 	rf.nextIndex = make([]int, len(rf.peers))
 	rf.matchIndex = make([]int, len(rf.peers))
-	for i := range rf.peers {
-		rf.nextIndex[i] = rf.log.length()
-	}
 
 	go rf.startWaitForResponse()
 	go rf.commitDaemon()
@@ -342,6 +339,14 @@ func (rf *Raft) setTermAndVote(term, vote int) {
 		rf.votedFor = vote
 		rf.persist()
 	}
+}
+
+func (rf *Raft) setNextIndex(server, index int) {
+	nxt_index := index
+	if index <= rf.log.start_index {
+		nxt_index = rf.log.start_index + 1
+	}
+	rf.nextIndex[server] = nxt_index
 }
 
 func (rf *Raft) Lock() {

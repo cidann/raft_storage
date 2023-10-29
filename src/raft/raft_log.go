@@ -28,7 +28,6 @@ func (rf *Raft) initializeRaftLog(start_index, start_term int) {
 		})
 	}
 	rf.log.start_index = start_index
-	rf.log.discardUpTo(start_index)
 }
 
 func (rf *Raft) reInitializeRaftLog(start_index, start_term int) {
@@ -59,6 +58,10 @@ func (rl *RaftLog) append(msg ...RaftEntry) {
 
 func (rl *RaftLog) replace(start int, msg ...RaftEntry) {
 	start = rl.getLogIndex(start)
+	if start < 0 {
+		msg = msg[-start:]
+		start = 0
+	}
 	rl.log = append(rl.log[:start], msg...)
 	rl.owner.persist()
 }
@@ -70,10 +73,10 @@ func (rl *RaftLog) discardUpTo(new_first_index int) {
 
 func (rl *RaftLog) get(index int) RaftEntry {
 	if index < 0 {
-		panic(fmt.Sprintf("log access with negative index %d len %d", index, rl.length()))
+		panic(fmt.Sprintf("log access with negative index %d len %d start index %d", index, rl.length(), rl.start_index))
 	}
 	if index >= rl.length() {
-		panic(fmt.Sprintf("log access with out of bound %d len %d", index, rl.length()))
+		panic(fmt.Sprintf("log access with out of bound %d len %d start index %d", index, rl.length(), rl.start_index))
 	}
 	if rl.getLogIndex(index) < 0 {
 		panic(fmt.Sprintf("log access with negative true index %d global index %d start_index %d", rl.getLogIndex(index), index, rl.start_index))
@@ -83,16 +86,27 @@ func (rl *RaftLog) get(index int) RaftEntry {
 	}
 	return rl.log[rl.getLogIndex(index)]
 }
+
+func (rl *RaftLog) getAtOrFirst(index int) RaftEntry {
+	if index < 0 {
+		panic(fmt.Sprintf("log access with negative index %d len %d", index, rl.length()))
+	}
+	if index >= rl.length() {
+		panic(fmt.Sprintf("log access with out of bound %d len %d", index, rl.length()))
+	}
+	if rl.getLogIndex(index) >= len(rl.log) {
+		panic(fmt.Sprintf("log access with out of bound true index %d global index %d start_index %d", rl.getLogIndex(index), index, rl.start_index))
+	}
+	if rl.getLogIndex(index) < 0 {
+		return rl.first()
+	}
+	return rl.log[rl.getLogIndex(index)]
+}
+
 func (rl *RaftLog) getLastTermIndex(index int) int {
-	var term int
 	i := index
-	if index < rl.start_index {
-		i = rl.start_index
-	} else {
-		term = rl.get(index).Term()
-		for i > rl.start_index && rl.get(i).Term() == term {
-			i--
-		}
+	for i >= rl.start_index && rl.get(i).Term() == rl.get(index).Term() {
+		i--
 	}
 	return i
 }
@@ -163,17 +177,21 @@ func (msg ApplyMsg) Term() int {
 
 func (rl *RaftLog) checkMatch(index, term int) bool {
 	var other RaftEntry
+	matched := false
 	if index < 0 {
-		panic("Don't allow left bound for now")
-	} else if index >= rl.length() || index < rl.start_index {
-		return false
+		panic(fmt.Sprintf("out of bound true index %d start index %d", index, rl.start_index))
+	} else if index >= rl.length() {
+		matched = false
+	} else if index < rl.start_index {
+		matched = true
 	} else {
 		other = ApplyMsg{
 			CommandIndex: index,
 			CommandTerm:  term,
 		}
+		matched = matchRaftEntry(rl.get(index), other)
 	}
-	return matchRaftEntry(rl.get(other.Index()), other)
+	return matched
 }
 
 func matchRaftEntry(first, second RaftEntry) bool {

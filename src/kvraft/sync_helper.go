@@ -23,10 +23,10 @@ func UnlockUntilChanReceive[T any](obj Lockable, c chan T) T {
 	return WaitUntilChanReceive(c)
 }
 
-func UnlockUntilChanSend[T any](obj Lockable, c chan T) T {
+func UnlockUntilChanSend[T any](obj Lockable, c chan T, val T) T {
 	Unlock(obj, lock_trace, "UnlockUntilChan")
 	defer Lock(obj, lock_trace, "UnlockUntilChan")
-	return WaitUntilChanSend(c)
+	return WaitUntilChanSend(c, val)
 }
 
 func GetChanForFunc[T any](f func()) chan T {
@@ -57,8 +57,8 @@ func WaitUntilChanReceive[T any](c chan T) T {
 	return zero_val
 }
 
-func WaitUntilChanSend[T any](c chan T) T {
-	val := <-c
+func WaitUntilChanSend[T any](c chan T, val T) T {
+	c <- val
 	return val
 }
 
@@ -91,7 +91,6 @@ func Lock(obj Lockable, stack_trace bool, print_args ...interface{}) {
 			builder.WriteString(fmt.Sprintf(print_args[0].(string), print_args[1:]...))
 			builder.WriteRune('\n')
 		}
-		builder.WriteString(CreateStackTrace(1))
 		log.Print(builder.String())
 	}
 

@@ -105,7 +105,6 @@ func Lock(obj Lockable, stack_trace bool, print_args ...interface{}) {
 			builder.WriteString(fmt.Sprintf(print_args[0].(string), print_args[1:]...))
 			builder.WriteRune('\n')
 		}
-		builder.WriteString(CreateStackTrace(1))
 		log.Print(builder.String())
 	}
 }

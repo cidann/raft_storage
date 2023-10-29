@@ -17,7 +17,7 @@ func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
 		Type:   GET,
 		Key:    args.Key,
 	}
-	result_chan := make(chan string)
+	result_chan := make(chan string, 1)
 
 	kv.tracker.RecordRequest(&operation, result_chan)
 	start_and_wait := func() {

@@ -1,6 +1,8 @@
 package raft
 
-import "time"
+import (
+	"time"
+)
 
 /*
 Raft is locked and unlocked at:
@@ -104,36 +106,35 @@ func (rf *Raft) handleValidAppendReply(server int, args *AppendEntryArgs, reply 
 	if reply.Success {
 		replicated_up_to := getReplicatedIndex(args)
 		rf.matchIndex[server] = replicated_up_to
-		rf.nextIndex[server] = replicated_up_to + 1
-		if rf.log.getLogIndex(replicated_up_to) < 0 {
-			rf.nextIndex[server] = rf.log.first().Index() + 1
-			go rf.sendInstallSnapshot(server, rf.makeInstallSnapshotArgs(), rf.makeInstallSnapshotReply())
-		}
+		rf.setNextIndex(server, replicated_up_to+1)
 		rf.leaderCheckAndUpdateCommit(rf.matchIndex[server])
 		rf.commitCond.Broadcast()
 		DPrintf("[** %d term %d] replicated on [%d] total replicated [%v] next [%v]", rf.me, rf.getTerm(), server, rf.matchIndex, rf.nextIndex)
 	} else {
 		next := rf.log.getLastTermIndex(args.PrevLogIndex) + 1
-		if rf.log.getLogIndex(next) >= 0 {
-			rf.nextIndex[server] = rf.log.first().Index() + 1
+		if rf.log.getLogIndex(next) <= 0 && args.PrevLogIndex == rf.log.start_index {
 			go rf.sendInstallSnapshot(server, rf.makeInstallSnapshotArgs(), rf.makeInstallSnapshotReply())
-		} else {
-			rf.nextIndex[server] = next
 		}
+		rf.setNextIndex(server, next)
 	}
 }
 
 func (rf *Raft) checkAppendRequest(args *AppendEntryArgs, reply *AppendEntryReply) bool {
+	valid := true
 	if args.Term < rf.getTerm() {
 		reply.Success = false
 		reply.Term = rf.getTerm()
-		return false
+		valid = false
+	}
+	if args.PrevLogIndex+1+len(args.Entries) <= rf.commitIndex {
+		valid = false
 	}
 	if args.Term > rf.getTerm() {
 		rf.setTerm(args.Term)
 		rf.toFollower()
 	}
-	return true
+
+	return valid
 }
 
 func (rf *Raft) handleValidAppendRequest(args *AppendEntryArgs, reply *AppendEntryReply) {
@@ -141,16 +142,20 @@ func (rf *Raft) handleValidAppendRequest(args *AppendEntryArgs, reply *AppendEnt
 	DPrintf("[%d term %d] Received append[len %d] from leader[%d commit %d] [index %d term %d]==[index %d term %d]", rf.me, rf.getTerm(), len(args.Entries), args.LeaderId, args.LeaderCommit, args.PrevLogIndex, args.PrevLogTerm, args.PrevLogIndex, args.PrevLogIndex)
 
 	if rf.log.checkMatch(args.PrevLogIndex, args.PrevLogTerm) {
+		if rf.commitIndex < rf.log.start_index {
+			panic("commit index smaller than begining index")
+		}
 		reply.Success = true
 		rf.log.replace(args.PrevLogIndex+1, args.Entries...)
 		rf.toFollower()
 		rf.setTerm(args.Term)
-		if args.LeaderCommit < rf.log.length() {
-			rf.commitIndex = args.LeaderCommit
-		} else {
-			rf.commitIndex = rf.log.length()
+		if args.LeaderCommit > rf.commitIndex {
+			rf.commitIndex = Min(args.LeaderCommit, rf.log.length()-1)
+			rf.commitCond.Broadcast()
 		}
-		rf.commitCond.Broadcast()
+		if rf.log.length() <= rf.commitIndex {
+			panic("Some commited log was removed")
+		}
 	} else {
 		reply.Success = false
 	}
@@ -190,9 +195,6 @@ func (rf *Raft) commitDaemon() {
 }
 
 func (rf *Raft) makeAppendEntryArgs(server int) *AppendEntryArgs {
-	if rf.nextIndex[server]-1 < rf.log.first().Index() {
-		rf.nextIndex[server] = rf.log.first().Index()
-	}
 	prevEntry := rf.log.get(rf.nextIndex[server] - 1)
 	return &AppendEntryArgs{
 		Term:         rf.getTerm(),

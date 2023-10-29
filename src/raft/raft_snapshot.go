@@ -12,8 +12,10 @@ type InstallSnapshotReply struct {
 	Term int
 }
 
-type Snapshot struct {
-	Data []byte
+type SnapshotData struct {
+	Data      []byte
+	LastIndex int
+	LastTerm  int
 }
 
 func (rf *Raft) sendInstallSnapshot(server int, args *InstallSnapshotArgs, reply *InstallSnapshotReply) bool {
@@ -56,39 +58,50 @@ func (rf *Raft) handleValidInstallSnapshotReply(server int, args *InstallSnapsho
 }
 
 func (rf *Raft) checkInstallSnapshotRequest(args *InstallSnapshotArgs, reply *InstallSnapshotReply) bool {
+	valid := true
 	if args.Term < rf.getTerm() {
 		reply.Term = rf.getTerm()
-		return false
+		valid = false
 	}
 	if args.Term > rf.getTerm() {
 		rf.setTerm(args.Term)
 		rf.toFollower()
 	}
-	return true
+	if args.LastIncludedIndex <= rf.commitIndex {
+		valid = false
+	}
+	return valid
 }
 
 func (rf *Raft) handleValidInstallSnapshotRequest(args *InstallSnapshotArgs, reply *InstallSnapshotReply) {
-	if args.LastIncludedIndex > rf.log.first().Index() {
-		if args.LastIncludedIndex > rf.log.last().Index() {
-			rf.reInitializeRaftLog(args.LastIncludedIndex, args.LastIncludedTerm)
-		}
-		rf.commitIndex = Max(args.LastIncludedIndex, rf.commitIndex)
-		rf.lastApplied = Max(args.LastIncludedIndex, rf.lastApplied)
-		rf.PersistSnapshot(args.Data, args.LastIncludedIndex, args.LastIncludedTerm)
-		snapshot := Snapshot{
-			Data: args.Data,
-		}
-		entry := ApplyMsg{
-			CommandValid: true,
-			Command:      snapshot,
-			CommandIndex: args.LastIncludedIndex,
-			CommandTerm:  args.LastIncludedTerm,
-		}
-		rf.UnlockUntilAppliable(entry)
+	if args.LastIncludedIndex > rf.log.last().Index() {
+		rf.reInitializeRaftLog(args.LastIncludedIndex, args.LastIncludedTerm)
 	}
+
+	rf.Snapshot(args.Data, args.LastIncludedIndex, args.LastIncludedTerm)
+	rf.commitIndex = args.LastIncludedIndex
+	rf.lastApplied = args.LastIncludedIndex
+
+	snapshot := SnapshotData{
+		Data:      args.Data,
+		LastIndex: args.LastIncludedIndex,
+		LastTerm:  args.LastIncludedTerm,
+	}
+	entry := ApplyMsg{
+		CommandValid: true,
+		Command:      snapshot,
+		CommandIndex: args.LastIncludedIndex,
+		CommandTerm:  args.LastIncludedTerm,
+	}
+	DPrintf("[%d] handleValidInstallSnapshotRequest send", rf.me)
+	rf.UnlockUntilAppliable(entry)
+	DPrintf("[%d] handleValidInstallSnapshotRequest send done", rf.me)
+
+	reply.Term = rf.getTerm()
 }
 
 func (rf *Raft) makeInstallSnapshotArgs() *InstallSnapshotArgs {
+	//log.Printf("make install snapshot")
 	return &InstallSnapshotArgs{
 		Term:              rf.currentTerm,
 		LeaderId:          rf.me,

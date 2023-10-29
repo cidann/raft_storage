@@ -19,7 +19,7 @@ func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 		Value:  args.Value,
 	}
 
-	result_chan := make(chan string)
+	result_chan := make(chan string, 1)
 
 	kv.tracker.RecordRequest(&operation, result_chan)
 	start_and_wait := func() {

@@ -1,18 +1,22 @@
 package kvraft
 
 type ClientTracker struct {
-	servers []bool
-	curFlag bool
-	cur     int
-	hint    int
+	servers      []bool
+	curFlag      bool
+	cur          int
+	hint         int
+	server_retry []int
+	retry        int
 }
 
-func NewClientTracker(server_num int) *ClientTracker {
+func NewClientTracker(server_num int, retry int) *ClientTracker {
 	return &ClientTracker{
-		servers: make([]bool, server_num),
-		curFlag: false,
-		cur:     0,
-		hint:    -1,
+		servers:      make([]bool, server_num),
+		curFlag:      false,
+		cur:          0,
+		hint:         -1,
+		server_retry: make([]int, server_num),
+		retry:        retry,
 	}
 }
 
@@ -39,8 +43,16 @@ func (ct *ClientTracker) RecordHint(nxt int) {
 }
 
 func (ct *ClientTracker) RecordInvalid(server int) {
-	defer func() { ct.servers[server] = !ct.servers[server] }()
-	if server == ct.hint {
-		ct.hint = -1
+	if ct.server_retry[server] > ct.retry {
+		panic("Should retried not be greater max retry")
+	}
+	if ct.server_retry[server] == ct.retry {
+		if server == ct.hint {
+			ct.hint = -1
+		}
+		ct.servers[server] = !ct.servers[server]
+		ct.server_retry[server] = 0
+	} else {
+		ct.server_retry[server]++
 	}
 }
