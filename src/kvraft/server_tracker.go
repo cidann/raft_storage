@@ -33,7 +33,6 @@ func (tracker *RequestTracker) ProcessRequest(operation *Op, result string) {
 	tracker.latest_applied[operation.Sid] = operation.Serial
 
 	if tracker.request_chan[operation.Sid] != nil && operation.Serial == tracker.request_serial[operation.Sid] {
-		DPrint("Notify the request from @%d", operation.Sid)
 		tracker.request_chan[operation.Sid] <- result
 		tracker.DiscardRequestFrom(operation.Sid)
 	}
@@ -43,7 +42,6 @@ func (tracker *RequestTracker) DiscardRequestFrom(sid int) {
 	if tracker.request_chan[sid] != nil {
 		close(tracker.request_chan[sid])
 		tracker.request_chan[sid] = nil
-		DPrintf("closed and removed previous channel waiting for notification")
 	}
 }
 

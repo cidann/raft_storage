@@ -479,7 +479,6 @@ func TestConcurrent3ADebug(t *testing.T) {
 	test_timeout := GetChanForTime[bool](time.Duration(25) * time.Second)
 	select {
 	case <-test_done:
-		DPrintf("Test finished on its own")
 	case <-test_timeout:
 		t.Fatal("Test timedout ")
 	}

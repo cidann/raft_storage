@@ -9,7 +9,7 @@ func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
 		reply.LeaderHint = leader
 		return
 	}
-	DPrintf("[%d] Received Get as Leader", kv.me)
+	Debug(dClient, "C%d -> S%d Received Get Serial:%d as Leader", args.Sid, kv.me, args.Serial)
 
 	operation := Op{
 		Serial: args.Serial,
@@ -23,10 +23,9 @@ func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
 	start_and_wait := func() {
 		kv.rf.Start(operation)
 		reply.Value = WaitUntilChanReceive(result_chan)
-		DPrintf("[%d to %d] from notification Get {%s:%s}", args.Sid, kv.me, args.Key, reply.Value)
 	}
 	UnlockUntilChanReceive(kv, GetChanForFunc[any](start_and_wait))
 	reply.Success = true
-	DPrintf("[%d to %d] Get Request done", args.Sid, kv.me)
+	Debug(dClient, "C%d -> S%d Get Serial:%d done", args.Sid, kv.me, args.Serial)
 
 }

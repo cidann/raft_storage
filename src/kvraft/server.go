@@ -63,7 +63,7 @@ type KVServer struct {
 // to suppress debug output from a Kill()ed instance.
 //
 func (kv *KVServer) Kill() {
-	DPrintf("[%d] kill kv", kv.me)
+	Debug(dDrop, "S%d kill kv", kv.me)
 	kv.rf.Kill()
 	Lock(kv, false)
 	defer Unlock(kv, false)
@@ -126,7 +126,7 @@ func (kv *KVServer) PingDebug(args *GetArgs, reply *GetReply) {
 	Lock(kv, lock_trace)
 	defer Unlock(kv, lock_trace)
 
-	DPrintf("[%d to %d]", args.Sid, kv.me)
+	Debug(dClient, "C%d -> S%d", args.Sid, kv.me)
 }
 
 func (kv *KVServer) Lock() {

@@ -111,9 +111,7 @@ func Unlock(obj Lockable, stack_trace bool, print_args ...interface{}) {
 }
 
 func CondWait(obj Lockable, cond *sync.Cond) {
-	DPrintf("[%s] cond wait", obj.Identity())
 	cond.Wait()
-	DPrintf("[%s] cond start", obj.Identity())
 }
 
 func CreateStackTrace(frame_skip int) string {

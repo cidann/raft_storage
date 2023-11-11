@@ -25,7 +25,6 @@ func (kv *KVServer) ApplyDaemon() {
 }
 
 func (kv *KVServer) handleOperation(msg *raft.ApplyMsg) {
-	DPrintf("[%d] handleOperation", kv.me)
 	operation := msg.Command.(Op)
 	op_result := ""
 	if !kv.tracker.AlreadyProcessed(&operation) || operation.Type == GET {
@@ -52,6 +51,7 @@ func (kv *KVServer) handleSnapshot(msg *raft.ApplyMsg) {
 	}
 	snapshot := msg.Command.(raft.SnapshotData)
 	if snapshot.LastIndex > kv.state.LastIndex {
+		Debug(dSnap, "S%d handle snapshot from raft", kv.me)
 		kv.LoadSnapshot(snapshot.Data)
 
 		if snapshot.LastIndex != kv.state.LastIndex {
