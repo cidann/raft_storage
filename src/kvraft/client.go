@@ -62,24 +62,24 @@ func (ck *Clerk) Get(key string) string {
 		}
 
 		target_server, visited_all := ck.tracker.Next()
-		Debug(dClient, "C%d -> S%d try to Get Serial: %d", ck.id, target_server, args.Serial)
+		Debug(dClient, "S%d <- C%d try to Get Serial: %d", target_server, ck.id, args.Serial)
 		result_chan := GetChanForFunc[bool](func() { ck.servers[target_server].Call("KVServer.Get", &args, &reply) })
 		timeout_chan := GetChanForTime[bool](raft.GetSendTime())
 		select {
 		case <-result_chan:
 			if reply.Success {
-				Debug(dClient, "C%d -> S%d successfull Get Serial: %d", ck.id, target_server, args.Serial)
+				Debug(dClient, "S%d <- C%d successfull Get Serial: %d", target_server, ck.id, args.Serial)
 				ck.serial++
 				return reply.Value
 			} else {
-				Debug(dClient, "C%d -> S%d failed Get Serial: %d", ck.id, target_server, args.Serial)
+				Debug(dClient, "S%d <- C%d failed Get Serial: %d", target_server, ck.id, args.Serial)
 				ck.tracker.RecordInvalid(target_server)
 				if reply.LeaderHint != -1 {
 					ck.tracker.RecordHint(reply.LeaderHint)
 				}
 			}
 		case <-timeout_chan:
-			Debug(dClient, "C%d -> S%d timed out Get Serial: %d", ck.id, target_server, args.Serial)
+			Debug(dClient, "S%d <- C%d timed out Get Serial: %d", target_server, ck.id, args.Serial)
 			ck.tracker.RecordInvalid(target_server)
 		}
 		if visited_all {
@@ -105,24 +105,24 @@ func (ck *Clerk) PutAppend(key string, value string, op OperationType) {
 			LeaderHint: -1,
 		}
 		target_server, visited_all := ck.tracker.Next()
-		Debug(dClient, "C%d -> S%d try to PutAppend Serial: %d", ck.id, target_server, args.Serial)
+		Debug(dClient, "S%d <- C%d try to PutAppend Serial: %d", target_server, ck.id, args.Serial)
 		result_chan := GetChanForFunc[bool](func() { ck.servers[target_server].Call("KVServer.PutAppend", &args, &reply) })
 		timeout_chan := GetChanForTime[bool](raft.GetSendTime())
 		select {
 		case <-result_chan:
 			if reply.Success {
-				Debug(dClient, "C%d -> S%d successfull PutAppend Serial: %d", ck.id, target_server, args.Serial)
+				Debug(dClient, "S%d <- C%d successfull PutAppend Serial: %d", target_server, ck.id, args.Serial)
 				ck.serial++
 				return
 			} else {
-				Debug(dClient, "C%d -> S%d failed PutAppend Serial: %d", ck.id, target_server, args.Serial)
+				Debug(dClient, "S%d <- C%d failed PutAppend Serial: %d", target_server, ck.id, args.Serial)
 				ck.tracker.RecordInvalid(target_server)
 				if reply.LeaderHint != -1 {
 					ck.tracker.RecordHint(reply.LeaderHint)
 				}
 			}
 		case <-timeout_chan:
-			Debug(dClient, "C%d -> S%d timed out PutAppend Serial: %d", ck.id, target_server, args.Serial)
+			Debug(dClient, "S%d <- C%d timed out PutAppend Serial: %d", target_server, ck.id, args.Serial)
 			ck.tracker.RecordInvalid(target_server)
 		}
 		if visited_all {

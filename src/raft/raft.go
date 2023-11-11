@@ -199,11 +199,7 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 		}
 		rf.log.append(entry)
 		rf.sendAppendToFollowers()
-
-		DPrintf("[** %d term %d] Got new entry[%d] to replicate log{%d,%d}", rf.me, rf.currentTerm, index, rf.log.start_index, rf.log.length())
-	} else {
-
-		DPrintf("[** %d term %d] not leader", rf.me, rf.currentTerm)
+		Debug(dLeader, "S%d Got new entry {%d:%d}", rf.me, rf.log.start_index, rf.log.length())
 	}
 
 	return index, term, isLeader
@@ -250,10 +246,21 @@ func (rf *Raft) ApplicationSnapshot(snapshot []byte, last_index, last_term int) 
 }
 
 func (rf *Raft) Snapshot(snapshot []byte, last_index, last_term int) {
+	Debug(dSnap, "S%d handle snapshot from kvserver", rf.me)
+	if last_index > rf.log.last().Index() {
+		rf.reInitializeRaftLog(last_index, last_term)
+	}
 	rf.log.discardUpTo(last_index)
 	for i := range rf.nextIndex {
 		rf.setNextIndex(i, last_index+1)
 	}
+	if rf.commitIndex < last_index {
+		rf.commitIndex = last_index
+	}
+	if rf.lastApplied < last_index {
+		rf.lastApplied = last_index
+	}
+
 	rf.persister.SaveStateAndSnapshot(rf.getRaftPersistState(), snapshot)
 }
 

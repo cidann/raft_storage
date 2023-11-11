@@ -9,7 +9,7 @@ func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
 		reply.LeaderHint = leader
 		return
 	}
-	Debug(dClient, "C%d -> S%d Received Get Serial:%d as Leader", args.Sid, kv.me, args.Serial)
+	Debug(dClient, "S%d <- C%d Received Get Serial:%d as Leader", kv.me, args.Sid, args.Serial)
 
 	operation := Op{
 		Serial: args.Serial,
@@ -26,6 +26,6 @@ func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
 	}
 	UnlockUntilChanReceive(kv, GetChanForFunc[any](start_and_wait))
 	reply.Success = true
-	Debug(dClient, "C%d -> S%d Get Serial:%d done", args.Sid, kv.me, args.Serial)
+	Debug(dClient, "S%d <- C%d Get Serial:%d done", kv.me, args.Sid, args.Serial)
 
 }

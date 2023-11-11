@@ -126,7 +126,7 @@ func (kv *KVServer) PingDebug(args *GetArgs, reply *GetReply) {
 	Lock(kv, lock_trace)
 	defer Unlock(kv, lock_trace)
 
-	Debug(dClient, "C%d -> S%d", args.Sid, kv.me)
+	Debug(dClient, "S%d <- C%d", kv.me, args.Sid)
 }
 
 func (kv *KVServer) Lock() {

@@ -9,7 +9,7 @@ func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 		reply.LeaderHint = leader
 		return
 	}
-	Debug(dClient, "C%d -> S%d Received PutAppend Serial:%d as Leader", args.Sid, kv.me, args.Serial)
+	Debug(dClient, "S%d <- C%d Received PutAppend Serial:%d as Leader", kv.me, args.Sid, args.Serial)
 
 	operation := Op{
 		Serial: args.Serial,
@@ -28,6 +28,6 @@ func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 	}
 	UnlockUntilChanReceive(kv, GetChanForFunc[any](start_and_wait))
 	reply.Success = true
-	Debug(dClient, "C%d -> S%d PutAppend Serial:%d done", args.Sid, kv.me, args.Serial)
+	Debug(dClient, "S%d <- C%d PutAppend Serial:%d done", kv.me, args.Sid, args.Serial)
 
 }

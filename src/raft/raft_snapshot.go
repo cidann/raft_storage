@@ -74,13 +74,6 @@ func (rf *Raft) checkInstallSnapshotRequest(args *InstallSnapshotArgs, reply *In
 }
 
 func (rf *Raft) handleValidInstallSnapshotRequest(args *InstallSnapshotArgs, reply *InstallSnapshotReply) {
-	if args.LastIncludedIndex > rf.log.last().Index() {
-		rf.reInitializeRaftLog(args.LastIncludedIndex, args.LastIncludedTerm)
-	}
-
-	rf.Snapshot(args.Data, args.LastIncludedIndex, args.LastIncludedTerm)
-	rf.commitIndex = args.LastIncludedIndex
-	rf.lastApplied = args.LastIncludedIndex
 
 	snapshot := SnapshotData{
 		Data:      args.Data,
@@ -93,9 +86,8 @@ func (rf *Raft) handleValidInstallSnapshotRequest(args *InstallSnapshotArgs, rep
 		CommandIndex: args.LastIncludedIndex,
 		CommandTerm:  args.LastIncludedTerm,
 	}
-	DPrintf("[%d] handleValidInstallSnapshotRequest send", rf.me)
+
 	rf.UnlockUntilAppliable(entry)
-	DPrintf("[%d] handleValidInstallSnapshotRequest send done", rf.me)
 
 	reply.Term = rf.getTerm()
 }
