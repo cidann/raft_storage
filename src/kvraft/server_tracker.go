@@ -23,14 +23,16 @@ func (tracker *RequestTracker) RecordRequest(operation *Op, req_chan chan string
 
 func (tracker *RequestTracker) AlreadyProcessed(operation *Op) bool {
 	already_processed := false
-	if serial, ok := tracker.latest_applied[operation.Sid]; ok && (serial+1) > operation.Serial {
+	if serial, ok := tracker.latest_applied[operation.Sid]; ok && serial >= operation.Serial {
 		already_processed = true
 	}
 	return already_processed
 }
 
 func (tracker *RequestTracker) ProcessRequest(operation *Op, result string) {
-	tracker.latest_applied[operation.Sid] = operation.Serial
+	if !tracker.AlreadyProcessed(operation) {
+		tracker.latest_applied[operation.Sid] = operation.Serial
+	}
 
 	if tracker.request_chan[operation.Sid] != nil && operation.Serial == tracker.request_serial[operation.Sid] {
 		tracker.request_chan[operation.Sid] <- result
@@ -40,6 +42,7 @@ func (tracker *RequestTracker) ProcessRequest(operation *Op, result string) {
 
 func (tracker *RequestTracker) DiscardRequestFrom(sid int) {
 	if tracker.request_chan[sid] != nil {
+		Debug(dWarn, "debug close chan %d", sid)
 		close(tracker.request_chan[sid])
 		tracker.request_chan[sid] = nil
 	}

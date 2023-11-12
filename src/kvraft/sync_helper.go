@@ -20,7 +20,8 @@ func UnlockAndSleepFor(obj Lockable, d time.Duration) {
 func UnlockUntilChanReceive[T any](obj Lockable, c chan T) T {
 	Unlock(obj, lock_trace, "UnlockUntilChan")
 	defer Lock(obj, lock_trace, "UnlockUntilChan")
-	return WaitUntilChanReceive(c)
+	val, _ := WaitUntilChanReceive(c)
+	return val
 }
 
 func UnlockUntilChanSend[T any](obj Lockable, c chan T, val T) T {
@@ -49,12 +50,12 @@ func GetChanForTime[T any](d time.Duration) chan T {
 	return c
 }
 
-func WaitUntilChanReceive[T any](c chan T) T {
+func WaitUntilChanReceive[T any](c chan T) (T, bool) {
 	for s := range c {
-		return s
+		return s, true
 	}
 	var zero_val T
-	return zero_val
+	return zero_val, false
 }
 
 func WaitUntilChanSend[T any](c chan T, val T) T {

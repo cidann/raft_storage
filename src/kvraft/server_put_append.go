@@ -9,7 +9,7 @@ func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 		reply.LeaderHint = leader
 		return
 	}
-	Debug(dClient, "S%d <- C%d Received PutAppend Serial:%d as Leader", kv.me, args.Sid, args.Serial)
+	Debug(dClient, "S%d <- C%d Received PutAppend Serial:%d Key:%s as Leader", kv.me, args.Sid, args.Serial, args.Key)
 
 	operation := Op{
 		Serial: args.Serial,
@@ -24,10 +24,11 @@ func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 	kv.tracker.RecordRequest(&operation, result_chan)
 	start_and_wait := func() {
 		kv.rf.Start(operation)
-		WaitUntilChanReceive(result_chan)
+		var _, received = WaitUntilChanReceive(result_chan)
+		reply.OutDated = !received
 	}
 	UnlockUntilChanReceive(kv, GetChanForFunc[any](start_and_wait))
 	reply.Success = true
-	Debug(dClient, "S%d <- C%d PutAppend Serial:%d done", kv.me, args.Sid, args.Serial)
+	Debug(dClient, "S%d <- C%d PutAppend Serial:%d Key:%s done", kv.me, args.Sid, args.Serial, args.Key)
 
 }

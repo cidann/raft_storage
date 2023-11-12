@@ -156,6 +156,10 @@ func (rl *RaftLog) slice(begin, end int) []RaftEntry {
 	return res
 }
 
+func (rl *RaftLog) sliceDeep(begin, end int) []RaftEntry {
+	return append([]RaftEntry{}, rl.slice(begin, end)...)
+}
+
 func (rl *RaftLog) isUpToDate(index, term int) bool {
 	other := ApplyMsg{
 		CommandIndex: index,

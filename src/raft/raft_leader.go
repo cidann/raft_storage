@@ -200,7 +200,7 @@ func (rf *Raft) makeAppendEntryArgs(server int) *AppendEntryArgs {
 		LeaderId:     rf.me,
 		PrevLogIndex: prevEntry.Index(),
 		PrevLogTerm:  prevEntry.Term(),
-		Entries:      rf.log.slice(rf.nextIndex[server], rf.log.length()),
+		Entries:      rf.log.sliceDeep(rf.nextIndex[server], rf.log.length()),
 		LeaderCommit: rf.commitIndex,
 	}
 }

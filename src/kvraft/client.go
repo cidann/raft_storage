@@ -47,6 +47,7 @@ func MakeClerk(servers []*labrpc.ClientEnd) *Clerk {
 // must match the declared types of the RPC handler function's
 // arguments. and reply must be passed as a pointer.
 //
+
 func (ck *Clerk) Get(key string) string {
 
 	for {
@@ -59,27 +60,31 @@ func (ck *Clerk) Get(key string) string {
 			Success:    false,
 			Value:      "",
 			LeaderHint: -1,
+			OutDated:   false,
 		}
 
 		target_server, visited_all := ck.tracker.Next()
-		Debug(dClient, "S%d <- C%d try to Get Serial: %d", target_server, ck.id, args.Serial)
+		//client server index mismatch Debug(dClient, "S%d <- C%d try to Get Serial: %d Key:%s", target_server, ck.id, args.Serial, args.Key)
 		result_chan := GetChanForFunc[bool](func() { ck.servers[target_server].Call("KVServer.Get", &args, &reply) })
 		timeout_chan := GetChanForTime[bool](raft.GetSendTime())
 		select {
 		case <-result_chan:
 			if reply.Success {
-				Debug(dClient, "S%d <- C%d successfull Get Serial: %d", target_server, ck.id, args.Serial)
+				//client server index mismatch Debug(dClient, "S%d <- C%d successfull Get Serial: %d Key:%s", target_server, ck.id, args.Serial, args.Key)
+				if reply.OutDated {
+					continue
+				}
 				ck.serial++
 				return reply.Value
 			} else {
-				Debug(dClient, "S%d <- C%d failed Get Serial: %d", target_server, ck.id, args.Serial)
+				//client server index mismatch Debug(dClient, "S%d <- C%d failed Get Serial: %d Key:%s", target_server, ck.id, args.Serial, args.Key)
 				ck.tracker.RecordInvalid(target_server)
 				if reply.LeaderHint != -1 {
 					ck.tracker.RecordHint(reply.LeaderHint)
 				}
 			}
 		case <-timeout_chan:
-			Debug(dClient, "S%d <- C%d timed out Get Serial: %d", target_server, ck.id, args.Serial)
+			//client server index mismatch Debug(dClient, "S%d <- C%d timed out Get Serial: %d Key:%s", target_server, ck.id, args.Serial, args.Key)
 			ck.tracker.RecordInvalid(target_server)
 		}
 		if visited_all {
@@ -103,26 +108,30 @@ func (ck *Clerk) PutAppend(key string, value string, op OperationType) {
 		reply := PutAppendReply{
 			Success:    false,
 			LeaderHint: -1,
+			OutDated:   false,
 		}
 		target_server, visited_all := ck.tracker.Next()
-		Debug(dClient, "S%d <- C%d try to PutAppend Serial: %d", target_server, ck.id, args.Serial)
+		//client server index mismatch Debug(dClient, "S%d <- C%d try to PutAppend Serial: %d Key:%s", target_server, ck.id, args.Serial, args.Key)
 		result_chan := GetChanForFunc[bool](func() { ck.servers[target_server].Call("KVServer.PutAppend", &args, &reply) })
 		timeout_chan := GetChanForTime[bool](raft.GetSendTime())
 		select {
 		case <-result_chan:
 			if reply.Success {
-				Debug(dClient, "S%d <- C%d successfull PutAppend Serial: %d", target_server, ck.id, args.Serial)
+				//client server index mismatch Debug(dClient, "S%d <- C%d successfull PutAppend Serial: %d Key:%s", target_server, ck.id, args.Serial, args.Key)
+				if reply.OutDated {
+					continue
+				}
 				ck.serial++
 				return
 			} else {
-				Debug(dClient, "S%d <- C%d failed PutAppend Serial: %d", target_server, ck.id, args.Serial)
+				//client server index mismatch Debug(dClient, "S%d <- C%d failed PutAppend Serial: %d Key:%s", target_server, ck.id, args.Serial, args.Key)
 				ck.tracker.RecordInvalid(target_server)
 				if reply.LeaderHint != -1 {
 					ck.tracker.RecordHint(reply.LeaderHint)
 				}
 			}
 		case <-timeout_chan:
-			Debug(dClient, "S%d <- C%d timed out PutAppend Serial: %d", target_server, ck.id, args.Serial)
+			//client server index mismatch Debug(dClient, "S%d <- C%d timed out PutAppend Serial: %d Key:%s", target_server, ck.id, args.Serial, args.Key)
 			ck.tracker.RecordInvalid(target_server)
 		}
 		if visited_all {

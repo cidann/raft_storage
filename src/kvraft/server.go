@@ -25,6 +25,12 @@ const (
 	APPEND
 )
 
+var typeMap = map[OperationType]string{
+	GET:    "Get",
+	PUT:    "Put",
+	APPEND: "Append",
+}
+
 type Op struct {
 	// Your definitions here.
 	// Field names must start with capital letters,

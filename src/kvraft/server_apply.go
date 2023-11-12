@@ -33,6 +33,7 @@ func (kv *KVServer) handleOperation(msg *raft.ApplyMsg) {
 	}
 	kv.state.SetLatest(msg.Index(), msg.Term())
 	kv.tracker.ProcessRequest(&operation, op_result)
+	//Debug(dCommit, "S%d replicated and applied C%d Serial:%d entry %s %s", kv.me, operation.Sid, operation.Serial, typeMap[operation.Type], operation.Key)
 
 	kv.non_snapshot_size += kv.getOperationSize(&operation)
 	if kv.maxraftstate != -1 && kv.non_snapshot_size >= kv.maxraftstate*2 {
@@ -53,7 +54,7 @@ func (kv *KVServer) handleSnapshot(msg *raft.ApplyMsg) {
 	if snapshot.LastIndex > kv.state.LastIndex {
 		Debug(dSnap, "S%d handle snapshot from raft", kv.me)
 		kv.LoadSnapshot(snapshot.Data)
-		kv.rf.Snapshot(snapshot.Data, snapshot.LastIndex, snapshot.LastTerm)
+		kv.rf.ApplicationSnapshot(snapshot.Data, snapshot.LastIndex, snapshot.LastTerm)
 
 		if snapshot.LastIndex != kv.state.LastIndex {
 			panic(fmt.Sprintf("snapshot index mismatch state index %d snapshot last index %d", kv.state.LastIndex, snapshot.LastIndex))
