@@ -162,7 +162,9 @@ func (kv *KVServer) LoadSnapshot(snapshot []byte) {
 	decoder.Decode(kv.state)
 	decoder.Decode(&kv.tracker.latest_applied)
 	decoder.Decode(&kv.tracker.request_serial)
-
+	for cid := range kv.tracker.request_chan {
+		kv.tracker.DiscardRequestFrom(cid)
+	}
 }
 
 func (kv *KVServer) getOperationSize(operation *Op) int {

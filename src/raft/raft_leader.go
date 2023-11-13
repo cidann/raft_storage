@@ -66,7 +66,7 @@ func (rf *Raft) startLeader() {
 	}
 
 	rf.state = LEADER
-	DPrintf("[** %d term %d] %v is now leader!", rf.me, rf.getTerm(), rf.nextIndex)
+	Debug(dLeader, "S%d is now leader of term %d", rf.me, rf.currentTerm)
 
 	for rf.state == LEADER && !rf.killed() {
 		rf.sendAppendToFollowers()
@@ -175,6 +175,7 @@ func (rf *Raft) leaderCheckAndUpdateCommit(new_commit_index int) {
 		}
 	}
 	if count > len(rf.peers)/2 {
+		Debug(dCommit, "S%d replicated from index %d to %d", rf.me, rf.commitIndex, new_commit_index)
 		rf.commitIndex = new_commit_index
 	}
 }

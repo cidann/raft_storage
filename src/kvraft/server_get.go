@@ -2,12 +2,12 @@ package kvraft
 
 import "sync/atomic"
 
-var tmp int64 = 0
+var true_serial_get int64 = 0
 
 func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
 	Lock(kv, lock_trace, "Get")
 	defer Unlock(kv, lock_trace, "Get")
-	cur_serial := atomic.AddInt64(&tmp, 1)
+	cur_serial := atomic.AddInt64(&true_serial_get, 1)
 
 	if leader, isLeader := kv.GetLeader(); !isLeader {
 		reply.Success = false
@@ -39,6 +39,6 @@ func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
 	}
 	UnlockUntilChanReceive(kv, GetChanForFunc[any](start_and_wait))
 	reply.Success = true
-	Debug(dClient, "S%d <- C%d Get Serial:%d Key:%s done true#%d", kv.me, args.Sid, args.Serial, args.Key, cur_serial)
+	Debug(dClient, "S%d <- C%d Get Serial:%d Key/Val:{%s:%s} done true#%d Outdated:%t", kv.me, args.Sid, args.Serial, args.Key, reply.Value, cur_serial, reply.OutDated)
 
 }

@@ -52,9 +52,10 @@ func (kv *KVServer) handleSnapshot(msg *raft.ApplyMsg) {
 	}
 	snapshot := msg.Command.(raft.SnapshotData)
 	if snapshot.LastIndex > kv.state.LastIndex {
-		Debug(dSnap, "S%d handle snapshot from raft", kv.me)
+		Debug(dSnap, "S%d handle snapshot from raft index/term: %d/%d", kv.me, snapshot.LastIndex, snapshot.LastTerm)
 		kv.LoadSnapshot(snapshot.Data)
 		kv.rf.ApplicationSnapshot(snapshot.Data, snapshot.LastIndex, snapshot.LastTerm)
+		kv.non_snapshot_size = 0
 
 		if snapshot.LastIndex != kv.state.LastIndex {
 			panic(fmt.Sprintf("snapshot index mismatch state index %d snapshot last index %d", kv.state.LastIndex, snapshot.LastIndex))

@@ -173,11 +173,11 @@ func (rf *Raft) handleValidVoteRequest(args *RequestVoteArgs, reply *RequestVote
 }
 
 func (rf *Raft) toFollower() {
-	DPrintf("[%d term %d] converted to follower", rf.me, rf.getTerm())
 	rf.setVotedFor(-1)
 	if rf.state == FOLLOWER {
 		return
 	}
+	Debug(dLeader, "S%d converted to follower", rf.me)
 	rf.state = FOLLOWER
 	rf.stateCond.Broadcast()
 }

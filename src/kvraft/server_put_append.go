@@ -1,15 +1,20 @@
 package kvraft
 
+import "sync/atomic"
+
+var true_serial_put_append int64 = 0
+
 func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 	Lock(kv, lock_trace, "PutAppend")
 	defer Unlock(kv, lock_trace, "PutAppend")
+	cur_serial := atomic.AddInt64(&true_serial_put_append, 1)
 
 	if leader, isLeader := kv.GetLeader(); !isLeader {
 		reply.Success = false
 		reply.LeaderHint = leader
 		return
 	}
-	Debug(dClient, "S%d <- C%d Received PutAppend Serial:%d Key:%s as Leader", kv.me, args.Sid, args.Serial, args.Key)
+	Debug(dClient, "S%d <- C%d Received PutAppend Serial:%d Key/Val:{%s:%s} as Leader true#%d", kv.me, args.Sid, args.Serial, args.Key, args.Value, cur_serial)
 
 	operation := Op{
 		Serial: args.Serial,
@@ -29,6 +34,6 @@ func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 	}
 	UnlockUntilChanReceive(kv, GetChanForFunc[any](start_and_wait))
 	reply.Success = true
-	Debug(dClient, "S%d <- C%d PutAppend Serial:%d Key:%s done", kv.me, args.Sid, args.Serial, args.Key)
+	Debug(dClient, "S%d <- C%d PutAppend Serial:%d Key:%s done true#%d Outdated:%t", kv.me, args.Sid, args.Serial, args.Key, cur_serial, reply.OutDated)
 
 }

@@ -246,7 +246,7 @@ func (rf *Raft) ApplicationSnapshot(snapshot []byte, last_index, last_term int) 
 }
 
 func (rf *Raft) Snapshot(snapshot []byte, last_index, last_term int) {
-	Debug(dSnap, "S%d handle snapshot from kvserver", rf.me)
+	Debug(dSnap, "S%d handle snapshot from kvserver index/term: %d/%d", rf.me, last_index, last_term)
 	if last_index > rf.log.last().Index() {
 		rf.reInitializeRaftLog(last_index, last_term)
 	}
