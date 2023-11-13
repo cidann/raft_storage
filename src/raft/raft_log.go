@@ -64,7 +64,7 @@ func (rl *RaftLog) replace(start int, msg ...RaftEntry) {
 	}
 	for i := range msg {
 		if i+start+rl.start_index < rl.length() {
-			if rl.log[i+start] != msg[i] {
+			if rl.log[i+start].Term() != msg[i].Term() {
 				rl.log = append(rl.log[:i+start], msg[i:]...)
 				rl.owner.persist()
 				break
