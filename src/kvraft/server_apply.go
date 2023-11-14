@@ -36,7 +36,7 @@ func (kv *KVServer) handleOperation(msg *raft.ApplyMsg) {
 	//Debug(dCommit, "S%d replicated and applied C%d Serial:%d entry %s %s", kv.me, operation.Sid, operation.Serial, typeMap[operation.Type], operation.Key)
 
 	kv.non_snapshot_size += kv.getOperationSize(&operation)
-	if kv.maxraftstate != -1 && kv.non_snapshot_size >= kv.maxraftstate*2 {
+	if kv.maxraftstate != -1 && kv.non_snapshot_size >= kv.maxraftstate {
 		//log.Printf("[%d] handleOperation %d cur state size %d max size", kv.me, kv.rf.GetStateSize(), kv.maxraftstate)
 		//log.Printf("[%d] snapshoted at [index: %d, term: %d] non_snapshot_size %d", kv.me, kv.state.LastIndex, kv.state.LastTerm, kv.non_snapshot_size)
 		kv.rf.ApplicationSnapshot(kv.CreateSnapshot(), kv.state.LastIndex, kv.state.LastTerm)

@@ -160,9 +160,10 @@ func (rf *Raft) checkVoteRequest(args *RequestVoteArgs, reply *RequestVoteReply)
 }
 
 func (rf *Raft) handleValidVoteRequest(args *RequestVoteArgs, reply *RequestVoteReply) {
-	if (rf.getVotedFor() == -1 || rf.getVotedFor() == args.CandidateId) && rf.log.isUpToDate(args.LastEntryIndex, args.LastEntryTerm) {
+	if (rf.getVotedFor() == -1) && rf.log.isUpToDate(args.LastEntryIndex, args.LastEntryTerm) {
 		reply.VoteGranted = true
 		rf.lastRecord.RecordTime()
+		Debug(dVote, "S%d voted for %d for term %d prev voted %d", rf.me, args.CandidateId, args.Term, rf.getVotedFor())
 		rf.setVotedFor(args.CandidateId)
 		DPrintf("[%d term %d] Received vote from more up to date server [index %d term %d]>[index %d term %d]", rf.me, rf.getTerm(), args.LastEntryIndex, args.LastEntryTerm, rf.log.last().Index(), rf.log.last().Term())
 	} else {
