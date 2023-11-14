@@ -120,6 +120,9 @@ func (rf *Raft) handleValidAppendReply(server int, args *AppendEntryArgs, reply 
 
 func (rf *Raft) checkAppendRequest(args *AppendEntryArgs, reply *AppendEntryReply) bool {
 	valid := true
+	if args.Term == rf.currentTerm && rf.state == LEADER {
+		panic("Two leader in the same term")
+	}
 	if args.Term < rf.getTerm() {
 		reply.Success = false
 		reply.Term = rf.getTerm()
@@ -144,14 +147,18 @@ func (rf *Raft) handleValidAppendRequest(args *AppendEntryArgs, reply *AppendEnt
 		if rf.commitIndex < rf.log.start_index {
 			panic("commit index smaller than begining index")
 		}
+
+		if rf.state == CANDIDATE {
+			rf.toFollower()
+		}
 		reply.Success = true
 		rf.log.replace(args.PrevLogIndex+1, args.Entries...)
-		rf.toFollower()
 		rf.setTerm(args.Term)
 		if args.LeaderCommit > rf.commitIndex {
 			rf.commitIndex = Min(args.LeaderCommit, rf.log.length()-1)
 			rf.commitCond.Broadcast()
 		}
+
 		if rf.log.length() <= rf.commitIndex {
 			panic("Some commited log was removed")
 		}
