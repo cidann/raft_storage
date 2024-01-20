@@ -1,0 +1,789 @@
+Test: Basic leave/join ...
+labgob warning: Decoding into a non-default variable/field Term may not work
+006189 LEAD S1 converted to follower
+006190 VOTE S1 voted for 2 for term 2 prev voted -1
+006191 LEAD S0 converted to follower
+006191 VOTE S0 voted for 2 for term 2 prev voted -1
+006192 LEAD S2 is now leader of term 2
+007127 CLNT S2 <- C0 Received Query Serial:0 Num: -1 as Leader true#23
+007128 LEAD S2 Got new entry {0:2}
+007130 CMIT S2 replicated from index 0 to 1
+007130 WARN debug close chan 0
+007130 CLNT S2 <- C0 Query Serial:0 Num: -1 Config:{Num:0 Shards:[0 0 0 0 0 0 0 0 0 0] Groups:map[]} done true#23 Outdated:false
+007134 CLNT S2 <- C0 Received Query Serial:1 Num: -1 as Leader true#25
+007135 LEAD S2 Got new entry {0:3}
+007136 CMIT S2 replicated from index 1 to 2
+007136 WARN debug close chan 0
+007136 CLNT S2 <- C0 Query Serial:1 Num: -1 Config:{Num:0 Shards:[0 0 0 0 0 0 0 0 0 0] Groups:map[]} done true#25 Outdated:false
+007138 CLNT S2 <- C0 Received Join Serial:2 mapping:map[1:[x y z]] as Leader true#2
+007139 LEAD S2 Got new entry {0:4}
+007141 CMIT S2 replicated from index 2 to 3
+007141 WARN debug close chan 0
+007141 CLNT S2 <- C0 Join Serial:2 mapping:map[1:[x y z]] done true#2 Outdated:false
+007142 CLNT S2 <- C0 Received Query Serial:3 Num: -1 as Leader true#27
+007143 LEAD S2 Got new entry {0:5}
+007144 CMIT S2 replicated from index 3 to 4
+007144 WARN debug close chan 0
+007144 CLNT S2 <- C0 Query Serial:3 Num: -1 Config:{Num:1 Shards:[1 1 1 1 1 1 1 1 1 1] Groups:map[1:[x y z]]} done true#27 Outdated:false
+007148 CLNT S2 <- C0 Received Query Serial:4 Num: -1 as Leader true#29
+007149 LEAD S2 Got new entry {0:6}
+007150 CMIT S2 replicated from index 4 to 5
+007150 WARN debug close chan 0
+007150 CLNT S2 <- C0 Query Serial:4 Num: -1 Config:{Num:1 Shards:[1 1 1 1 1 1 1 1 1 1] Groups:map[1:[x y z]]} done true#29 Outdated:false
+007152 CLNT S2 <- C0 Received Join Serial:5 mapping:map[2:[a b c]] as Leader true#4
+007153 LEAD S2 Got new entry {0:7}
+007154 CMIT S2 replicated from index 5 to 6
+007155 WARN debug close chan 0
+007155 CLNT S2 <- C0 Join Serial:5 mapping:map[2:[a b c]] done true#4 Outdated:false
+007156 CLNT S2 <- C0 Received Query Serial:6 Num: -1 as Leader true#31
+007157 LEAD S2 Got new entry {0:8}
+007158 CMIT S2 replicated from index 6 to 7
+007159 WARN debug close chan 0
+007159 CLNT S2 <- C0 Query Serial:6 Num: -1 Config:{Num:2 Shards:[2 2 2 2 2 1 1 1 1 1] Groups:map[1:[x y z] 2:[a b c]]} done true#31 Outdated:false
+007160 CLNT S2 <- C0 Received Query Serial:7 Num: -1 as Leader true#33
+007161 LEAD S2 Got new entry {0:9}
+007162 CMIT S2 replicated from index 7 to 8
+007162 WARN debug close chan 0
+007163 CLNT S2 <- C0 Query Serial:7 Num: -1 Config:{Num:2 Shards:[2 2 2 2 2 1 1 1 1 1] Groups:map[1:[x y z] 2:[a b c]]} done true#33 Outdated:false
+007164 CLNT S2 <- C0 Received Query Serial:8 Num: -1 as Leader true#35
+007165 LEAD S2 Got new entry {0:10}
+007167 CMIT S2 replicated from index 8 to 9
+007167 WARN debug close chan 0
+007167 CLNT S2 <- C0 Query Serial:8 Num: -1 Config:{Num:2 Shards:[2 2 2 2 2 1 1 1 1 1] Groups:map[1:[x y z] 2:[a b c]]} done true#35 Outdated:false
+007169 CLNT S2 <- C0 Received Leave Serial:9 GIDs:[1] as Leader true#2
+007170 LEAD S2 Got new entry {0:11}
+007171 CMIT S2 replicated from index 9 to 10
+007171 WARN debug close chan 0
+007171 CLNT S2 <- C0 Leave Serial:9 GIDs:[1] done true#2 Outdated:false
+007173 CLNT S2 <- C0 Received Query Serial:10 Num: -1 as Leader true#37
+007174 LEAD S2 Got new entry {0:12}
+007175 CMIT S2 replicated from index 10 to 11
+007175 WARN debug close chan 0
+007175 CLNT S2 <- C0 Query Serial:10 Num: -1 Config:{Num:3 Shards:[2 2 2 2 2 2 2 2 2 2] Groups:map[2:[a b c]]} done true#37 Outdated:false
+007177 CLNT S2 <- C0 Received Query Serial:11 Num: -1 as Leader true#39
+007178 LEAD S2 Got new entry {0:13}
+007179 CMIT S2 replicated from index 11 to 12
+007179 WARN debug close chan 0
+007179 CLNT S2 <- C0 Query Serial:11 Num: -1 Config:{Num:3 Shards:[2 2 2 2 2 2 2 2 2 2] Groups:map[2:[a b c]]} done true#39 Outdated:false
+007181 CLNT S2 <- C0 Received Leave Serial:12 GIDs:[2] as Leader true#4
+007182 LEAD S2 Got new entry {0:14}
+007183 CMIT S2 replicated from index 12 to 13
+007184 WARN debug close chan 0
+007184 CLNT S2 <- C0 Leave Serial:12 GIDs:[2] done true#4 Outdated:false
+007185 CLNT S2 <- C0 Received Query Serial:13 Num: -1 as Leader true#41
+007186 LEAD S2 Got new entry {0:15}
+007188 CMIT S2 replicated from index 13 to 14
+007188 WARN debug close chan 0
+007188 CLNT S2 <- C0 Query Serial:13 Num: -1 Config:{Num:4 Shards:[0 0 0 0 0 0 0 0 0 0] Groups:map[]} done true#41 Outdated:false
+  ... Passed
+Test: Historical queries ...
+007188 DROP S0 kill shardmaster
+007681 CLNT S2 <- C0 Received Query Serial:14 Num: 0 as Leader true#42
+007684 LEAD S2 Got new entry {0:16}
+007687 CMIT S2 replicated from index 14 to 15
+007687 WARN debug close chan 0
+007687 CLNT S2 <- C0 Query Serial:14 Num: 0 Config:{Num:0 Shards:[0 0 0 0 0 0 0 0 0 0] Groups:map[]} done true#42 Outdated:false
+008443 CLNT S2 <- C0 Received Query Serial:15 Num: 1 as Leader true#43
+008446 LEAD S2 Got new entry {0:17}
+008450 CMIT S2 replicated from index 15 to 16
+008450 WARN debug close chan 0
+008451 CLNT S2 <- C0 Query Serial:15 Num: 1 Config:{Num:1 Shards:[1 1 1 1 1 1 1 1 1 1] Groups:map[1:[x y z]]} done true#43 Outdated:false
+009189 CLNT S2 <- C0 Received Query Serial:16 Num: 2 as Leader true#44
+009190 LEAD S2 Got new entry {0:18}
+009192 CMIT S2 replicated from index 16 to 17
+009193 WARN debug close chan 0
+009193 CLNT S2 <- C0 Query Serial:16 Num: 2 Config:{Num:2 Shards:[2 2 2 2 2 1 1 1 1 1] Groups:map[1:[x y z] 2:[a b c]]} done true#44 Outdated:false
+010109 CLNT S2 <- C0 Received Query Serial:17 Num: 0 as Leader true#45
+010110 LEAD S2 Got new entry {0:19}
+010112 CMIT S2 replicated from index 17 to 18
+010112 WARN debug close chan 0
+010112 CLNT S2 <- C0 Query Serial:17 Num: 0 Config:{Num:0 Shards:[0 0 0 0 0 0 0 0 0 0] Groups:map[]} done true#45 Outdated:false
+010855 CLNT S2 <- C0 Received Query Serial:18 Num: 3 as Leader true#46
+010859 LEAD S2 Got new entry {0:20}
+010865 CMIT S2 replicated from index 18 to 19
+010865 WARN debug close chan 0
+010866 CLNT S2 <- C0 Query Serial:18 Num: 3 Config:{Num:3 Shards:[2 2 2 2 2 2 2 2 2 2] Groups:map[2:[a b c]]} done true#46 Outdated:false
+011243 CLNT S2 <- C0 Received Query Serial:19 Num: 4 as Leader true#47
+011247 LEAD S2 Got new entry {0:21}
+011253 CMIT S2 replicated from index 19 to 20
+011254 WARN debug close chan 0
+011255 CLNT S2 <- C0 Query Serial:19 Num: 4 Config:{Num:4 Shards:[0 0 0 0 0 0 0 0 0 0] Groups:map[]} done true#47 Outdated:false
+011260 DROP S1 kill shardmaster
+011268 LEAD S2 converted to follower
+017180 LEAD S0 converted to follower
+017180 VOTE S0 voted for 2 for term 4 prev voted -1
+017182 LEAD S2 is now leader of term 4
+018205 CLNT S2 <- C0 Received Query Serial:20 Num: 0 as Leader true#59
+018206 LEAD S2 Got new entry {0:22}
+018208 CMIT S2 replicated from index 20 to 21
+018208 WARN debug close chan 0
+018209 CLNT S2 <- C0 Query Serial:20 Num: 0 Config:{Num:0 Shards:[0 0 0 0 0 0 0 0 0 0] Groups:map[]} done true#59 Outdated:false
+018211 CLNT S2 <- C0 Received Query Serial:21 Num: 1 as Leader true#61
+018212 LEAD S2 Got new entry {0:23}
+018214 CMIT S2 replicated from index 21 to 22
+018214 WARN debug close chan 0
+018214 CLNT S2 <- C0 Query Serial:21 Num: 1 Config:{Num:1 Shards:[1 1 1 1 1 1 1 1 1 1] Groups:map[1:[x y z]]} done true#61 Outdated:false
+018216 CLNT S2 <- C0 Received Query Serial:22 Num: 2 as Leader true#63
+018217 LEAD S2 Got new entry {0:24}
+018219 CMIT S2 replicated from index 22 to 23
+018219 WARN debug close chan 0
+018219 CLNT S2 <- C0 Query Serial:22 Num: 2 Config:{Num:2 Shards:[2 2 2 2 2 1 1 1 1 1] Groups:map[1:[x y z] 2:[a b c]]} done true#63 Outdated:false
+018221 CLNT S2 <- C0 Received Query Serial:23 Num: 0 as Leader true#65
+018222 LEAD S2 Got new entry {0:25}
+018224 CMIT S2 replicated from index 23 to 24
+018224 WARN debug close chan 0
+018224 CLNT S2 <- C0 Query Serial:23 Num: 0 Config:{Num:0 Shards:[0 0 0 0 0 0 0 0 0 0] Groups:map[]} done true#65 Outdated:false
+018226 CLNT S2 <- C0 Received Query Serial:24 Num: 3 as Leader true#67
+018227 LEAD S2 Got new entry {0:26}
+018229 CMIT S2 replicated from index 24 to 25
+018230 WARN debug close chan 0
+018230 CLNT S2 <- C0 Query Serial:24 Num: 3 Config:{Num:3 Shards:[2 2 2 2 2 2 2 2 2 2] Groups:map[2:[a b c]]} done true#67 Outdated:false
+018231 CLNT S2 <- C0 Received Query Serial:25 Num: 4 as Leader true#69
+018232 LEAD S2 Got new entry {0:27}
+018234 CMIT S2 replicated from index 25 to 26
+018234 WARN debug close chan 0
+018234 CLNT S2 <- C0 Query Serial:25 Num: 4 Config:{Num:4 Shards:[0 0 0 0 0 0 0 0 0 0] Groups:map[]} done true#69 Outdated:false
+018236 DROP S2 kill shardmaster
+018238 LEAD S1 converted to follower
+023465 VOTE S1 voted for 0 for term 5 prev voted -1
+023467 LEAD S0 is now leader of term 5
+023607 CLNT S0 <- C0 Received Query Serial:26 Num: 0 as Leader true#78
+023609 LEAD S0 Got new entry {0:28}
+023615 CMIT S0 replicated from index 25 to 27
+023616 WARN debug close chan 0
+023616 CLNT S0 <- C0 Query Serial:26 Num: 0 Config:{Num:0 Shards:[0 0 0 0 0 0 0 0 0 0] Groups:map[]} done true#78 Outdated:false
+023619 CLNT S0 <- C0 Received Query Serial:27 Num: 1 as Leader true#79
+023621 LEAD S0 Got new entry {0:29}
+023625 CMIT S0 replicated from index 27 to 28
+023625 WARN debug close chan 0
+023626 CLNT S0 <- C0 Query Serial:27 Num: 1 Config:{Num:1 Shards:[1 1 1 1 1 1 1 1 1 1] Groups:map[1:[x y z]]} done true#79 Outdated:false
+023627 CLNT S0 <- C0 Received Query Serial:28 Num: 2 as Leader true#80
+023629 LEAD S0 Got new entry {0:30}
+023633 CMIT S0 replicated from index 28 to 29
+023633 WARN debug close chan 0
+023633 CLNT S0 <- C0 Query Serial:28 Num: 2 Config:{Num:2 Shards:[2 2 2 2 2 1 1 1 1 1] Groups:map[1:[x y z] 2:[a b c]]} done true#80 Outdated:false
+023635 CLNT S0 <- C0 Received Query Serial:29 Num: 0 as Leader true#81
+023636 LEAD S0 Got new entry {0:31}
+023639 CMIT S0 replicated from index 29 to 30
+023639 WARN debug close chan 0
+023640 CLNT S0 <- C0 Query Serial:29 Num: 0 Config:{Num:0 Shards:[0 0 0 0 0 0 0 0 0 0] Groups:map[]} done true#81 Outdated:false
+023641 CLNT S0 <- C0 Received Query Serial:30 Num: 3 as Leader true#82
+023642 LEAD S0 Got new entry {0:32}
+023646 CMIT S0 replicated from index 30 to 31
+023646 WARN debug close chan 0
+023646 CLNT S0 <- C0 Query Serial:30 Num: 3 Config:{Num:3 Shards:[2 2 2 2 2 2 2 2 2 2] Groups:map[2:[a b c]]} done true#82 Outdated:false
+023648 CLNT S0 <- C0 Received Query Serial:31 Num: 4 as Leader true#83
+023649 LEAD S0 Got new entry {0:33}
+023652 CMIT S0 replicated from index 31 to 32
+023652 WARN debug close chan 0
+023653 CLNT S0 <- C0 Query Serial:31 Num: 4 Config:{Num:4 Shards:[0 0 0 0 0 0 0 0 0 0] Groups:map[]} done true#83 Outdated:false
+  ... Passed
+Test: Move ...
+023655 CLNT S0 <- C0 Received Join Serial:32 mapping:map[503:[3a 3b 3c]] as Leader true#5
+023656 LEAD S0 Got new entry {0:34}
+023657 LEAD S2 converted to follower
+023658 CMIT S0 replicated from index 32 to 33
+023658 WARN debug close chan 0
+023658 CLNT S0 <- C0 Join Serial:32 mapping:map[503:[3a 3b 3c]] done true#5 Outdated:false
+023659 CLNT S0 <- C0 Received Join Serial:33 mapping:map[504:[4a 4b 4c]] as Leader true#6
+023660 LEAD S0 Got new entry {0:35}
+023664 CMIT S0 replicated from index 33 to 34
+023665 WARN debug close chan 0
+023665 CLNT S0 <- C0 Join Serial:33 mapping:map[504:[4a 4b 4c]] done true#6 Outdated:false
+023666 CLNT S0 <- C0 Received Query Serial:34 Num: -1 as Leader true#84
+023671 LEAD S0 Got new entry {0:36}
+023673 CMIT S0 replicated from index 34 to 35
+023673 WARN debug close chan 0
+023674 CLNT S0 <- C0 Query Serial:34 Num: -1 Config:{Num:6 Shards:[504 504 504 504 504 503 503 503 503 503] Groups:map[503:[3a 3b 3c] 504:[4a 4b 4c]]} done true#84 Outdated:false
+023675 CLNT S0 <- C0 Received Move Serial:35 Shard/GID: 0/503 as Leader true#1
+023676 LEAD S0 Got new entry {0:37}
+023678 CMIT S0 replicated from index 35 to 36
+023678 WARN debug close chan 0
+023678 CLNT S0 <- C0 Move Serial:35 Shard/GID: 0/503 done true#1 Outdated:false
+023679 CLNT S0 <- C0 Received Query Serial:36 Num: -1 as Leader true#85
+023681 LEAD S0 Got new entry {0:38}
+023682 CMIT S0 replicated from index 36 to 37
+023682 WARN debug close chan 0
+023682 CLNT S0 <- C0 Query Serial:36 Num: -1 Config:{Num:7 Shards:[503 504 504 504 504 503 503 503 503 503] Groups:map[503:[3a 3b 3c] 504:[4a 4b 4c]]} done true#85 Outdated:false
+023684 CLNT S0 <- C0 Received Query Serial:37 Num: -1 as Leader true#86
+023685 LEAD S0 Got new entry {0:39}
+023687 CMIT S0 replicated from index 37 to 38
+023687 WARN debug close chan 0
+023687 CLNT S0 <- C0 Query Serial:37 Num: -1 Config:{Num:7 Shards:[503 504 504 504 504 503 503 503 503 503] Groups:map[503:[3a 3b 3c] 504:[4a 4b 4c]]} done true#86 Outdated:false
+023688 CLNT S0 <- C0 Received Move Serial:38 Shard/GID: 1/503 as Leader true#2
+023689 LEAD S0 Got new entry {0:40}
+023691 CMIT S0 replicated from index 38 to 39
+023692 WARN debug close chan 0
+023692 CLNT S0 <- C0 Move Serial:38 Shard/GID: 1/503 done true#2 Outdated:false
+023693 CLNT S0 <- C0 Received Query Serial:39 Num: -1 as Leader true#87
+023694 LEAD S0 Got new entry {0:41}
+023695 CMIT S0 replicated from index 39 to 40
+023696 WARN debug close chan 0
+023696 CLNT S0 <- C0 Query Serial:39 Num: -1 Config:{Num:8 Shards:[503 503 504 504 504 503 503 503 503 503] Groups:map[503:[3a 3b 3c] 504:[4a 4b 4c]]} done true#87 Outdated:false
+023697 CLNT S0 <- C0 Received Query Serial:40 Num: -1 as Leader true#88
+023698 LEAD S0 Got new entry {0:42}
+023699 CMIT S0 replicated from index 40 to 41
+023700 WARN debug close chan 0
+023700 CLNT S0 <- C0 Query Serial:40 Num: -1 Config:{Num:8 Shards:[503 503 504 504 504 503 503 503 503 503] Groups:map[503:[3a 3b 3c] 504:[4a 4b 4c]]} done true#88 Outdated:false
+023701 CLNT S0 <- C0 Received Move Serial:41 Shard/GID: 2/503 as Leader true#3
+023702 LEAD S0 Got new entry {0:43}
+023703 CMIT S0 replicated from index 41 to 42
+023704 WARN debug close chan 0
+023704 CLNT S0 <- C0 Move Serial:41 Shard/GID: 2/503 done true#3 Outdated:false
+023705 CLNT S0 <- C0 Received Query Serial:42 Num: -1 as Leader true#89
+023706 LEAD S0 Got new entry {0:44}
+023707 CMIT S0 replicated from index 42 to 43
+023707 WARN debug close chan 0
+023708 CLNT S0 <- C0 Query Serial:42 Num: -1 Config:{Num:9 Shards:[503 503 503 504 504 503 503 503 503 503] Groups:map[503:[3a 3b 3c] 504:[4a 4b 4c]]} done true#89 Outdated:false
+023709 CLNT S0 <- C0 Received Query Serial:43 Num: -1 as Leader true#90
+023710 LEAD S0 Got new entry {0:45}
+023712 CMIT S0 replicated from index 43 to 44
+023712 WARN debug close chan 0
+023712 CLNT S0 <- C0 Query Serial:43 Num: -1 Config:{Num:9 Shards:[503 503 503 504 504 503 503 503 503 503] Groups:map[503:[3a 3b 3c] 504:[4a 4b 4c]]} done true#90 Outdated:false
+023713 CLNT S0 <- C0 Received Move Serial:44 Shard/GID: 3/503 as Leader true#4
+023714 LEAD S0 Got new entry {0:46}
+023716 CMIT S0 replicated from index 44 to 45
+023716 WARN debug close chan 0
+023716 CLNT S0 <- C0 Move Serial:44 Shard/GID: 3/503 done true#4 Outdated:false
+023717 CLNT S0 <- C0 Received Query Serial:45 Num: -1 as Leader true#91
+023718 LEAD S0 Got new entry {0:47}
+023719 CMIT S0 replicated from index 45 to 46
+023720 WARN debug close chan 0
+023720 CLNT S0 <- C0 Query Serial:45 Num: -1 Config:{Num:10 Shards:[503 503 503 503 504 503 503 503 503 503] Groups:map[503:[3a 3b 3c] 504:[4a 4b 4c]]} done true#91 Outdated:false
+023720 CLNT S0 <- C0 Received Query Serial:46 Num: -1 as Leader true#92
+023722 LEAD S0 Got new entry {0:48}
+023723 CMIT S0 replicated from index 46 to 47
+023724 WARN debug close chan 0
+023724 CLNT S0 <- C0 Query Serial:46 Num: -1 Config:{Num:10 Shards:[503 503 503 503 504 503 503 503 503 503] Groups:map[503:[3a 3b 3c] 504:[4a 4b 4c]]} done true#92 Outdated:false
+023725 CLNT S0 <- C0 Received Move Serial:47 Shard/GID: 4/503 as Leader true#5
+023726 LEAD S0 Got new entry {0:49}
+023727 CMIT S0 replicated from index 47 to 48
+023728 WARN debug close chan 0
+023728 CLNT S0 <- C0 Move Serial:47 Shard/GID: 4/503 done true#5 Outdated:false
+023728 CLNT S0 <- C0 Received Query Serial:48 Num: -1 as Leader true#93
+023729 LEAD S0 Got new entry {0:50}
+023731 CMIT S0 replicated from index 48 to 49
+023732 WARN debug close chan 0
+023732 CLNT S0 <- C0 Query Serial:48 Num: -1 Config:{Num:11 Shards:[503 503 503 503 503 503 503 503 503 503] Groups:map[503:[3a 3b 3c] 504:[4a 4b 4c]]} done true#93 Outdated:false
+023733 CLNT S0 <- C0 Received Query Serial:49 Num: -1 as Leader true#94
+023734 LEAD S0 Got new entry {0:51}
+023736 CMIT S0 replicated from index 49 to 50
+023736 WARN debug close chan 0
+023736 CLNT S0 <- C0 Query Serial:49 Num: -1 Config:{Num:11 Shards:[503 503 503 503 503 503 503 503 503 503] Groups:map[503:[3a 3b 3c] 504:[4a 4b 4c]]} done true#94 Outdated:false
+023737 CLNT S0 <- C0 Received Move Serial:50 Shard/GID: 5/504 as Leader true#6
+023738 LEAD S0 Got new entry {0:52}
+023740 CMIT S0 replicated from index 50 to 51
+023740 WARN debug close chan 0
+023740 CLNT S0 <- C0 Move Serial:50 Shard/GID: 5/504 done true#6 Outdated:false
+023741 CLNT S0 <- C0 Received Query Serial:51 Num: -1 as Leader true#95
+023742 LEAD S0 Got new entry {0:53}
+023744 CMIT S0 replicated from index 51 to 52
+023744 WARN debug close chan 0
+023744 CLNT S0 <- C0 Query Serial:51 Num: -1 Config:{Num:12 Shards:[503 503 503 503 503 504 503 503 503 503] Groups:map[503:[3a 3b 3c] 504:[4a 4b 4c]]} done true#95 Outdated:false
+023745 CLNT S0 <- C0 Received Query Serial:52 Num: -1 as Leader true#96
+023748 LEAD S0 Got new entry {0:54}
+023751 CMIT S0 replicated from index 52 to 53
+023751 WARN debug close chan 0
+023751 CLNT S0 <- C0 Query Serial:52 Num: -1 Config:{Num:12 Shards:[503 503 503 503 503 504 503 503 503 503] Groups:map[503:[3a 3b 3c] 504:[4a 4b 4c]]} done true#96 Outdated:false
+023752 CLNT S0 <- C0 Received Move Serial:53 Shard/GID: 6/504 as Leader true#7
+023754 LEAD S0 Got new entry {0:55}
+023755 CMIT S0 replicated from index 53 to 54
+023756 WARN debug close chan 0
+023756 CLNT S0 <- C0 Move Serial:53 Shard/GID: 6/504 done true#7 Outdated:false
+023757 CLNT S0 <- C0 Received Query Serial:54 Num: -1 as Leader true#97
+023758 LEAD S0 Got new entry {0:56}
+023760 CMIT S0 replicated from index 54 to 55
+023760 WARN debug close chan 0
+023760 CLNT S0 <- C0 Query Serial:54 Num: -1 Config:{Num:13 Shards:[503 503 503 503 503 504 504 503 503 503] Groups:map[503:[3a 3b 3c] 504:[4a 4b 4c]]} done true#97 Outdated:false
+023760 CLNT S0 <- C0 Received Query Serial:55 Num: -1 as Leader true#98
+023762 LEAD S0 Got new entry {0:57}
+023763 CMIT S0 replicated from index 55 to 56
+023764 WARN debug close chan 0
+023764 CLNT S0 <- C0 Query Serial:55 Num: -1 Config:{Num:13 Shards:[503 503 503 503 503 504 504 503 503 503] Groups:map[503:[3a 3b 3c] 504:[4a 4b 4c]]} done true#98 Outdated:false
+023764 CLNT S0 <- C0 Received Move Serial:56 Shard/GID: 7/504 as Leader true#8
+023765 LEAD S0 Got new entry {0:58}
+023767 CMIT S0 replicated from index 56 to 57
+023767 WARN debug close chan 0
+023768 CLNT S0 <- C0 Move Serial:56 Shard/GID: 7/504 done true#8 Outdated:false
+023768 CLNT S0 <- C0 Received Query Serial:57 Num: -1 as Leader true#99
+023770 LEAD S0 Got new entry {0:59}
+023772 CMIT S0 replicated from index 57 to 58
+023772 WARN debug close chan 0
+023772 CLNT S0 <- C0 Query Serial:57 Num: -1 Config:{Num:14 Shards:[503 503 503 503 503 504 504 504 503 503] Groups:map[503:[3a 3b 3c] 504:[4a 4b 4c]]} done true#99 Outdated:false
+023772 CLNT S0 <- C0 Received Query Serial:58 Num: -1 as Leader true#100
+023774 LEAD S0 Got new entry {0:60}
+023776 CMIT S0 replicated from index 58 to 59
+023776 WARN debug close chan 0
+023776 CLNT S0 <- C0 Query Serial:58 Num: -1 Config:{Num:14 Shards:[503 503 503 503 503 504 504 504 503 503] Groups:map[503:[3a 3b 3c] 504:[4a 4b 4c]]} done true#100 Outdated:false
+023778 CLNT S0 <- C0 Received Move Serial:59 Shard/GID: 8/504 as Leader true#9
+023779 LEAD S0 Got new entry {0:61}
+023781 CMIT S0 replicated from index 59 to 60
+023781 WARN debug close chan 0
+023782 CLNT S0 <- C0 Move Serial:59 Shard/GID: 8/504 done true#9 Outdated:false
+023783 CLNT S0 <- C0 Received Query Serial:60 Num: -1 as Leader true#101
+023784 LEAD S0 Got new entry {0:62}
+023786 CMIT S0 replicated from index 60 to 61
+023786 WARN debug close chan 0
+023786 CLNT S0 <- C0 Query Serial:60 Num: -1 Config:{Num:15 Shards:[503 503 503 503 503 504 504 504 504 503] Groups:map[503:[3a 3b 3c] 504:[4a 4b 4c]]} done true#101 Outdated:false
+023787 CLNT S0 <- C0 Received Query Serial:61 Num: -1 as Leader true#102
+023788 LEAD S0 Got new entry {0:63}
+023790 CMIT S0 replicated from index 61 to 62
+023790 WARN debug close chan 0
+023790 CLNT S0 <- C0 Query Serial:61 Num: -1 Config:{Num:15 Shards:[503 503 503 503 503 504 504 504 504 503] Groups:map[503:[3a 3b 3c] 504:[4a 4b 4c]]} done true#102 Outdated:false
+023791 CLNT S0 <- C0 Received Move Serial:62 Shard/GID: 9/504 as Leader true#10
+023792 LEAD S0 Got new entry {0:64}
+023794 CMIT S0 replicated from index 62 to 63
+023795 WARN debug close chan 0
+023795 CLNT S0 <- C0 Move Serial:62 Shard/GID: 9/504 done true#10 Outdated:false
+023795 CLNT S0 <- C0 Received Query Serial:63 Num: -1 as Leader true#103
+023796 LEAD S0 Got new entry {0:65}
+023798 CMIT S0 replicated from index 63 to 64
+023799 WARN debug close chan 0
+023799 CLNT S0 <- C0 Query Serial:63 Num: -1 Config:{Num:16 Shards:[503 503 503 503 503 504 504 504 504 504] Groups:map[503:[3a 3b 3c] 504:[4a 4b 4c]]} done true#103 Outdated:false
+023800 CLNT S0 <- C0 Received Query Serial:64 Num: -1 as Leader true#104
+023801 LEAD S0 Got new entry {0:66}
+023803 CMIT S0 replicated from index 64 to 65
+023803 WARN debug close chan 0
+023803 CLNT S0 <- C0 Query Serial:64 Num: -1 Config:{Num:16 Shards:[503 503 503 503 503 504 504 504 504 504] Groups:map[503:[3a 3b 3c] 504:[4a 4b 4c]]} done true#104 Outdated:false
+023805 CLNT S0 <- C0 Received Leave Serial:65 GIDs:[503] as Leader true#5
+023806 LEAD S0 Got new entry {0:67}
+023808 CMIT S0 replicated from index 65 to 66
+023808 WARN debug close chan 0
+023808 CLNT S0 <- C0 Leave Serial:65 GIDs:[503] done true#5 Outdated:false
+023810 CLNT S0 <- C0 Received Leave Serial:66 GIDs:[504] as Leader true#6
+023813 LEAD S0 Got new entry {0:68}
+023815 CMIT S0 replicated from index 66 to 67
+023815 WARN debug close chan 0
+023815 CLNT S0 <- C0 Leave Serial:66 GIDs:[504] done true#6 Outdated:false
+  ... Passed
+Test: Concurrent leave/join ...
+023818 CLNT S0 <- C7 Received Join Serial:0 mapping:map[1160:[s160a]] as Leader true#9
+023819 LEAD S0 Got new entry {0:69}
+023819 CLNT S0 <- C6 Received Join Serial:0 mapping:map[1150:[s150a]] as Leader true#13
+023819 CLNT S0 <- C10 Received Join Serial:0 mapping:map[1190:[s190a]] as Leader true#14
+023819 CLNT S0 <- C5 Received Join Serial:0 mapping:map[1140:[s140a]] as Leader true#15
+023819 CLNT S0 <- C2 Received Join Serial:0 mapping:map[1110:[s110a]] as Leader true#16
+023819 CLNT S0 <- C8 Received Join Serial:0 mapping:map[1170:[s170a]] as Leader true#17
+023820 LEAD S0 Got new entry {0:70}
+023820 CLNT S0 <- C9 Received Join Serial:0 mapping:map[1180:[s180a]] as Leader true#20
+023820 CLNT S0 <- C3 Received Join Serial:0 mapping:map[1120:[s120a]] as Leader true#23
+023821 LEAD S0 Got new entry {0:71}
+023821 CLNT S0 <- C1 Received Join Serial:0 mapping:map[1100:[s100a]] as Leader true#24
+023823 LEAD S0 Got new entry {0:72}
+023823 CMIT S0 replicated from index 67 to 68
+023824 LEAD S0 Got new entry {0:73}
+023825 LEAD S0 Got new entry {0:74}
+023826 LEAD S0 Got new entry {0:75}
+023826 CMIT S0 replicated from index 68 to 71
+023826 CLNT S0 <- C4 Received Join Serial:0 mapping:map[1130:[s130a]] as Leader true#26
+023827 LEAD S0 Got new entry {0:76}
+023828 LEAD S0 Got new entry {0:77}
+023829 WARN debug close chan 7
+023829 WARN debug close chan 8
+023829 CLNT S0 <- C8 Join Serial:0 mapping:map[1170:[s170a]] done true#17 Outdated:false
+023829 CLNT S0 <- C8 Received Join Serial:1 mapping:map[170:[s170b]] as Leader true#27
+023830 CLNT S0 <- C7 Join Serial:0 mapping:map[1160:[s160a]] done true#9 Outdated:false
+023830 CMIT S0 replicated from index 71 to 75
+023836 CLNT S0 <- C7 Received Join Serial:1 mapping:map[160:[s160b]] as Leader true#28
+023838 LEAD S0 Got new entry {0:78}
+023839 LEAD S0 Got new entry {0:79}
+023839 WARN debug close chan 3
+023839 WARN debug close chan 1
+023839 CLNT S0 <- C1 Join Serial:0 mapping:map[1100:[s100a]] done true#24 Outdated:false
+023840 CMIT S0 replicated from index 75 to 77
+023840 CLNT S0 <- C3 Join Serial:0 mapping:map[1120:[s120a]] done true#23 Outdated:false
+023841 LEAD S0 Got new entry {0:80}
+023842 CMIT S0 replicated from index 77 to 78
+023844 WARN debug close chan 5
+023847 WARN debug close chan 2
+023847 CLNT S0 <- C2 Join Serial:0 mapping:map[1110:[s110a]] done true#16 Outdated:false
+023847 CLNT S0 <- C5 Join Serial:0 mapping:map[1140:[s140a]] done true#15 Outdated:false
+023848 CLNT S0 <- C2 Received Join Serial:1 mapping:map[110:[s110b]] as Leader true#32
+023848 WARN debug close chan 6
+023849 WARN debug close chan 9
+023849 CLNT S0 <- C9 Join Serial:0 mapping:map[1180:[s180a]] done true#20 Outdated:false
+023850 LEAD S0 Got new entry {0:81}
+023850 CMIT S0 replicated from index 78 to 79
+023850 CLNT S0 <- C9 Received Join Serial:1 mapping:map[180:[s180b]] as Leader true#34
+023850 CLNT S0 <- C6 Join Serial:0 mapping:map[1150:[s150a]] done true#13 Outdated:false
+023852 CLNT S0 <- C1 Received Join Serial:1 mapping:map[100:[s100b]] as Leader true#35
+023852 CMIT S0 replicated from index 79 to 80
+023853 LEAD S0 Got new entry {0:82}
+023855 LEAD S0 Got new entry {0:83}
+023855 CLNT S0 <- C6 Received Join Serial:1 mapping:map[150:[s150b]] as Leader true#38
+023855 WARN debug close chan 10
+023855 WARN debug close chan 4
+023855 CMIT S0 replicated from index 80 to 81
+023855 CLNT S0 <- C4 Join Serial:0 mapping:map[1130:[s130a]] done true#26 Outdated:false
+023855 CLNT S0 <- C10 Join Serial:0 mapping:map[1190:[s190a]] done true#14 Outdated:false
+023857 LEAD S0 Got new entry {0:84}
+023857 CLNT S0 <- C4 Received Join Serial:1 mapping:map[130:[s130b]] as Leader true#42
+023857 CLNT S0 <- C3 Received Join Serial:1 mapping:map[120:[s120b]] as Leader true#43
+023858 LEAD S0 Got new entry {0:85}
+023858 CLNT S0 <- C5 Received Join Serial:1 mapping:map[140:[s140b]] as Leader true#44
+023860 LEAD S0 Got new entry {0:86}
+023860 CLNT S0 <- C10 Received Join Serial:1 mapping:map[190:[s190b]] as Leader true#46
+023862 LEAD S0 Got new entry {0:87}
+023862 CMIT S0 replicated from index 81 to 84
+023862 WARN debug close chan 8
+023862 WARN debug close chan 7
+023862 CMIT S0 replicated from index 84 to 85
+023862 CLNT S0 <- C7 Join Serial:1 mapping:map[160:[s160b]] done true#28 Outdated:false
+023862 CLNT S0 <- C8 Join Serial:1 mapping:map[170:[s170b]] done true#27 Outdated:false
+023863 CLNT S0 <- C7 Received Leave Serial:2 GIDs:[1160] as Leader true#7
+023864 LEAD S0 Got new entry {0:88}
+023864 CLNT S0 <- C8 Received Leave Serial:2 GIDs:[1170] as Leader true#8
+023867 LEAD S0 Got new entry {0:89}
+023873 LEAD S0 Got new entry {0:90}
+023873 WARN debug close chan 2
+023873 WARN debug close chan 1
+023873 CLNT S0 <- C1 Join Serial:1 mapping:map[100:[s100b]] done true#35 Outdated:false
+023874 CMIT S0 replicated from index 85 to 86
+023874 CMIT S0 replicated from index 86 to 87
+023874 CLNT S0 <- C2 Join Serial:1 mapping:map[110:[s110b]] done true#32 Outdated:false
+023874 WARN debug close chan 9
+023874 WARN debug close chan 6
+023875 CLNT S0 <- C6 Join Serial:1 mapping:map[150:[s150b]] done true#38 Outdated:false
+023875 CLNT S0 <- C9 Join Serial:1 mapping:map[180:[s180b]] done true#34 Outdated:false
+023875 CMIT S0 replicated from index 87 to 88
+023875 WARN debug close chan 3
+023875 WARN debug close chan 5
+023875 CLNT S0 <- C5 Join Serial:1 mapping:map[140:[s140b]] done true#44 Outdated:false
+023876 CLNT S0 <- C9 Received Leave Serial:2 GIDs:[1180] as Leader true#11
+023876 CLNT S0 <- C3 Join Serial:1 mapping:map[120:[s120b]] done true#43 Outdated:false
+023878 LEAD S0 Got new entry {0:91}
+023879 CMIT S0 replicated from index 88 to 89
+023879 CLNT S0 <- C2 Received Leave Serial:2 GIDs:[1110] as Leader true#14
+023879 CLNT S0 <- C5 Received Leave Serial:2 GIDs:[1140] as Leader true#18
+023879 CLNT S0 <- C1 Received Leave Serial:2 GIDs:[1100] as Leader true#19
+023879 CLNT S0 <- C6 Received Leave Serial:2 GIDs:[1150] as Leader true#20
+023879 WARN debug close chan 10
+023879 WARN debug close chan 7
+023879 CLNT S0 <- C7 Leave Serial:2 GIDs:[1160] done true#7 Outdated:false
+023879 CLNT S0 <- C10 Join Serial:1 mapping:map[190:[s190b]] done true#46 Outdated:false
+023881 LEAD S0 Got new entry {0:92}
+023883 LEAD S0 Got new entry {0:93}
+023885 LEAD S0 Got new entry {0:94}
+023886 CLNT S0 <- C3 Received Leave Serial:2 GIDs:[1120] as Leader true#22
+023886 CLNT S0 <- C10 Received Leave Serial:2 GIDs:[1190] as Leader true#24
+023887 LEAD S0 Got new entry {0:95}
+023888 CMIT S0 replicated from index 89 to 93
+023889 LEAD S0 Got new entry {0:96}
+023889 WARN debug close chan 8
+023889 WARN debug close chan 4
+023889 CLNT S0 <- C4 Join Serial:1 mapping:map[130:[s130b]] done true#42 Outdated:false
+023890 CMIT S0 replicated from index 93 to 94
+023891 LEAD S0 Got new entry {0:97}
+023891 CLNT S0 <- C4 Received Leave Serial:2 GIDs:[1130] as Leader true#26
+023891 CLNT S0 <- C8 Leave Serial:2 GIDs:[1170] done true#8 Outdated:false
+023892 WARN debug close chan 9
+023894 CMIT S0 replicated from index 94 to 95
+023898 WARN debug close chan 5
+023898 CLNT S0 <- C9 Leave Serial:2 GIDs:[1180] done true#11 Outdated:false
+023899 CLNT S0 <- C5 Leave Serial:2 GIDs:[1140] done true#18 Outdated:false
+023902 LEAD S0 Got new entry {0:98}
+023902 WARN debug close chan 1
+023902 WARN debug close chan 6
+023902 CLNT S0 <- C6 Leave Serial:2 GIDs:[1150] done true#20 Outdated:false
+023902 CMIT S0 replicated from index 95 to 96
+023902 CLNT S0 <- C1 Leave Serial:2 GIDs:[1100] done true#19 Outdated:false
+023902 WARN debug close chan 10
+023903 WARN debug close chan 2
+023903 CLNT S0 <- C10 Leave Serial:2 GIDs:[1190] done true#24 Outdated:false
+023903 WARN debug close chan 3
+023903 CLNT S0 <- C2 Leave Serial:2 GIDs:[1110] done true#14 Outdated:false
+023903 CLNT S0 <- C3 Leave Serial:2 GIDs:[1120] done true#22 Outdated:false
+023904 CMIT S0 replicated from index 96 to 97
+023905 WARN debug close chan 4
+023905 CLNT S0 <- C4 Leave Serial:2 GIDs:[1130] done true#26 Outdated:false
+023905 CLNT S0 <- C0 Received Query Serial:67 Num: -1 as Leader true#105
+023907 LEAD S0 Got new entry {0:99}
+023909 CMIT S0 replicated from index 97 to 98
+023909 WARN debug close chan 0
+023909 CLNT S0 <- C0 Query Serial:67 Num: -1 Config:{Num:48 Shards:[180 160 130 170 190 150 100 140 120 110] Groups:map[100:[s100b] 110:[s110b] 120:[s120b] 130:[s130b] 140:[s140b] 150:[s150b] 160:[s160b] 170:[s170b] 180:[s180b] 190:[s190b]]} done true#105 Outdated:false
+  ... Passed
+Test: Minimal transfers after joins ...
+023911 CLNT S0 <- C0 Received Query Serial:68 Num: -1 as Leader true#106
+023912 LEAD S0 Got new entry {0:100}
+023914 CMIT S0 replicated from index 98 to 99
+023915 WARN debug close chan 0
+023915 CLNT S0 <- C0 Query Serial:68 Num: -1 Config:{Num:48 Shards:[180 160 130 170 190 150 100 140 120 110] Groups:map[100:[s100b] 110:[s110b] 120:[s120b] 130:[s130b] 140:[s140b] 150:[s150b] 160:[s160b] 170:[s170b] 180:[s180b] 190:[s190b]]} done true#106 Outdated:false
+023916 CLNT S0 <- C0 Received Join Serial:69 mapping:map[11:[11a 11b 11b]] as Leader true#47
+023917 LEAD S0 Got new entry {0:101}
+023920 CMIT S0 replicated from index 99 to 100
+023920 WARN debug close chan 0
+023920 CLNT S0 <- C0 Join Serial:69 mapping:map[11:[11a 11b 11b]] done true#47 Outdated:false
+023921 CLNT S0 <- C0 Received Join Serial:70 mapping:map[12:[12a 12b 12b]] as Leader true#48
+023923 LEAD S0 Got new entry {0:102}
+023925 CMIT S0 replicated from index 100 to 101
+023925 WARN debug close chan 0
+023925 CLNT S0 <- C0 Join Serial:70 mapping:map[12:[12a 12b 12b]] done true#48 Outdated:false
+023926 CLNT S0 <- C0 Received Join Serial:71 mapping:map[13:[13a 13b 13b]] as Leader true#49
+023928 LEAD S0 Got new entry {0:103}
+023930 CMIT S0 replicated from index 101 to 102
+023930 WARN debug close chan 0
+023930 CLNT S0 <- C0 Join Serial:71 mapping:map[13:[13a 13b 13b]] done true#49 Outdated:false
+023931 CLNT S0 <- C0 Received Join Serial:72 mapping:map[14:[14a 14b 14b]] as Leader true#50
+023933 LEAD S0 Got new entry {0:104}
+023935 CMIT S0 replicated from index 102 to 103
+023935 WARN debug close chan 0
+023935 CLNT S0 <- C0 Join Serial:72 mapping:map[14:[14a 14b 14b]] done true#50 Outdated:false
+023936 CLNT S0 <- C0 Received Join Serial:73 mapping:map[15:[15a 15b 15b]] as Leader true#51
+023937 LEAD S0 Got new entry {0:105}
+023940 CMIT S0 replicated from index 103 to 104
+023941 WARN debug close chan 0
+023942 CLNT S0 <- C0 Join Serial:73 mapping:map[15:[15a 15b 15b]] done true#51 Outdated:false
+023945 CLNT S0 <- C0 Received Query Serial:74 Num: -1 as Leader true#107
+023947 LEAD S0 Got new entry {0:106}
+023949 CMIT S0 replicated from index 104 to 105
+023949 WARN debug close chan 0
+023949 CLNT S0 <- C0 Query Serial:74 Num: -1 Config:{Num:53 Shards:[180 160 130 170 190 150 100 140 120 110] Groups:map[11:[11a 11b 11b] 12:[12a 12b 12b] 13:[13a 13b 13b] 14:[14a 14b 14b] 15:[15a 15b 15b] 100:[s100b] 110:[s110b] 120:[s120b] 130:[s130b] 140:[s140b] 150:[s150b] 160:[s160b] 170:[s170b] 180:[s180b] 190:[s190b]]} done true#107 Outdated:false
+  ... Passed
+Test: Minimal transfers after leaves ...
+023951 CLNT S0 <- C0 Received Leave Serial:75 GIDs:[11] as Leader true#27
+023952 LEAD S0 Got new entry {0:107}
+023954 CMIT S0 replicated from index 105 to 106
+023955 WARN debug close chan 0
+023955 CLNT S0 <- C0 Leave Serial:75 GIDs:[11] done true#27 Outdated:false
+023955 CLNT S0 <- C0 Received Leave Serial:76 GIDs:[12] as Leader true#28
+023957 LEAD S0 Got new entry {0:108}
+023960 CMIT S0 replicated from index 106 to 107
+023960 WARN debug close chan 0
+023960 CLNT S0 <- C0 Leave Serial:76 GIDs:[12] done true#28 Outdated:false
+023961 CLNT S0 <- C0 Received Leave Serial:77 GIDs:[13] as Leader true#29
+023962 LEAD S0 Got new entry {0:109}
+023965 CMIT S0 replicated from index 107 to 108
+023965 WARN debug close chan 0
+023965 CLNT S0 <- C0 Leave Serial:77 GIDs:[13] done true#29 Outdated:false
+023965 CLNT S0 <- C0 Received Leave Serial:78 GIDs:[14] as Leader true#30
+023967 LEAD S0 Got new entry {0:110}
+023970 CMIT S0 replicated from index 108 to 109
+023970 WARN debug close chan 0
+023970 CLNT S0 <- C0 Leave Serial:78 GIDs:[14] done true#30 Outdated:false
+023971 CLNT S0 <- C0 Received Leave Serial:79 GIDs:[15] as Leader true#31
+023972 LEAD S0 Got new entry {0:111}
+023975 CMIT S0 replicated from index 109 to 110
+023975 WARN debug close chan 0
+023975 CLNT S0 <- C0 Leave Serial:79 GIDs:[15] done true#31 Outdated:false
+023976 CLNT S0 <- C0 Received Query Serial:80 Num: -1 as Leader true#108
+023978 LEAD S0 Got new entry {0:112}
+023980 CMIT S0 replicated from index 110 to 111
+023980 WARN debug close chan 0
+023980 CLNT S0 <- C0 Query Serial:80 Num: -1 Config:{Num:58 Shards:[180 160 130 170 190 150 100 140 120 110] Groups:map[100:[s100b] 110:[s110b] 120:[s120b] 130:[s130b] 140:[s140b] 150:[s150b] 160:[s160b] 170:[s170b] 180:[s180b] 190:[s190b]]} done true#108 Outdated:false
+  ... Passed
+023981 DROP S0 kill shardmaster
+023981 DROP S1 kill shardmaster
+023981 DROP S2 kill shardmaster
+Test: Multi-group join/leave ...
+051511 LEAD S2 converted to follower
+051512 VOTE S2 voted for 1 for term 2 prev voted -1
+051513 LEAD S0 converted to follower
+051513 VOTE S0 voted for 1 for term 2 prev voted -1
+051514 LEAD S1 is now leader of term 2
+052072 CLNT S1 <- C11 Received Query Serial:0 Num: -1 as Leader true#133
+052075 LEAD S1 Got new entry {0:2}
+052078 CMIT S1 replicated from index 0 to 1
+052079 WARN debug close chan 11
+052079 CLNT S1 <- C11 Query Serial:0 Num: -1 Config:{Num:0 Shards:[0 0 0 0 0 0 0 0 0 0] Groups:map[]} done true#133 Outdated:false
+052083 CLNT S1 <- C11 Received Query Serial:1 Num: -1 as Leader true#134
+052084 LEAD S1 Got new entry {0:3}
+052088 CMIT S1 replicated from index 1 to 2
+052088 WARN debug close chan 11
+052088 CLNT S1 <- C11 Query Serial:1 Num: -1 Config:{Num:0 Shards:[0 0 0 0 0 0 0 0 0 0] Groups:map[]} done true#134 Outdated:false
+052091 CLNT S1 <- C11 Received Join Serial:2 mapping:map[1:[x y z] 2:[a b c]] as Leader true#52
+052092 LEAD S1 Got new entry {0:4}
+052096 CMIT S1 replicated from index 2 to 3
+052097 WARN debug close chan 11
+052097 CLNT S1 <- C11 Join Serial:2 mapping:map[1:[x y z] 2:[a b c]] done true#52 Outdated:false
+052099 CLNT S1 <- C11 Received Query Serial:3 Num: -1 as Leader true#135
+052100 LEAD S1 Got new entry {0:5}
+052103 CMIT S1 replicated from index 3 to 4
+052103 WARN debug close chan 11
+052104 CLNT S1 <- C11 Query Serial:3 Num: -1 Config:{Num:1 Shards:[1 1 1 1 1 2 2 2 2 2] Groups:map[1:[x y z] 2:[a b c]]} done true#135 Outdated:false
+052105 CLNT S1 <- C11 Received Query Serial:4 Num: -1 as Leader true#136
+052107 LEAD S1 Got new entry {0:6}
+052110 CMIT S1 replicated from index 4 to 5
+052110 WARN debug close chan 11
+052111 CLNT S1 <- C11 Query Serial:4 Num: -1 Config:{Num:1 Shards:[1 1 1 1 1 2 2 2 2 2] Groups:map[1:[x y z] 2:[a b c]]} done true#136 Outdated:false
+052113 CLNT S1 <- C11 Received Join Serial:5 mapping:map[3:[j k l]] as Leader true#53
+052114 LEAD S1 Got new entry {0:7}
+052115 CMIT S1 replicated from index 5 to 6
+052116 WARN debug close chan 11
+052116 CLNT S1 <- C11 Join Serial:5 mapping:map[3:[j k l]] done true#53 Outdated:false
+052116 CLNT S1 <- C11 Received Query Serial:6 Num: -1 as Leader true#137
+052117 LEAD S1 Got new entry {0:8}
+052118 CMIT S1 replicated from index 6 to 7
+052118 WARN debug close chan 11
+052118 CLNT S1 <- C11 Query Serial:6 Num: -1 Config:{Num:2 Shards:[3 3 1 1 1 3 2 2 2 2] Groups:map[1:[x y z] 2:[a b c] 3:[j k l]]} done true#137 Outdated:false
+052119 CLNT S1 <- C11 Received Query Serial:7 Num: -1 as Leader true#138
+052120 LEAD S1 Got new entry {0:9}
+052121 CMIT S1 replicated from index 7 to 8
+052121 WARN debug close chan 11
+052121 CLNT S1 <- C11 Query Serial:7 Num: -1 Config:{Num:2 Shards:[3 3 1 1 1 3 2 2 2 2] Groups:map[1:[x y z] 2:[a b c] 3:[j k l]]} done true#138 Outdated:false
+052122 CLNT S1 <- C11 Received Query Serial:8 Num: -1 as Leader true#139
+052123 LEAD S1 Got new entry {0:10}
+052125 CMIT S1 replicated from index 8 to 9
+052125 WARN debug close chan 11
+052125 CLNT S1 <- C11 Query Serial:8 Num: -1 Config:{Num:2 Shards:[3 3 1 1 1 3 2 2 2 2] Groups:map[1:[x y z] 2:[a b c] 3:[j k l]]} done true#139 Outdated:false
+052126 CLNT S1 <- C11 Received Leave Serial:9 GIDs:[1 3] as Leader true#32
+052126 LEAD S1 Got new entry {0:11}
+052128 CMIT S1 replicated from index 9 to 10
+052128 WARN debug close chan 11
+052128 CLNT S1 <- C11 Leave Serial:9 GIDs:[1 3] done true#32 Outdated:false
+052129 CLNT S1 <- C11 Received Query Serial:10 Num: -1 as Leader true#140
+052129 LEAD S1 Got new entry {0:12}
+052130 CMIT S1 replicated from index 10 to 11
+052130 WARN debug close chan 11
+052131 CLNT S1 <- C11 Query Serial:10 Num: -1 Config:{Num:3 Shards:[2 2 2 2 2 2 2 2 2 2] Groups:map[2:[a b c]]} done true#140 Outdated:false
+052131 CLNT S1 <- C11 Received Query Serial:11 Num: -1 as Leader true#141
+052132 LEAD S1 Got new entry {0:13}
+052133 CMIT S1 replicated from index 11 to 12
+052133 WARN debug close chan 11
+052134 CLNT S1 <- C11 Query Serial:11 Num: -1 Config:{Num:3 Shards:[2 2 2 2 2 2 2 2 2 2] Groups:map[2:[a b c]]} done true#141 Outdated:false
+052134 CLNT S1 <- C11 Received Query Serial:12 Num: -1 as Leader true#142
+052135 LEAD S1 Got new entry {0:14}
+052137 CMIT S1 replicated from index 12 to 13
+052138 WARN debug close chan 11
+052138 CLNT S1 <- C11 Query Serial:12 Num: -1 Config:{Num:3 Shards:[2 2 2 2 2 2 2 2 2 2] Groups:map[2:[a b c]]} done true#142 Outdated:false
+052139 CLNT S1 <- C11 Received Leave Serial:13 GIDs:[2] as Leader true#33
+052140 LEAD S1 Got new entry {0:15}
+052142 CMIT S1 replicated from index 13 to 14
+052142 WARN debug close chan 11
+052142 CLNT S1 <- C11 Leave Serial:13 GIDs:[2] done true#33 Outdated:false
+  ... Passed
+Test: Concurrent multi leave/join ...
+052145 CLNT S1 <- C13 Received Join Serial:0 mapping:map[1001:[1001a 1001b 1001c] 2001:[2001a] 3001:[3001a]] as Leader true#57
+052146 LEAD S1 Got new entry {0:16}
+052146 CLNT S1 <- C21 Received Join Serial:0 mapping:map[1009:[1009a 1009b 1009c] 2009:[2009a] 3009:[3009a]] as Leader true#58
+052146 CLNT S1 <- C16 Received Join Serial:0 mapping:map[1004:[1004a 1004b 1004c] 2004:[2004a] 3004:[3004a]] as Leader true#60
+052146 LEAD S1 Got new entry {0:17}
+052146 CLNT S1 <- C12 Received Join Serial:0 mapping:map[1000:[1000a 1000b 1000c] 2000:[2000a] 3000:[3000a]] as Leader true#62
+052147 LEAD S1 Got new entry {0:18}
+052146 CLNT S1 <- C17 Received Join Serial:0 mapping:map[1005:[1005a 1005b 1005c] 2005:[2005a] 3005:[3005a]] as Leader true#63
+052147 LEAD S1 Got new entry {0:19}
+052147 CMIT S1 replicated from index 14 to 15
+052147 WARN debug close chan 13
+052147 CLNT S1 <- C13 Join Serial:0 mapping:map[1001:[1001a 1001b 1001c] 2001:[2001a] 3001:[3001a]] done true#57 Outdated:false
+052147 CLNT S1 <- C18 Received Join Serial:0 mapping:map[1006:[1006a 1006b 1006c] 2006:[2006a] 3006:[3006a]] as Leader true#68
+052148 LEAD S1 Got new entry {0:20}
+052148 CLNT S1 <- C14 Received Join Serial:0 mapping:map[1002:[1002a 1002b 1002c] 2002:[2002a] 3002:[3002a]] as Leader true#69
+052148 CLNT S1 <- C13 Received Leave Serial:1 GIDs:[2001 3001] as Leader true#34
+052148 LEAD S1 Got new entry {0:21}
+052149 CMIT S1 replicated from index 15 to 18
+052149 LEAD S1 Got new entry {0:22}
+052150 LEAD S1 Got new entry {0:23}
+052151 CMIT S1 replicated from index 18 to 19
+052151 CMIT S1 replicated from index 19 to 20
+052152 CLNT S1 <- C15 Received Join Serial:0 mapping:map[1003:[1003a 1003b 1003c] 2003:[2003a] 3003:[3003a]] as Leader true#72
+052153 LEAD S1 Got new entry {0:24}
+052153 CLNT S1 <- C19 Received Join Serial:0 mapping:map[1007:[1007a 1007b 1007c] 2007:[2007a] 3007:[3007a]] as Leader true#74
+052156 LEAD S1 Got new entry {0:25}
+052157 WARN debug close chan 16
+052157 WARN debug close chan 12
+052158 WARN debug close chan 17
+052159 CLNT S1 <- C12 Join Serial:0 mapping:map[1000:[1000a 1000b 1000c] 2000:[2000a] 3000:[3000a]] done true#62 Outdated:false
+052163 CLNT S1 <- C20 Received Join Serial:0 mapping:map[1008:[1008a 1008b 1008c] 2008:[2008a] 3008:[3008a]] as Leader true#75
+052163 LEAD S1 Got new entry {0:26}
+052164 CLNT S1 <- C12 Received Leave Serial:1 GIDs:[2000 3000] as Leader true#36
+052164 CLNT S1 <- C16 Join Serial:0 mapping:map[1004:[1004a 1004b 1004c] 2004:[2004a] 3004:[3004a]] done true#60 Outdated:false
+052164 CMIT S1 replicated from index 20 to 23
+052165 CLNT S1 <- C16 Received Leave Serial:1 GIDs:[2004 3004] as Leader true#38
+052165 LEAD S1 Got new entry {0:27}
+052166 WARN debug close chan 18
+052166 CMIT S1 replicated from index 23 to 24
+052167 WARN debug close chan 13
+052167 CLNT S1 <- C13 Leave Serial:1 GIDs:[2001 3001] done true#34 Outdated:false
+052167 CLNT S1 <- C17 Join Serial:0 mapping:map[1005:[1005a 1005b 1005c] 2005:[2005a] 3005:[3005a]] done true#63 Outdated:false
+052168 LEAD S1 Got new entry {0:28}
+052168 CLNT S1 <- C18 Join Serial:0 mapping:map[1006:[1006a 1006b 1006c] 2006:[2006a] 3006:[3006a]] done true#68 Outdated:false
+052168 CMIT S1 replicated from index 24 to 25
+052169 WARN debug close chan 21
+052169 WARN debug close chan 14
+052169 CMIT S1 replicated from index 25 to 26
+052169 CLNT S1 <- C14 Join Serial:0 mapping:map[1002:[1002a 1002b 1002c] 2002:[2002a] 3002:[3002a]] done true#69 Outdated:false
+052169 WARN debug close chan 15
+052170 WARN debug close chan 19
+052170 CLNT S1 <- C19 Join Serial:0 mapping:map[1007:[1007a 1007b 1007c] 2007:[2007a] 3007:[3007a]] done true#74 Outdated:false
+052170 CLNT S1 <- C15 Join Serial:0 mapping:map[1003:[1003a 1003b 1003c] 2003:[2003a] 3003:[3003a]] done true#72 Outdated:false
+052171 CMIT S1 replicated from index 26 to 27
+052171 CLNT S1 <- C15 Received Leave Serial:1 GIDs:[2003 3003] as Leader true#41
+052172 CLNT S1 <- C21 Join Serial:0 mapping:map[1009:[1009a 1009b 1009c] 2009:[2009a] 3009:[3009a]] done true#58 Outdated:false
+052173 LEAD S1 Got new entry {0:29}
+052173 WARN debug close chan 20
+052173 WARN debug close chan 16
+052173 CLNT S1 <- C16 Leave Serial:1 GIDs:[2004 3004] done true#38 Outdated:false
+052174 CLNT S1 <- C20 Join Serial:0 mapping:map[1008:[1008a 1008b 1008c] 2008:[2008a] 3008:[3008a]] done true#75 Outdated:false
+052174 CLNT S1 <- C17 Received Leave Serial:1 GIDs:[2005 3005] as Leader true#46
+052175 CMIT S1 replicated from index 27 to 28
+052175 WARN debug close chan 12
+052175 WARN debug close chan 15
+052175 CLNT S1 <- C15 Leave Serial:1 GIDs:[2003 3003] done true#41 Outdated:false
+052176 LEAD S1 Got new entry {0:30}
+052176 CLNT S1 <- C20 Received Leave Serial:1 GIDs:[2008 3008] as Leader true#47
+052176 CLNT S1 <- C12 Leave Serial:1 GIDs:[2000 3000] done true#36 Outdated:false
+052176 CLNT S1 <- C14 Received Leave Serial:1 GIDs:[2002 3002] as Leader true#50
+052177 LEAD S1 Got new entry {0:31}
+052177 CLNT S1 <- C18 Received Leave Serial:1 GIDs:[2006 3006] as Leader true#53
+052177 CLNT S1 <- C19 Received Leave Serial:1 GIDs:[2007 3007] as Leader true#54
+052177 CLNT S1 <- C21 Received Leave Serial:1 GIDs:[2009 3009] as Leader true#55
+052178 LEAD S1 Got new entry {0:32}
+052178 CMIT S1 replicated from index 28 to 29
+052178 WARN debug close chan 17
+052178 CLNT S1 <- C17 Leave Serial:1 GIDs:[2005 3005] done true#46 Outdated:false
+052179 LEAD S1 Got new entry {0:33}
+052180 LEAD S1 Got new entry {0:34}
+052181 CMIT S1 replicated from index 29 to 31
+052181 LEAD S1 Got new entry {0:35}
+052181 CMIT S1 replicated from index 31 to 32
+052181 WARN debug close chan 14
+052182 WARN debug close chan 21
+052182 CLNT S1 <- C21 Leave Serial:1 GIDs:[2009 3009] done true#55 Outdated:false
+052182 CLNT S1 <- C14 Leave Serial:1 GIDs:[2002 3002] done true#50 Outdated:false
+052183 CMIT S1 replicated from index 32 to 33
+052183 CMIT S1 replicated from index 33 to 34
+052183 WARN debug close chan 18
+052183 WARN debug close chan 19
+052184 CLNT S1 <- C18 Leave Serial:1 GIDs:[2006 3006] done true#53 Outdated:false
+052184 CLNT S1 <- C19 Leave Serial:1 GIDs:[2007 3007] done true#54 Outdated:false
+052184 WARN debug close chan 20
+052184 CLNT S1 <- C20 Leave Serial:1 GIDs:[2008 3008] done true#47 Outdated:false
+052185 CLNT S1 <- C11 Received Query Serial:14 Num: -1 as Leader true#143
+052186 LEAD S1 Got new entry {0:36}
+052187 CMIT S1 replicated from index 34 to 35
+052187 WARN debug close chan 11
+052188 CLNT S1 <- C11 Query Serial:14 Num: -1 Config:{Num:24 Shards:[1009 1008 1005 1004 1002 1006 1007 1000 1001 1003] Groups:map[1000:[1000a 1000b 1000c] 1001:[1001a 1001b 1001c] 1002:[1002a 1002b 1002c] 1003:[1003a 1003b 1003c] 1004:[1004a 1004b 1004c] 1005:[1005a 1005b 1005c] 1006:[1006a 1006b 1006c] 1007:[1007a 1007b 1007c] 1008:[1008a 1008b 1008c] 1009:[1009a 1009b 1009c]]} done true#143 Outdated:false
+  ... Passed
+Test: Minimal transfers after multijoins ...
+052189 CLNT S1 <- C11 Received Query Serial:15 Num: -1 as Leader true#144
+052191 LEAD S1 Got new entry {0:37}
+052196 CMIT S1 replicated from index 35 to 36
+052196 WARN debug close chan 11
+052196 CLNT S1 <- C11 Query Serial:15 Num: -1 Config:{Num:24 Shards:[1009 1008 1005 1004 1002 1006 1007 1000 1001 1003] Groups:map[1000:[1000a 1000b 1000c] 1001:[1001a 1001b 1001c] 1002:[1002a 1002b 1002c] 1003:[1003a 1003b 1003c] 1004:[1004a 1004b 1004c] 1005:[1005a 1005b 1005c] 1006:[1006a 1006b 1006c] 1007:[1007a 1007b 1007c] 1008:[1008a 1008b 1008c] 1009:[1009a 1009b 1009c]]} done true#144 Outdated:false
+052198 CLNT S1 <- C11 Received Join Serial:16 mapping:map[11:[11a 11b] 12:[12a 12b] 13:[13a 13b] 14:[14a 14b] 15:[15a 15b]] as Leader true#76
+052199 LEAD S1 Got new entry {0:38}
+052201 CMIT S1 replicated from index 36 to 37
+052201 WARN debug close chan 11
+052202 CLNT S1 <- C11 Join Serial:16 mapping:map[11:[11a 11b] 12:[12a 12b] 13:[13a 13b] 14:[14a 14b] 15:[15a 15b]] done true#76 Outdated:false
+052203 CLNT S1 <- C11 Received Query Serial:17 Num: -1 as Leader true#145
+052204 LEAD S1 Got new entry {0:39}
+052205 CMIT S1 replicated from index 37 to 38
+052205 WARN debug close chan 11
+052206 CLNT S1 <- C11 Query Serial:17 Num: -1 Config:{Num:25 Shards:[1009 1008 1005 1004 1002 1006 1007 1000 1001 1003] Groups:map[11:[11a 11b] 12:[12a 12b] 13:[13a 13b] 14:[14a 14b] 15:[15a 15b] 1000:[1000a 1000b 1000c] 1001:[1001a 1001b 1001c] 1002:[1002a 1002b 1002c] 1003:[1003a 1003b 1003c] 1004:[1004a 1004b 1004c] 1005:[1005a 1005b 1005c] 1006:[1006a 1006b 1006c] 1007:[1007a 1007b 1007c] 1008:[1008a 1008b 1008c] 1009:[1009a 1009b 1009c]]} done true#145 Outdated:false
+  ... Passed
+Test: Minimal transfers after multileaves ...
+052207 CLNT S1 <- C11 Received Leave Serial:18 GIDs:[11 12 13 14 15] as Leader true#56
+052208 LEAD S1 Got new entry {0:40}
+052210 CMIT S1 replicated from index 38 to 39
+052210 WARN debug close chan 11
+052210 CLNT S1 <- C11 Leave Serial:18 GIDs:[11 12 13 14 15] done true#56 Outdated:false
+052211 CLNT S1 <- C11 Received Query Serial:19 Num: -1 as Leader true#146
+052213 LEAD S1 Got new entry {0:41}
+052214 CMIT S1 replicated from index 39 to 40
+052215 WARN debug close chan 11
+052215 CLNT S1 <- C11 Query Serial:19 Num: -1 Config:{Num:26 Shards:[1009 1008 1005 1004 1002 1006 1007 1000 1001 1003] Groups:map[1000:[1000a 1000b 1000c] 1001:[1001a 1001b 1001c] 1002:[1002a 1002b 1002c] 1003:[1003a 1003b 1003c] 1004:[1004a 1004b 1004c] 1005:[1005a 1005b 1005c] 1006:[1006a 1006b 1006c] 1007:[1007a 1007b 1007c] 1008:[1008a 1008b 1008c] 1009:[1009a 1009b 1009c]]} done true#146 Outdated:false
+  ... Passed
+052215 DROP S0 kill shardmaster
+052216 DROP S1 kill shardmaster
+052216 DROP S2 kill shardmaster
+PASS
+ok  	dsys/shardmaster	7.226s
