@@ -4,14 +4,20 @@ package shardmaster
 // Shardmaster clerk.
 //
 
-import "../labrpc"
-import "time"
-import "crypto/rand"
-import "math/big"
+import (
+	"crypto/rand"
+	"dsys/labrpc"
+	"math/big"
+	"time"
+)
+
+var id_counter int = 0
 
 type Clerk struct {
 	servers []*labrpc.ClientEnd
 	// Your data here.
+	id     int
+	serial int
 }
 
 func nrand() int64 {
@@ -24,78 +30,105 @@ func nrand() int64 {
 func MakeClerk(servers []*labrpc.ClientEnd) *Clerk {
 	ck := new(Clerk)
 	ck.servers = servers
-	// Your code here.
+	ck.serial = 0
+	ck.id = id_counter
+
+	id_counter++
 	return ck
 }
 
 func (ck *Clerk) Query(num int) Config {
-	args := &QueryArgs{}
-	// Your code here.
-	args.Num = num
+	defer func() {
+		ck.serial++
+	}()
+	args := &QueryArgs{
+		Num:    num,
+		Serial: ck.serial,
+		Sid:    ck.id,
+	}
 	for {
 		// try each known server.
 		for _, srv := range ck.servers {
 			var reply QueryReply
 			ok := srv.Call("ShardMaster.Query", args, &reply)
-			if ok && reply.WrongLeader == false {
+			if ok && reply.Success && !reply.OutDated {
 				return reply.Config
 			}
 		}
+		//log.Println("Failed Query")
 		time.Sleep(100 * time.Millisecond)
 	}
 }
 
 func (ck *Clerk) Join(servers map[int][]string) {
-	args := &JoinArgs{}
-	// Your code here.
-	args.Servers = servers
+	defer func() {
+		ck.serial++
+	}()
+	args := &JoinArgs{
+		Servers: servers,
+		Serial:  ck.serial,
+		Sid:     ck.id,
+	}
 
 	for {
 		// try each known server.
 		for _, srv := range ck.servers {
 			var reply JoinReply
 			ok := srv.Call("ShardMaster.Join", args, &reply)
-			if ok && reply.WrongLeader == false {
+			if ok && reply.Success && !reply.OutDated {
 				return
 			}
 		}
+		//log.Println("Failed join")
 		time.Sleep(100 * time.Millisecond)
 	}
 }
 
 func (ck *Clerk) Leave(gids []int) {
-	args := &LeaveArgs{}
-	// Your code here.
-	args.GIDs = gids
+	defer func() {
+		ck.serial++
+	}()
+	args := &LeaveArgs{
+		GIDs:   gids,
+		Serial: ck.serial,
+		Sid:    ck.id,
+	}
 
 	for {
 		// try each known server.
 		for _, srv := range ck.servers {
 			var reply LeaveReply
 			ok := srv.Call("ShardMaster.Leave", args, &reply)
-			if ok && reply.WrongLeader == false {
+			if ok && reply.Success && !reply.OutDated {
 				return
 			}
 		}
+		//log.Println("Failed Leave")
 		time.Sleep(100 * time.Millisecond)
 	}
 }
 
 func (ck *Clerk) Move(shard int, gid int) {
-	args := &MoveArgs{}
-	// Your code here.
-	args.Shard = shard
-	args.GID = gid
+	defer func() {
+		ck.serial++
+	}()
+	args := &MoveArgs{
+		Shard:  shard,
+		GID:    gid,
+		Serial: ck.serial,
+		Sid:    ck.id,
+	}
 
 	for {
 		// try each known server.
 		for _, srv := range ck.servers {
 			var reply MoveReply
 			ok := srv.Call("ShardMaster.Move", args, &reply)
-			if ok && reply.WrongLeader == false {
+			if ok && reply.Success && !reply.OutDated {
 				return
 			}
 		}
+		//log.Println("Failed Move")
 		time.Sleep(100 * time.Millisecond)
 	}
 }

@@ -1,12 +1,15 @@
 package shardmaster
 
 import (
+	"fmt"
 	"sync"
 	"testing"
+	"time"
+
+	"go.uber.org/goleak"
 )
 
 // import "time"
-import "fmt"
 
 func check(t *testing.T, groups []int, ck *Clerk) {
 	c := ck.Query(-1)
@@ -78,6 +81,10 @@ func check_same_config(t *testing.T, c1 Config, c2 Config) {
 }
 
 func TestBasic(t *testing.T) {
+	defer func() {
+		time.Sleep(2 * time.Second)
+		goleak.VerifyNone(t)
+	}()
 	const nservers = 3
 	cfg := make_config(t, nservers, false)
 	defer cfg.cleanup()
@@ -250,6 +257,10 @@ func TestBasic(t *testing.T) {
 }
 
 func TestMulti(t *testing.T) {
+	defer func() {
+		time.Sleep(2 * time.Second)
+		goleak.VerifyNone(t)
+	}()
 	const nservers = 3
 	cfg := make_config(t, nservers, false)
 	defer cfg.cleanup()

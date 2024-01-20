@@ -1,11 +1,33 @@
 package shardmaster
 
+import (
+	"bytes"
+	"strconv"
+	"sync"
+	"sync/atomic"
 
-import "../raft"
-import "../labrpc"
-import "sync"
-import "../labgob"
+	"dsys/labgob"
 
+	"dsys/raft"
+
+	"dsys/labrpc"
+)
+
+type OperationType int
+
+const (
+	JOIN OperationType = iota
+	LEAVE
+	MOVE
+	QUERY
+)
+
+var typeMap = map[OperationType]string{
+	JOIN:  "JOIN",
+	LEAVE: "LEAVE",
+	MOVE:  "MOVE",
+	QUERY: "QUERY",
+}
 
 type ShardMaster struct {
 	mu      sync.Mutex
@@ -13,33 +35,27 @@ type ShardMaster struct {
 	rf      *raft.Raft
 	applyCh chan raft.ApplyMsg
 
-	// Your data here.
+	state   *ConfigState
+	tracker *RequestTracker
 
-	configs []Config // indexed by config num
+	maxraftstate      int
+	non_snapshot_size int
+	dead              int64
 }
-
 
 type Op struct {
-	// Your data here.
+	Serial int
+	Sid    int
+	Type   OperationType
+	Args   interface{}
 }
 
+type StopDaemon int
 
-func (sm *ShardMaster) Join(args *JoinArgs, reply *JoinReply) {
-	// Your code here.
+func (sm *ShardMaster) GetLeader() (int, bool) {
+	_, leader, isLeader := sm.rf.GetStateAndLeader()
+	return leader, isLeader
 }
-
-func (sm *ShardMaster) Leave(args *LeaveArgs, reply *LeaveReply) {
-	// Your code here.
-}
-
-func (sm *ShardMaster) Move(args *MoveArgs, reply *MoveReply) {
-	// Your code here.
-}
-
-func (sm *ShardMaster) Query(args *QueryArgs, reply *QueryReply) {
-	// Your code here.
-}
-
 
 //
 // the tester calls Kill() when a ShardMaster instance won't
@@ -48,8 +64,21 @@ func (sm *ShardMaster) Query(args *QueryArgs, reply *QueryReply) {
 // turn off debug output from this instance.
 //
 func (sm *ShardMaster) Kill() {
+	Lock(sm, false)
+	defer Unlock(sm, false)
+	Debug(dDrop, "S%d kill shardmaster", sm.me)
 	sm.rf.Kill()
-	// Your code here, if desired.
+	atomic.StoreInt64(&sm.dead, 1)
+
+	UnlockUntilChanSend(sm, sm.applyCh, raft.ApplyMsg{Command: StopDaemon(1)})
+	for k := range sm.tracker.request_chan {
+		sm.tracker.DiscardRequestFrom(k)
+	}
+}
+
+func (sm *ShardMaster) killed() bool {
+	z := atomic.LoadInt64(&sm.dead)
+	return z == 1
 }
 
 // needed by shardkv tester
@@ -67,14 +96,58 @@ func StartServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persister)
 	sm := new(ShardMaster)
 	sm.me = me
 
-	sm.configs = make([]Config, 1)
-	sm.configs[0].Groups = map[int][]string{}
-
 	labgob.Register(Op{})
 	sm.applyCh = make(chan raft.ApplyMsg)
 	sm.rf = raft.Make(servers, me, persister, sm.applyCh)
+	sm.tracker = NewRequestTracker()
+	sm.state = NewConfigState()
+	sm.dead = 0
+	sm.maxraftstate = -1
+	sm.non_snapshot_size = 0
+	if suppress {
+		raft.SetRaftMute(sm.rf, true)
+	}
 
-	// Your code here.
+	go sm.ApplyDaemon()
 
 	return sm
+}
+
+func (sm *ShardMaster) Lock() {
+	sm.mu.Lock()
+}
+
+func (sm *ShardMaster) Unlock() {
+	sm.mu.Unlock()
+}
+
+func (sm *ShardMaster) Identity() string {
+	return "S" + strconv.Itoa(sm.me)
+}
+
+func (sm *ShardMaster) CreateSnapshot() []byte {
+	buf := new(bytes.Buffer)
+	encoder := labgob.NewEncoder(buf)
+	encoder.Encode(*sm.state)
+	encoder.Encode(sm.tracker.latest_applied)
+	encoder.Encode(sm.tracker.request_serial)
+	return buf.Bytes()
+}
+
+func (sm *ShardMaster) LoadSnapshot(snapshot []byte) {
+	buf := bytes.NewBuffer(snapshot)
+	decoder := labgob.NewDecoder(buf)
+	decoder.Decode(sm.state)
+	decoder.Decode(&sm.tracker.latest_applied)
+	decoder.Decode(&sm.tracker.request_serial)
+	for cid := range sm.tracker.request_chan {
+		sm.tracker.DiscardRequestFrom(cid)
+	}
+}
+
+func (sm *ShardMaster) getOperationSize(operation *Op) int {
+	buf := new(bytes.Buffer)
+	encoder := labgob.NewEncoder(buf)
+	encoder.Encode(*operation)
+	return len(buf.Bytes())
 }

@@ -36,38 +36,50 @@ type Err string
 
 type JoinArgs struct {
 	Servers map[int][]string // new GID -> servers mappings
+	Sid     int
+	Serial  int
 }
 
 type JoinReply struct {
-	WrongLeader bool
-	Err         Err
+	Success    bool
+	LeaderHint int
+	OutDated   bool //this is needed since a outdated request might close the channel of more up to date request
 }
 
 type LeaveArgs struct {
-	GIDs []int
+	GIDs   []int
+	Sid    int
+	Serial int
 }
 
 type LeaveReply struct {
-	WrongLeader bool
-	Err         Err
+	Success    bool
+	LeaderHint int
+	OutDated   bool //this is needed since a outdated request might close the channel of more up to date request
 }
 
 type MoveArgs struct {
-	Shard int
-	GID   int
+	Shard  int
+	GID    int
+	Sid    int
+	Serial int
 }
 
 type MoveReply struct {
-	WrongLeader bool
-	Err         Err
+	Success    bool
+	LeaderHint int
+	OutDated   bool //this is needed since a outdated request might close the channel of more up to date request
 }
 
 type QueryArgs struct {
-	Num int // desired config number
+	Num    int // desired config number
+	Sid    int
+	Serial int
 }
 
 type QueryReply struct {
-	WrongLeader bool
-	Err         Err
-	Config      Config
+	Success    bool
+	LeaderHint int
+	OutDated   bool //this is needed since a outdated request might close the channel of more up to date request
+	Config     Config
 }
