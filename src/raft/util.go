@@ -46,6 +46,13 @@ func getVerbosity() int {
 	return level
 }
 
+//set verbosity from upper layer
+func SetRaftMute(rf *Raft, mute bool) {
+	rf.mu.Lock()
+	defer rf.mu.Unlock()
+	rf.mute = mute
+}
+
 func init() {
 	debugVerbosity = getVerbosity()
 	debugStart = time.Now()
@@ -53,8 +60,8 @@ func init() {
 	log.SetFlags(log.Flags() &^ (log.Ldate | log.Ltime))
 }
 
-func Debug(topic logTopic, format string, a ...interface{}) {
-	if debugVerbosity >= 1 {
+func Debug(rf *Raft, topic logTopic, format string, a ...interface{}) {
+	if !rf.mute && debugVerbosity >= 1 {
 		time := time.Since(debugStart).Microseconds()
 		time /= 100
 		prefix := fmt.Sprintf("%06d %v ", time, string(topic))
@@ -78,7 +85,21 @@ const RPCAppendDelay = 100
 const RPCVoteDelay = 100
 const ElectionDelay = 2000
 const CommitDelay = 2000
-const lock_trace = false
+
+var lock_trace bool
+
+func getLockTrace() bool {
+	v := os.Getenv("LT")
+	lt := false
+	if v != "" {
+		lt = true
+	}
+	return lt
+}
+
+func init() {
+	lock_trace = getLockTrace()
+}
 
 func DPrintf(format string, a ...interface{}) (n int, err error) {
 	if DEBUG > 0 {

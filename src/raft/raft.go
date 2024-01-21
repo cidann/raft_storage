@@ -38,6 +38,22 @@ const (
 	LEADER
 )
 
+func (rf_state RaftState) String() string {
+	s := ""
+	switch rf_state {
+	case KILLED:
+		s = "KILLED"
+	case FOLLOWER:
+		s = "FOLLOWER"
+	case CANDIDATE:
+		s = "CANDIDATE"
+	case LEADER:
+		s = "LEADER"
+	}
+
+	return s
+}
+
 //
 // as each Raft peer becomes aware that successive log entries are
 // committed, the peer should send an ApplyMsg to the service (or
@@ -91,6 +107,7 @@ type Raft struct {
 	commitCond *sync.Cond
 
 	applyCh chan ApplyMsg
+	mute    bool
 }
 
 // return currentTerm and whether this server
@@ -199,7 +216,7 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 		}
 		rf.log.append(entry)
 		rf.sendAppendToFollowers()
-		Debug(dLeader, "S%d Got new entry {%d:%d}", rf.me, rf.log.start_index, rf.log.length())
+		Debug(rf, dLeader, "S%d Got new entry {%d:%d}", rf.me, rf.log.start_index, rf.log.length())
 	}
 
 	return index, term, isLeader
@@ -246,7 +263,7 @@ func (rf *Raft) ApplicationSnapshot(snapshot []byte, last_index, last_term int) 
 }
 
 func (rf *Raft) Snapshot(snapshot []byte, last_index, last_term int) {
-	Debug(dSnap, "S%d handle snapshot from kvserver index/term: %d/%d", rf.me, last_index, last_term)
+	Debug(rf, dSnap, "S%d handle snapshot from kvserver index/term: %d/%d", rf.me, last_index, last_term)
 	if last_index > rf.log.last().Index() {
 		rf.reInitializeRaftLog(last_index, last_term)
 	}
@@ -289,6 +306,7 @@ func Make(peers []*labrpc.ClientEnd, me int,
 	rf.stateCond = sync.NewCond(&rf.mu)
 	rf.commitCond = sync.NewCond(&rf.mu)
 	rf.applyCh = applyCh
+	rf.mute = false
 
 	rf.log = NewRaftLog(rf)
 	snapshot_index, snapshot_term := rf.readPersist(persister.ReadRaftState())

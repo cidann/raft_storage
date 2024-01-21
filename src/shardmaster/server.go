@@ -104,9 +104,6 @@ func StartServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persister)
 	sm.dead = 0
 	sm.maxraftstate = -1
 	sm.non_snapshot_size = 0
-	if suppress {
-		raft.SetRaftMute(sm.rf, true)
-	}
 
 	go sm.ApplyDaemon()
 

@@ -163,7 +163,7 @@ func (rf *Raft) handleValidVoteRequest(args *RequestVoteArgs, reply *RequestVote
 	if (rf.getVotedFor() == -1) && rf.log.isUpToDate(args.LastEntryIndex, args.LastEntryTerm) {
 		reply.VoteGranted = true
 		rf.lastRecord.RecordTime()
-		Debug(dVote, "S%d voted for %d for term %d prev voted %d", rf.me, args.CandidateId, args.Term, rf.getVotedFor())
+		Debug(rf, dVote, "S%d voted for %d for term %d prev voted %d", rf.me, args.CandidateId, args.Term, rf.getVotedFor())
 		rf.setVotedFor(args.CandidateId)
 		DPrintf("[%d term %d] Received vote from more up to date server [index %d term %d]>[index %d term %d]", rf.me, rf.getTerm(), args.LastEntryIndex, args.LastEntryTerm, rf.log.last().Index(), rf.log.last().Term())
 	} else {
@@ -174,11 +174,12 @@ func (rf *Raft) handleValidVoteRequest(args *RequestVoteArgs, reply *RequestVote
 }
 
 func (rf *Raft) toFollower() {
+	//Debug(rf, dLeader, "S%d converted to follower from %s trace: %s", rf.me, rf.state, CreateStackTrace(1))
 	rf.setVotedFor(-1)
 	if rf.state == FOLLOWER {
 		return
 	}
-	Debug(dLeader, "S%d converted to follower", rf.me)
+
 	rf.state = FOLLOWER
 	rf.stateCond.Broadcast()
 }

@@ -30,22 +30,27 @@ func (sm *ShardMaster) handleOperation(msg *raft.ApplyMsg) {
 	if !sm.tracker.AlreadyProcessed(&operation) || operation.Type == QUERY {
 		switch operation.Type {
 		case JOIN:
+			Debug(dInfo, "S%d handle join serial: %d", sm.me, operation.Serial)
 			mapping := operation.Args.(JoinOperationArgs).Server
 			sm.state.Join(mapping)
 		case LEAVE:
+			Debug(dInfo, "S%d handle leave serial: %d", sm.me, operation.Serial)
 			gids := operation.Args.(LeaveOperationArgs).GIDs
 			sm.state.Leave(gids)
 		case MOVE:
+			Debug(dInfo, "S%d handle move serial: %d", sm.me, operation.Serial)
 			shard := operation.Args.(MoveOperationArgs).Shard
 			gid := operation.Args.(MoveOperationArgs).GID
 			sm.state.Move(shard, gid)
 		case QUERY:
+			Debug(dInfo, "S%d handle query serial: %d", sm.me, operation.Serial)
 			cid := operation.Args.(QueryOperationArgs).Num
 			op_result = *sm.state.Query(cid)
 		default:
 			panic("Unknown op type")
 		}
 	}
+
 	sm.state.SetLatest(msg.Index(), msg.Term())
 	sm.tracker.ProcessRequest(&operation, op_result)
 

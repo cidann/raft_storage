@@ -146,9 +146,5 @@ func CopyConfigGroups(old_config *Config) map[int][]string {
 }
 
 func CopyConfigShards(old_config *Config) [NShards]int {
-	var new_shards [NShards]int
-	for i, v := range old_config.Shards {
-		new_shards[i] = v
-	}
-	return new_shards
+	return old_config.Shards
 }

@@ -34,6 +34,12 @@ const (
 
 type Err string
 
+type ReplyBase struct {
+	Success    bool
+	LeaderHint int
+	OutDated   bool //this is needed since a outdated request might close the channel of more up to date request
+}
+
 type JoinArgs struct {
 	Servers map[int][]string // new GID -> servers mappings
 	Sid     int
@@ -41,9 +47,7 @@ type JoinArgs struct {
 }
 
 type JoinReply struct {
-	Success    bool
-	LeaderHint int
-	OutDated   bool //this is needed since a outdated request might close the channel of more up to date request
+	ReplyBase
 }
 
 type LeaveArgs struct {
@@ -53,9 +57,7 @@ type LeaveArgs struct {
 }
 
 type LeaveReply struct {
-	Success    bool
-	LeaderHint int
-	OutDated   bool //this is needed since a outdated request might close the channel of more up to date request
+	ReplyBase
 }
 
 type MoveArgs struct {
@@ -66,9 +68,7 @@ type MoveArgs struct {
 }
 
 type MoveReply struct {
-	Success    bool
-	LeaderHint int
-	OutDated   bool //this is needed since a outdated request might close the channel of more up to date request
+	ReplyBase
 }
 
 type QueryArgs struct {
@@ -78,8 +78,6 @@ type QueryArgs struct {
 }
 
 type QueryReply struct {
-	Success    bool
-	LeaderHint int
-	OutDated   bool //this is needed since a outdated request might close the channel of more up to date request
-	Config     Config
+	ReplyBase
+	Config Config
 }

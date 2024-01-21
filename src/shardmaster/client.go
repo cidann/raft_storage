@@ -7,6 +7,8 @@ package shardmaster
 import (
 	"crypto/rand"
 	"dsys/labrpc"
+	"dsys/raft"
+	"log"
 	"math/big"
 	"time"
 )
@@ -41,7 +43,7 @@ func (ck *Clerk) Query(num int) Config {
 	defer func() {
 		ck.serial++
 	}()
-	args := &QueryArgs{
+	args := QueryArgs{
 		Num:    num,
 		Serial: ck.serial,
 		Sid:    ck.id,
@@ -50,12 +52,11 @@ func (ck *Clerk) Query(num int) Config {
 		// try each known server.
 		for _, srv := range ck.servers {
 			var reply QueryReply
-			ok := srv.Call("ShardMaster.Query", args, &reply)
-			if ok && reply.Success && !reply.OutDated {
+			if send_for(srv, "ShardMaster.Query", &args, &reply, raft.GetSendTime()) {
 				return reply.Config
 			}
 		}
-		//log.Println("Failed Query")
+		log.Println("Failed Query")
 		time.Sleep(100 * time.Millisecond)
 	}
 }
@@ -64,7 +65,7 @@ func (ck *Clerk) Join(servers map[int][]string) {
 	defer func() {
 		ck.serial++
 	}()
-	args := &JoinArgs{
+	args := JoinArgs{
 		Servers: servers,
 		Serial:  ck.serial,
 		Sid:     ck.id,
@@ -74,12 +75,11 @@ func (ck *Clerk) Join(servers map[int][]string) {
 		// try each known server.
 		for _, srv := range ck.servers {
 			var reply JoinReply
-			ok := srv.Call("ShardMaster.Join", args, &reply)
-			if ok && reply.Success && !reply.OutDated {
+			if send_for(srv, "ShardMaster.Join", &args, &reply, raft.GetSendTime()) {
 				return
 			}
 		}
-		//log.Println("Failed join")
+		log.Println("Failed join")
 		time.Sleep(100 * time.Millisecond)
 	}
 }
@@ -88,7 +88,7 @@ func (ck *Clerk) Leave(gids []int) {
 	defer func() {
 		ck.serial++
 	}()
-	args := &LeaveArgs{
+	args := LeaveArgs{
 		GIDs:   gids,
 		Serial: ck.serial,
 		Sid:    ck.id,
@@ -98,12 +98,11 @@ func (ck *Clerk) Leave(gids []int) {
 		// try each known server.
 		for _, srv := range ck.servers {
 			var reply LeaveReply
-			ok := srv.Call("ShardMaster.Leave", args, &reply)
-			if ok && reply.Success && !reply.OutDated {
+			if send_for(srv, "ShardMaster.Leave", &args, &reply, raft.GetSendTime()) {
 				return
 			}
 		}
-		//log.Println("Failed Leave")
+		log.Println("Failed Leave")
 		time.Sleep(100 * time.Millisecond)
 	}
 }
@@ -112,7 +111,7 @@ func (ck *Clerk) Move(shard int, gid int) {
 	defer func() {
 		ck.serial++
 	}()
-	args := &MoveArgs{
+	args := MoveArgs{
 		Shard:  shard,
 		GID:    gid,
 		Serial: ck.serial,
@@ -123,12 +122,44 @@ func (ck *Clerk) Move(shard int, gid int) {
 		// try each known server.
 		for _, srv := range ck.servers {
 			var reply MoveReply
-			ok := srv.Call("ShardMaster.Move", args, &reply)
-			if ok && reply.Success && !reply.OutDated {
+			if send_for(srv, "ShardMaster.Move", &args, &reply, raft.GetSendTime()) {
 				return
 			}
 		}
-		//log.Println("Failed Move")
+		log.Println("Failed Move")
 		time.Sleep(100 * time.Millisecond)
 	}
+}
+
+type ClerkReply interface {
+	is_valid() bool
+}
+
+type ClerkReplyGet[T any] interface {
+	get_result() T
+	ClerkReply
+}
+
+type ClerkReplyPut interface {
+	ClerkReply
+}
+
+func (reply *ReplyBase) is_valid() bool {
+	return reply.Success && !reply.OutDated
+}
+
+func send_for(server *labrpc.ClientEnd, rpc_name string, args any, reply ClerkReply, timeout time.Duration) bool {
+	result_chan := GetChanForFunc[bool](func() { server.Call(rpc_name, args, reply) })
+	timeout_chan := GetChanForTime[bool](timeout)
+	var res bool = false
+
+	select {
+	case <-result_chan:
+		if reply.is_valid() {
+			res = true
+		}
+	case <-timeout_chan:
+	}
+
+	return res
 }
