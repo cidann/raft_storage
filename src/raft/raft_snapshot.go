@@ -21,8 +21,8 @@ type SnapshotData struct {
 func (rf *Raft) sendInstallSnapshot(server int, args *InstallSnapshotArgs, reply *InstallSnapshotReply) bool {
 	ok := rf.peers[server].Call("Raft.InstallSnapshot", args, reply)
 
-	Lock(rf, lock_trace)
-	defer Unlock(rf, lock_trace)
+	Lock(rf, lock_trace, "sendInstallSnapshot")
+	defer Unlock(rf, lock_trace, "sendInstallSnapshot")
 
 	if !rf.checkValidInstallSnapshotReply(args, reply) {
 		return false
@@ -33,8 +33,8 @@ func (rf *Raft) sendInstallSnapshot(server int, args *InstallSnapshotArgs, reply
 }
 
 func (rf *Raft) InstallSnapshot(args *InstallSnapshotArgs, reply *InstallSnapshotReply) {
-	Lock(rf, lock_trace)
-	defer Unlock(rf, lock_trace)
+	Lock(rf, lock_trace, "InstallSnapshot")
+	defer Unlock(rf, lock_trace, "InstallSnapshot")
 
 	if !rf.checkInstallSnapshotRequest(args, reply) {
 		return

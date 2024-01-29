@@ -113,8 +113,8 @@ type Raft struct {
 // return currentTerm and whether this server
 // believes it is the leader.
 func (rf *Raft) GetState() (int, bool) {
-	Lock(rf, lock_trace)
-	defer Unlock(rf, lock_trace)
+	Lock(rf, lock_trace, "GetState")
+	defer Unlock(rf, lock_trace, "GetState")
 	var term int
 	var isleader bool
 
@@ -126,8 +126,8 @@ func (rf *Raft) GetState() (int, bool) {
 }
 
 func (rf *Raft) GetStateAndLeader() (int, int, bool) {
-	Lock(rf, lock_trace)
-	defer Unlock(rf, lock_trace)
+	Lock(rf, lock_trace, "GetStateAndLeader")
+	defer Unlock(rf, lock_trace, "GetStateAndLeader")
 	var term int
 	var leader int
 	var isleader bool
@@ -195,8 +195,8 @@ func (rf *Raft) readPersist(data []byte) (int, int) {
 // the leader.
 //
 func (rf *Raft) Start(command interface{}) (int, int, bool) {
-	Lock(rf, lock_trace)
-	defer Unlock(rf, lock_trace)
+	Lock(rf, lock_trace, "Start")
+	defer Unlock(rf, lock_trace, "Start")
 	index := -1
 	term := -1
 	isLeader := false
@@ -236,8 +236,8 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 func (rf *Raft) Kill() {
 	atomic.StoreInt32(&rf.dead, 1)
 	// Your code here, if desired.
-	Lock(rf, lock_trace)
-	defer Unlock(rf, lock_trace)
+	Lock(rf, lock_trace, "Kill")
+	defer Unlock(rf, lock_trace, "Kill")
 	rf.stateCond.Broadcast()
 	rf.commitCond.Broadcast()
 	rf.state = KILLED
@@ -249,14 +249,14 @@ func (rf *Raft) killed() bool {
 }
 
 func (rf *Raft) GetStateSize() int {
-	Lock(rf, lock_trace)
-	defer Unlock(rf, lock_trace)
+	Lock(rf, lock_trace, "GetStateSize")
+	defer Unlock(rf, lock_trace, "GetStateSize")
 	return rf.persister.RaftStateSize()
 }
 
 func (rf *Raft) ApplicationSnapshot(snapshot []byte, last_index, last_term int) {
-	Lock(rf, lock_trace)
-	defer Unlock(rf, lock_trace)
+	Lock(rf, lock_trace, "ApplicationSnapshot")
+	defer Unlock(rf, lock_trace, "ApplicationSnapshot")
 	if last_index > rf.log.first().Index() {
 		rf.Snapshot(snapshot, last_index, last_term)
 	}

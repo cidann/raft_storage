@@ -20,11 +20,11 @@ func GetMaxElectionTime() time.Duration {
 }
 
 func (rf *Raft) startWaitForResponse() {
-	Lock(rf, lock_trace)
-	defer Unlock(rf, lock_trace)
+	Lock(rf, lock_trace, "startWaitForResponse")
+	defer Unlock(rf, lock_trace, "startWaitForResponse")
 	go func() {
-		Lock(rf, lock_trace)
-		defer Unlock(rf, lock_trace)
+		Lock(rf, lock_trace, "startWaitForResponse_broadcast")
+		defer Unlock(rf, lock_trace, "startWaitForResponse_broadcast")
 		rf.stateCond.Broadcast()
 	}()
 	for !rf.killed() {
@@ -82,8 +82,8 @@ type RequestVoteReply struct {
 }
 
 func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
-	Lock(rf, lock_trace)
-	defer Unlock(rf, lock_trace)
+	Lock(rf, lock_trace, "RequestVote")
+	defer Unlock(rf, lock_trace, "RequestVote")
 
 	if !rf.checkVoteRequest(args, reply) {
 		return
@@ -96,8 +96,8 @@ func (rf *Raft) sendRequestVote(server int, args *RequestVoteArgs, reply *Reques
 
 	ok := rf.peers[server].Call("Raft.RequestVote", args, reply)
 
-	Lock(rf, lock_trace)
-	defer Unlock(rf, lock_trace)
+	Lock(rf, lock_trace, "sendRequestVote")
+	defer Unlock(rf, lock_trace, "sendRequestVote")
 
 	if !rf.checkValidVoteReply(args, reply) {
 		return false

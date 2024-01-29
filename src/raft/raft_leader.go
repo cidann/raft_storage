@@ -35,8 +35,8 @@ func (rf *Raft) sendAppendEntry(server int, args *AppendEntryArgs, reply *Append
 
 	ok := rf.peers[server].Call("Raft.AppendEntry", args, reply)
 
-	Lock(rf, lock_trace)
-	defer Unlock(rf, lock_trace)
+	Lock(rf, lock_trace, "sendAppendEntry")
+	defer Unlock(rf, lock_trace, "sendAppendEntry")
 
 	if !rf.checkValidAppendReply(args, reply) {
 		return false
@@ -48,8 +48,8 @@ func (rf *Raft) sendAppendEntry(server int, args *AppendEntryArgs, reply *Append
 
 func (rf *Raft) AppendEntry(args *AppendEntryArgs, reply *AppendEntryReply) {
 	//Remeber to finish
-	Lock(rf, lock_trace)
-	defer Unlock(rf, lock_trace)
+	Lock(rf, lock_trace, "AppendEntry")
+	defer Unlock(rf, lock_trace, "AppendEntry")
 
 	if !rf.checkAppendRequest(args, reply) {
 		return
@@ -58,8 +58,8 @@ func (rf *Raft) AppendEntry(args *AppendEntryArgs, reply *AppendEntryReply) {
 }
 
 func (rf *Raft) startLeader() {
-	Lock(rf, lock_trace)
-	defer Unlock(rf, lock_trace)
+	Lock(rf, lock_trace, "startLeader")
+	defer Unlock(rf, lock_trace, "startLeader")
 
 	if rf.state == LEADER {
 		return
@@ -188,8 +188,8 @@ func (rf *Raft) leaderCheckAndUpdateCommit(new_commit_index int) {
 }
 
 func (rf *Raft) commitDaemon() {
-	Lock(rf, lock_trace)
-	defer Unlock(rf, lock_trace)
+	Lock(rf, lock_trace, "commitDaemon")
+	defer Unlock(rf, lock_trace, "commitDaemon")
 	for !rf.killed() {
 		rf.commitCond.Wait()
 		for rf.lastApplied < rf.commitIndex {
