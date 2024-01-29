@@ -1,5 +1,9 @@
 package shardmaster
 
+import (
+	"dsys/raft_helper"
+)
+
 //
 // Master shard server: assigns shards to replication groups.
 //
@@ -34,12 +38,6 @@ const (
 
 type Err string
 
-type ReplyBase struct {
-	Success    bool
-	LeaderHint int
-	OutDated   bool //this is needed since a outdated request might close the channel of more up to date request
-}
-
 type JoinArgs struct {
 	Servers map[int][]string // new GID -> servers mappings
 	Sid     int
@@ -47,7 +45,7 @@ type JoinArgs struct {
 }
 
 type JoinReply struct {
-	ReplyBase
+	raft_helper.ReplyBase
 }
 
 type LeaveArgs struct {
@@ -57,7 +55,7 @@ type LeaveArgs struct {
 }
 
 type LeaveReply struct {
-	ReplyBase
+	raft_helper.ReplyBase
 }
 
 type MoveArgs struct {
@@ -68,7 +66,7 @@ type MoveArgs struct {
 }
 
 type MoveReply struct {
-	ReplyBase
+	raft_helper.ReplyBase
 }
 
 type QueryArgs struct {
@@ -78,6 +76,6 @@ type QueryArgs struct {
 }
 
 type QueryReply struct {
-	ReplyBase
+	raft_helper.ReplyBase
 	Config Config
 }

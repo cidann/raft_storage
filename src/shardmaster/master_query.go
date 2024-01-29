@@ -2,6 +2,7 @@ package shardmaster
 
 import (
 	"dsys/labgob"
+	"dsys/sync_helper"
 	"sync/atomic"
 )
 
@@ -16,8 +17,8 @@ func init() {
 var true_serial_query int64 = 0
 
 func (sm *ShardMaster) Query(args *QueryArgs, reply *QueryReply) {
-	Lock(sm, lock_trace, "Query")
-	defer Unlock(sm, lock_trace, "Query")
+	sync_helper.Lock(sm, lock_trace, "Query")
+	defer sync_helper.Unlock(sm, lock_trace, "Query")
 	cur_serial := atomic.AddInt64(&true_serial_query, 1)
 
 	if leader, isLeader := sm.GetLeader(); !isLeader {
@@ -39,11 +40,11 @@ func (sm *ShardMaster) Query(args *QueryArgs, reply *QueryReply) {
 	sm.tracker.RecordRequest(&operation, result_chan)
 	start_and_wait := func() {
 		sm.rf.Start(operation)
-		var config, received = WaitUntilChanReceive(result_chan)
+		var config, received = sync_helper.WaitUntilChanReceive(result_chan)
 		reply.OutDated = !received
 		reply.Config = config
 	}
-	UnlockUntilChanReceive(sm, GetChanForFunc[any](start_and_wait))
+	sync_helper.UnlockUntilChanReceive(sm, sync_helper.GetChanForFunc[any](start_and_wait))
 	reply.Success = true
 
 	Debug(dClient, "S%d <- C%d Query Serial:%d Num: %v Config:%+v done true#%d Outdated:%t", sm.me, args.Sid, args.Serial, args.Num, reply.Config, cur_serial, reply.OutDated)

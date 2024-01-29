@@ -8,6 +8,7 @@ import (
 	"crypto/rand"
 	"dsys/labrpc"
 	"dsys/raft"
+	"dsys/raft_helper"
 	"log"
 	"math/big"
 	"time"
@@ -52,7 +53,7 @@ func (ck *Clerk) Query(num int) Config {
 		// try each known server.
 		for _, srv := range ck.servers {
 			var reply QueryReply
-			if send_for(srv, "ShardMaster.Query", &args, &reply, raft.GetSendTime()) {
+			if raft_helper.Send_for(srv, "ShardMaster.Query", &args, &reply, raft.GetSendTime()) {
 				return reply.Config
 			}
 		}
@@ -75,7 +76,7 @@ func (ck *Clerk) Join(servers map[int][]string) {
 		// try each known server.
 		for _, srv := range ck.servers {
 			var reply JoinReply
-			if send_for(srv, "ShardMaster.Join", &args, &reply, raft.GetSendTime()) {
+			if raft_helper.Send_for(srv, "ShardMaster.Join", &args, &reply, raft.GetSendTime()) {
 				return
 			}
 		}
@@ -98,7 +99,7 @@ func (ck *Clerk) Leave(gids []int) {
 		// try each known server.
 		for _, srv := range ck.servers {
 			var reply LeaveReply
-			if send_for(srv, "ShardMaster.Leave", &args, &reply, raft.GetSendTime()) {
+			if raft_helper.Send_for(srv, "ShardMaster.Leave", &args, &reply, raft.GetSendTime()) {
 				return
 			}
 		}
@@ -122,44 +123,11 @@ func (ck *Clerk) Move(shard int, gid int) {
 		// try each known server.
 		for _, srv := range ck.servers {
 			var reply MoveReply
-			if send_for(srv, "ShardMaster.Move", &args, &reply, raft.GetSendTime()) {
+			if raft_helper.Send_for(srv, "ShardMaster.Move", &args, &reply, raft.GetSendTime()) {
 				return
 			}
 		}
 		log.Println("Failed Move")
 		time.Sleep(100 * time.Millisecond)
 	}
-}
-
-type ClerkReply interface {
-	is_valid() bool
-}
-
-type ClerkReplyGet[T any] interface {
-	get_result() T
-	ClerkReply
-}
-
-type ClerkReplyPut interface {
-	ClerkReply
-}
-
-func (reply *ReplyBase) is_valid() bool {
-	return reply.Success && !reply.OutDated
-}
-
-func send_for(server *labrpc.ClientEnd, rpc_name string, args any, reply ClerkReply, timeout time.Duration) bool {
-	result_chan := GetChanForFunc[bool](func() { server.Call(rpc_name, args, reply) })
-	timeout_chan := GetChanForTime[bool](timeout)
-	var res bool = false
-
-	select {
-	case <-result_chan:
-		if reply.is_valid() {
-			res = true
-		}
-	case <-timeout_chan:
-	}
-
-	return res
 }

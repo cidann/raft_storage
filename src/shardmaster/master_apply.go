@@ -2,15 +2,16 @@ package shardmaster
 
 import (
 	"dsys/raft"
+	"dsys/sync_helper"
 	"fmt"
 )
 
 func (sm *ShardMaster) ApplyDaemon() {
-	Lock(sm, lock_trace, "ApplyDaemon")
-	defer Unlock(sm, lock_trace, "ApplyDaemon")
+	sync_helper.Lock(sm, lock_trace, "ApplyDaemon")
+	defer sync_helper.Unlock(sm, lock_trace, "ApplyDaemon")
 
 	for !sm.killed() {
-		msg := UnlockUntilChanReceive(sm, sm.applyCh)
+		msg := sync_helper.UnlockUntilChanReceive(sm, sm.applyCh)
 		switch msg.Command.(type) {
 		case Op:
 			sm.handleOperation(&msg)

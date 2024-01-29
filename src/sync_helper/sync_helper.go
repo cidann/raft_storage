@@ -1,4 +1,4 @@
-package shardmaster
+package sync_helper
 
 import (
 	"fmt"
@@ -8,6 +8,8 @@ import (
 	"sync"
 	"time"
 )
+
+const lock_trace = false
 
 var max_stack_trace int = 2
 

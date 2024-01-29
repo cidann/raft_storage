@@ -8,9 +8,9 @@ import (
 
 	"dsys/labgob"
 
-	"dsys/raft"
-
 	"dsys/labrpc"
+	"dsys/raft"
+	"dsys/sync_helper"
 )
 
 type OperationType int
@@ -64,13 +64,13 @@ func (sm *ShardMaster) GetLeader() (int, bool) {
 // turn off debug output from this instance.
 //
 func (sm *ShardMaster) Kill() {
-	Lock(sm, false)
-	defer Unlock(sm, false)
+	sync_helper.Lock(sm, false)
+	defer sync_helper.Unlock(sm, false)
 	Debug(dDrop, "S%d kill shardmaster", sm.me)
 	sm.rf.Kill()
 	atomic.StoreInt64(&sm.dead, 1)
 
-	UnlockUntilChanSend(sm, sm.applyCh, raft.ApplyMsg{Command: StopDaemon(1)})
+	sync_helper.UnlockUntilChanSend(sm, sm.applyCh, raft.ApplyMsg{Command: StopDaemon(1)})
 	for k := range sm.tracker.request_chan {
 		sm.tracker.DiscardRequestFrom(k)
 	}

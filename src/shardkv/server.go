@@ -1,19 +1,20 @@
 package shardkv
 
+// import "dsys/shardmaster"
+import (
+	"bytes"
+	"dsys/labgob"
+	"dsys/raft_helper"
+	"dsys/shardmaster"
+	"fmt"
+	"sync"
+	"sync/atomic"
 
-// import "../shardmaster"
-import "../labrpc"
-import "../raft"
-import "sync"
-import "../labgob"
+	"dsys/labrpc"
+	"dsys/raft"
+)
 
-
-
-type Op struct {
-	// Your definitions here.
-	// Field names must start with capital letters,
-	// otherwise RPC will break.
-}
+type StopDaemon int
 
 type ShardKV struct {
 	mu           sync.Mutex
@@ -26,15 +27,13 @@ type ShardKV struct {
 	maxraftstate int // snapshot if log grows this big
 
 	// Your definitions here.
-}
+	state      *ServerState
+	mck        *shardmaster.Clerk
+	clerk_pool *ClerkPool
 
-
-func (kv *ShardKV) Get(args *GetArgs, reply *GetReply) {
-	// Your code here.
-}
-
-func (kv *ShardKV) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
-	// Your code here.
+	num_raft          int
+	non_snapshot_size int   //size of entries that is commited but not discarded from snapshot
+	dead              int32 // set by Kill()
 }
 
 //
@@ -44,10 +43,19 @@ func (kv *ShardKV) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 // turn off debug output from this instance.
 //
 func (kv *ShardKV) Kill() {
+	Debug(dDrop, "S%d kill kv", kv.me)
 	kv.rf.Kill()
-	// Your code here, if desired.
+	Lock(kv, false)
+	defer Unlock(kv, false)
+	UnlockUntilChanSend(kv, kv.applyCh, raft.ApplyMsg{Command: StopDaemon(1)})
+	kv.state.DiscardAllRequest()
+	atomic.StoreInt32(&kv.dead, 1)
 }
 
+func (kv *ShardKV) killed() bool {
+	z := atomic.LoadInt32(&kv.dead)
+	return z == 1
+}
 
 //
 // servers[] contains the ports of the servers in this group.
@@ -80,7 +88,6 @@ func (kv *ShardKV) Kill() {
 func StartServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persister, maxraftstate int, gid int, masters []*labrpc.ClientEnd, make_end func(string) *labrpc.ClientEnd) *ShardKV {
 	// call labgob.Register on structures you want
 	// Go's RPC library to marshall/unmarshall.
-	labgob.Register(Op{})
 
 	kv := new(ShardKV)
 	kv.me = me
@@ -91,12 +98,61 @@ func StartServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persister,
 
 	// Your initialization code here.
 
-	// Use something like this to talk to the shardmaster:
-	// kv.mck = shardmaster.MakeClerk(kv.masters)
+	kv.mck = shardmaster.MakeClerk(kv.masters)
+	kv.clerk_pool = NewClerkPool(masters, make_end)
 
-	kv.applyCh = make(chan raft.ApplyMsg)
+	kv.non_snapshot_size = 0
+	kv.applyCh = make(chan raft.ApplyMsg, 100)
 	kv.rf = raft.Make(servers, me, persister, kv.applyCh)
+	kv.state = NewServerState(kv.gid)
+	kv.num_raft = len(servers)
+	kv.LoadSnapshot(persister.ReadSnapshot())
 
+	go kv.ApplyDaemon()
+	go kv.ConfigPullDaemon()
 
 	return kv
+}
+
+func (kv *ShardKV) GetLeader() (int, bool) {
+	_, leader, isLeader := kv.rf.GetStateAndLeader()
+	return leader, isLeader
+}
+
+func (kv *ShardKV) IsLeader() bool {
+	_, is_leader := kv.GetLeader()
+	return is_leader
+}
+
+func (kv *ShardKV) Lock() {
+	kv.mu.Lock()
+}
+
+func (kv *ShardKV) Unlock() {
+	kv.mu.Unlock()
+}
+
+func (kv *ShardKV) Identity() string {
+	return fmt.Sprintf("KV server: [%d]", kv.me)
+}
+
+func (kv *ShardKV) CreateSnapshot() []byte {
+	buf := new(bytes.Buffer)
+	encoder := labgob.NewEncoder(buf)
+	kv.state.EncodeData(*encoder)
+	return buf.Bytes()
+}
+
+func (kv *ShardKV) LoadSnapshot(snapshot []byte) {
+	buf := bytes.NewBuffer(snapshot)
+	decoder := labgob.NewDecoder(buf)
+	decoder.Decode(kv.state)
+	kv.state.DiscardAllRequest()
+}
+
+func (kv *ShardKV) getOperationSize(operation raft_helper.Op) int {
+	buf := new(bytes.Buffer)
+	encoder := labgob.NewEncoder(buf)
+	encoder.Encode(operation)
+	return len(buf.Bytes())
 }
