@@ -29,7 +29,7 @@ func (reply *ReplyBase) Is_valid() bool {
 	return reply.Success && !reply.OutDated
 }
 
-func Send_for(server *labrpc.ClientEnd, rpc_name string, args any, reply ClerkReply, timeout time.Duration) bool {
+func Send_for(server *labrpc.ClientEnd, rpc_name string, args Op, reply ClerkReply, timeout time.Duration) bool {
 	result_chan := sync_helper.GetChanForFunc[bool](func() { server.Call(rpc_name, args, reply) })
 	timeout_chan := sync_helper.GetChanForTime[bool](timeout)
 	var res bool = false
@@ -40,6 +40,7 @@ func Send_for(server *labrpc.ClientEnd, rpc_name string, args any, reply ClerkRe
 			res = true
 		}
 	case <-timeout_chan:
+		Debug(dError, "C%d timeout %s serial: %d", args.Get_sid(), rpc_name, args.Get_serial())
 	}
 
 	return res

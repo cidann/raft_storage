@@ -1,18 +1,9 @@
 package shardmaster
 
 import (
-	"dsys/labgob"
 	"dsys/sync_helper"
 	"sync/atomic"
 )
-
-type QueryOperationArgs struct {
-	Num int // desired config number
-}
-
-func init() {
-	labgob.Register(QueryOperationArgs{})
-}
 
 var true_serial_query int64 = 0
 
@@ -27,17 +18,12 @@ func (sm *ShardMaster) Query(args *QueryArgs, reply *QueryReply) {
 		return
 	}
 
-	Debug(dClient, "S%d <- C%d Received Query Serial:%d Num: %v as Leader true#%d", sm.me, args.Sid, args.Serial, args.Num, cur_serial)
+	Debug(dClient, "S%d <- C%d Received Query Serial:%d Num: %v as Leader true#%d", sm.me, args.Get_sid(), args.Get_serial(), args.Num, cur_serial)
 
-	operation := Op{
-		Serial: args.Serial,
-		Sid:    args.Sid,
-		Type:   QUERY,
-		Args:   QueryOperationArgs{Num: args.Num},
-	}
+	operation := args
 	result_chan := make(chan Config, 1)
 
-	sm.tracker.RecordRequest(&operation, result_chan)
+	sm.tracker.RecordRequest(operation, result_chan)
 	start_and_wait := func() {
 		sm.rf.Start(operation)
 		var config, received = sync_helper.WaitUntilChanReceive(result_chan)
@@ -47,5 +33,5 @@ func (sm *ShardMaster) Query(args *QueryArgs, reply *QueryReply) {
 	sync_helper.UnlockUntilChanReceive(sm, sync_helper.GetChanForFunc[any](start_and_wait))
 	reply.Success = true
 
-	Debug(dClient, "S%d <- C%d Query Serial:%d Num: %v Config:%+v done true#%d Outdated:%t", sm.me, args.Sid, args.Serial, args.Num, reply.Config, cur_serial, reply.OutDated)
+	Debug(dClient, "S%d <- C%d Query Serial:%d Num: %v Config:%+v done true#%d Outdated:%t", sm.me, args.Get_sid(), args.Get_serial(), args.Num, reply.Config, cur_serial, reply.OutDated)
 }

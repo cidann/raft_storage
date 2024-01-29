@@ -238,6 +238,7 @@ func (rf *Raft) Kill() {
 	// Your code here, if desired.
 	Lock(rf, lock_trace, "Kill")
 	defer Unlock(rf, lock_trace, "Kill")
+	Debug(rf, dDrop, "S%d kill raft", rf.me)
 	rf.stateCond.Broadcast()
 	rf.commitCond.Broadcast()
 	rf.state = KILLED

@@ -57,11 +57,11 @@ func (rf *Raft) AppendEntry(args *AppendEntryArgs, reply *AppendEntryReply) {
 	rf.handleValidAppendRequest(args, reply)
 }
 
-func (rf *Raft) startLeader() {
+func (rf *Raft) startLeader(term int) {
 	Lock(rf, lock_trace, "startLeader")
 	defer Unlock(rf, lock_trace, "startLeader")
 
-	if rf.state == LEADER {
+	if rf.state == LEADER || rf.currentTerm != term {
 		return
 	}
 

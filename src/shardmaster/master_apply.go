@@ -2,6 +2,7 @@ package shardmaster
 
 import (
 	"dsys/raft"
+	"dsys/raft_helper"
 	"dsys/sync_helper"
 	"fmt"
 )
@@ -13,7 +14,7 @@ func (sm *ShardMaster) ApplyDaemon() {
 	for !sm.killed() {
 		msg := sync_helper.UnlockUntilChanReceive(sm, sm.applyCh)
 		switch msg.Command.(type) {
-		case Op:
+		case raft_helper.Op:
 			sm.handleOperation(&msg)
 		case raft.SnapshotData:
 			sm.handleSnapshot(&msg)
@@ -26,26 +27,26 @@ func (sm *ShardMaster) ApplyDaemon() {
 }
 
 func (sm *ShardMaster) handleOperation(msg *raft.ApplyMsg) {
-	operation := msg.Command.(Op)
+	operation := msg.Command.(raft_helper.Op)
 	var op_result Config
-	if !sm.tracker.AlreadyProcessed(&operation) || operation.Type == QUERY {
-		switch operation.Type {
-		case JOIN:
-			Debug(dInfo, "S%d handle join serial: %d", sm.me, operation.Serial)
-			mapping := operation.Args.(JoinOperationArgs).Server
+	if !sm.tracker.AlreadyProcessed(operation) || operation.Get_type() == QUERY {
+		switch operation := operation.(type) {
+		case *JoinArgs:
+			Debug(dInfo, "S%d handle join sid/serial: %d/%d", sm.me, operation.Get_sid(), operation.Get_serial())
+			mapping := operation.Servers
 			sm.state.Join(mapping)
-		case LEAVE:
-			Debug(dInfo, "S%d handle leave serial: %d", sm.me, operation.Serial)
-			gids := operation.Args.(LeaveOperationArgs).GIDs
+		case *LeaveArgs:
+			Debug(dInfo, "S%d handle leave sid/serial: %d/%d", sm.me, operation.Get_sid(), operation.Get_serial())
+			gids := operation.GIDs
 			sm.state.Leave(gids)
-		case MOVE:
-			Debug(dInfo, "S%d handle move serial: %d", sm.me, operation.Serial)
-			shard := operation.Args.(MoveOperationArgs).Shard
-			gid := operation.Args.(MoveOperationArgs).GID
+		case *MoveArgs:
+			Debug(dInfo, "S%d handle move sid/serial: %d/%d", sm.me, operation.Get_sid(), operation.Get_serial())
+			shard := operation.Shard
+			gid := operation.GID
 			sm.state.Move(shard, gid)
-		case QUERY:
-			Debug(dInfo, "S%d handle query serial: %d", sm.me, operation.Serial)
-			cid := operation.Args.(QueryOperationArgs).Num
+		case *QueryArgs:
+			Debug(dInfo, "S%d handle query sid/serial: %d/%d", sm.me, operation.Get_sid(), operation.Get_serial())
+			cid := operation.Num
 			op_result = *sm.state.Query(cid)
 		default:
 			panic("Unknown op type")
@@ -53,9 +54,9 @@ func (sm *ShardMaster) handleOperation(msg *raft.ApplyMsg) {
 	}
 
 	sm.state.SetLatest(msg.Index(), msg.Term())
-	sm.tracker.ProcessRequest(&operation, op_result)
+	sm.tracker.ProcessRequest(operation, op_result)
 
-	sm.non_snapshot_size += sm.getOperationSize(&operation)
+	sm.non_snapshot_size += sm.getOperationSize(operation)
 	if sm.maxraftstate != -1 && sm.non_snapshot_size >= sm.maxraftstate {
 		sm.rf.ApplicationSnapshot(sm.CreateSnapshot(), sm.state.LastIndex, sm.state.LastTerm)
 		sm.non_snapshot_size = 0

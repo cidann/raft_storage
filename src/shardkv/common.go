@@ -66,7 +66,7 @@ func NewTransaction(gid, tid int, op raft_helper.Op) *Transaction {
 
 // Put or Append
 type PutAppendArgs struct {
-	raft_helper.OpBase
+	raft_helper.Op
 	Key   string
 	Value string
 	Type  raft_helper.OperationType
@@ -78,7 +78,7 @@ type PutAppendReply struct {
 }
 
 type GetArgs struct {
-	raft_helper.OpBase
+	raft_helper.Op
 	Key string
 }
 
@@ -89,7 +89,7 @@ type GetReply struct {
 }
 
 type NewConfigArgs struct {
-	raft_helper.OpBase
+	raft_helper.Op
 	Config shardmaster.Config
 }
 
@@ -98,7 +98,7 @@ type NewConfigReply struct {
 }
 
 type TransferShardArgs struct {
-	raft_helper.OpBase
+	raft_helper.Op
 	Config shardmaster.Config
 	Shards []Shard
 	Gid    int
@@ -109,7 +109,7 @@ type TransferShardReply struct {
 }
 
 type TransferShardDecisionArgs struct {
-	raft_helper.OpBase
+	raft_helper.Op
 	Config shardmaster.Config
 	Gid    int
 }

@@ -17,8 +17,8 @@ type Op interface {
 	Set_type(OperationType)
 }
 
-func NewOpBase(serial, id int, op_type OperationType) OpBase {
-	return OpBase{
+func NewOpBase(serial, id int, op_type OperationType) *OpBase {
+	return &OpBase{
 		Serial: serial,
 		Sid:    id,
 		Type:   op_type,

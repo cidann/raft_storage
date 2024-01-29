@@ -9,7 +9,6 @@ import (
 	"dsys/labrpc"
 	"dsys/raft"
 	"dsys/raft_helper"
-	"log"
 	"math/big"
 	"time"
 )
@@ -45,20 +44,19 @@ func (ck *Clerk) Query(num int) Config {
 		ck.serial++
 	}()
 	args := QueryArgs{
-		Num:    num,
-		Serial: ck.serial,
-		Sid:    ck.id,
+		Num: num,
+		Op:  raft_helper.NewOpBase(ck.serial, ck.id, QUERY),
 	}
 	for {
 		// try each known server.
 		for _, srv := range ck.servers {
 			var reply QueryReply
-			if raft_helper.Send_for(srv, "ShardMaster.Query", &args, &reply, raft.GetSendTime()) {
+			if raft_helper.Send_for(srv, "ShardMaster.Query", &args, &reply, raft.GetSendTime()*10) {
 				return reply.Config
 			}
 		}
-		log.Println("Failed Query")
-		time.Sleep(100 * time.Millisecond)
+		Debug(dError, "C%d failed Query serial: %d", ck.id, ck.serial)
+		time.Sleep(raft.GetMaxElectionTime())
 	}
 }
 
@@ -68,20 +66,19 @@ func (ck *Clerk) Join(servers map[int][]string) {
 	}()
 	args := JoinArgs{
 		Servers: servers,
-		Serial:  ck.serial,
-		Sid:     ck.id,
+		Op:      raft_helper.NewOpBase(ck.serial, ck.id, JOIN),
 	}
 
 	for {
 		// try each known server.
 		for _, srv := range ck.servers {
 			var reply JoinReply
-			if raft_helper.Send_for(srv, "ShardMaster.Join", &args, &reply, raft.GetSendTime()) {
+			if raft_helper.Send_for(srv, "ShardMaster.Join", &args, &reply, raft.GetSendTime()*10) {
 				return
 			}
 		}
-		log.Println("Failed join")
-		time.Sleep(100 * time.Millisecond)
+		Debug(dError, "C%d failed Join serial: %d", ck.id, ck.serial)
+		time.Sleep(raft.GetMaxElectionTime())
 	}
 }
 
@@ -90,21 +87,20 @@ func (ck *Clerk) Leave(gids []int) {
 		ck.serial++
 	}()
 	args := LeaveArgs{
-		GIDs:   gids,
-		Serial: ck.serial,
-		Sid:    ck.id,
+		GIDs: gids,
+		Op:   raft_helper.NewOpBase(ck.serial, ck.id, LEAVE),
 	}
 
 	for {
 		// try each known server.
 		for _, srv := range ck.servers {
 			var reply LeaveReply
-			if raft_helper.Send_for(srv, "ShardMaster.Leave", &args, &reply, raft.GetSendTime()) {
+			if raft_helper.Send_for(srv, "ShardMaster.Leave", &args, &reply, raft.GetSendTime()*10) {
 				return
 			}
 		}
-		log.Println("Failed Leave")
-		time.Sleep(100 * time.Millisecond)
+		Debug(dError, "C%d failed Leave serial: %d", ck.id, ck.serial)
+		time.Sleep(raft.GetMaxElectionTime())
 	}
 }
 
@@ -113,21 +109,20 @@ func (ck *Clerk) Move(shard int, gid int) {
 		ck.serial++
 	}()
 	args := MoveArgs{
-		Shard:  shard,
-		GID:    gid,
-		Serial: ck.serial,
-		Sid:    ck.id,
+		Shard: shard,
+		GID:   gid,
+		Op:    raft_helper.NewOpBase(ck.serial, ck.id, MOVE),
 	}
 
 	for {
 		// try each known server.
 		for _, srv := range ck.servers {
 			var reply MoveReply
-			if raft_helper.Send_for(srv, "ShardMaster.Move", &args, &reply, raft.GetSendTime()) {
+			if raft_helper.Send_for(srv, "ShardMaster.Move", &args, &reply, raft.GetSendTime()*10) {
 				return
 			}
 		}
-		log.Println("Failed Move")
-		time.Sleep(100 * time.Millisecond)
+		Debug(dError, "C%d failed Move serial: %d", ck.id, ck.serial)
+		time.Sleep(raft.GetMaxElectionTime())
 	}
 }

@@ -76,8 +76,8 @@ func MakeClerk(masters []*labrpc.ClientEnd, make_end func(string) *labrpc.Client
 //
 func (ck *Clerk) Get(key string) string {
 	args := GetArgs{
-		OpBase: raft_helper.NewOpBase(ck.serial, ck.id, GET),
-		Key:    key,
+		Op:  raft_helper.NewOpBase(ck.serial, ck.id, GET),
+		Key: key,
 	}
 	ck.serial += 1
 
@@ -111,10 +111,10 @@ func (ck *Clerk) Get(key string) string {
 //
 func (ck *Clerk) PutAppend(key string, value string, op_type raft_helper.OperationType) {
 	args := PutAppendArgs{
-		OpBase: raft_helper.NewOpBase(ck.serial, ck.id, op_type),
-		Key:    key,
-		Value:  value,
-		Type:   op_type,
+		Op:    raft_helper.NewOpBase(ck.serial, ck.id, op_type),
+		Key:   key,
+		Value: value,
+		Type:  op_type,
 	}
 	ck.serial += 1
 
@@ -141,7 +141,7 @@ func (ck *Clerk) PutAppend(key string, value string, op_type raft_helper.Operati
 
 func (ck *Clerk) NewConfig(gid int, config shardmaster.Config) {
 	args := NewConfigArgs{
-		OpBase: raft_helper.NewOpBase(ck.serial, ck.id, NEW_CONFIG),
+		Op:     raft_helper.NewOpBase(ck.serial, ck.id, NEW_CONFIG),
 		Config: config,
 	}
 	ck.serial += 1
@@ -166,7 +166,7 @@ func (ck *Clerk) NewConfig(gid int, config shardmaster.Config) {
 
 func (ck *Clerk) TransferShards(target_gid, source_gid int, config shardmaster.Config, shards []Shard) {
 	args := TransferShardArgs{
-		OpBase: raft_helper.NewOpBase(ck.serial, ck.id, TRANSFERSHARD),
+		Op:     raft_helper.NewOpBase(ck.serial, ck.id, TRANSFERSHARD),
 		Config: config,
 		Shards: shards,
 		Gid:    source_gid,
@@ -193,7 +193,7 @@ func (ck *Clerk) TransferShards(target_gid, source_gid int, config shardmaster.C
 
 func (ck *Clerk) TransferShardsDecision(target_gid, source_gid int, config shardmaster.Config) {
 	args := TransferShardDecisionArgs{
-		OpBase: raft_helper.NewOpBase(ck.serial, ck.id, TRANSFERSHARDDECISION),
+		Op:     raft_helper.NewOpBase(ck.serial, ck.id, TRANSFERSHARDDECISION),
 		Config: config,
 		Gid:    source_gid,
 	}

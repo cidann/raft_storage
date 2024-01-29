@@ -1,6 +1,7 @@
 package shardmaster
 
 import (
+	"dsys/labgob"
 	"dsys/raft_helper"
 )
 
@@ -24,6 +25,13 @@ import (
 // The number of shards.
 const NShards = 10
 
+const (
+	JOIN raft_helper.OperationType = iota
+	LEAVE
+	MOVE
+	QUERY
+)
+
 // A configuration -- an assignment of shards to groups.
 // Please don't change this.
 type Config struct {
@@ -32,16 +40,9 @@ type Config struct {
 	Groups map[int][]string // gid -> servers[]
 }
 
-const (
-	OK = "OK"
-)
-
-type Err string
-
 type JoinArgs struct {
 	Servers map[int][]string // new GID -> servers mappings
-	Sid     int
-	Serial  int
+	raft_helper.Op
 }
 
 type JoinReply struct {
@@ -49,9 +50,8 @@ type JoinReply struct {
 }
 
 type LeaveArgs struct {
-	GIDs   []int
-	Sid    int
-	Serial int
+	GIDs []int
+	raft_helper.Op
 }
 
 type LeaveReply struct {
@@ -59,10 +59,9 @@ type LeaveReply struct {
 }
 
 type MoveArgs struct {
-	Shard  int
-	GID    int
-	Sid    int
-	Serial int
+	Shard int
+	GID   int
+	raft_helper.Op
 }
 
 type MoveReply struct {
@@ -70,12 +69,23 @@ type MoveReply struct {
 }
 
 type QueryArgs struct {
-	Num    int // desired config number
-	Sid    int
-	Serial int
+	Num int // desired config number
+	raft_helper.Op
 }
 
 type QueryReply struct {
 	raft_helper.ReplyBase
 	Config Config
+}
+
+func init() {
+	labgob.Register(&raft_helper.OpBase{})
+	labgob.Register(&JoinArgs{})
+	labgob.Register(&JoinReply{})
+	labgob.Register(&LeaveArgs{})
+	labgob.Register(&LeaveReply{})
+	labgob.Register(&MoveArgs{})
+	labgob.Register(&MoveReply{})
+	labgob.Register(&QueryArgs{})
+	labgob.Register(&QueryReply{})
 }

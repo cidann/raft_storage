@@ -142,7 +142,7 @@ func (rf *Raft) handleValidVoteReply(args *RequestVoteArgs, reply *RequestVoteRe
 		rf.voteCount += 1
 	}
 	if rf.voteCount > len(rf.peers)/2 {
-		go rf.startLeader()
+		go rf.startLeader(reply.Term)
 	}
 }
 

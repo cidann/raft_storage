@@ -7,22 +7,14 @@ import (
 	"sync/atomic"
 
 	"dsys/labgob"
+	"dsys/raft_helper"
 
 	"dsys/labrpc"
 	"dsys/raft"
 	"dsys/sync_helper"
 )
 
-type OperationType int
-
-const (
-	JOIN OperationType = iota
-	LEAVE
-	MOVE
-	QUERY
-)
-
-var typeMap = map[OperationType]string{
+var typeMap = map[raft_helper.OperationType]string{
 	JOIN:  "JOIN",
 	LEAVE: "LEAVE",
 	MOVE:  "MOVE",
@@ -43,13 +35,6 @@ type ShardMaster struct {
 	dead              int64
 }
 
-type Op struct {
-	Serial int
-	Sid    int
-	Type   OperationType
-	Args   interface{}
-}
-
 type StopDaemon int
 
 func (sm *ShardMaster) GetLeader() (int, bool) {
@@ -68,9 +53,9 @@ func (sm *ShardMaster) Kill() {
 	defer sync_helper.Unlock(sm, false)
 	Debug(dDrop, "S%d kill shardmaster", sm.me)
 	sm.rf.Kill()
-	atomic.StoreInt64(&sm.dead, 1)
 
 	sync_helper.UnlockUntilChanSend(sm, sm.applyCh, raft.ApplyMsg{Command: StopDaemon(1)})
+	atomic.StoreInt64(&sm.dead, 1)
 	for k := range sm.tracker.request_chan {
 		sm.tracker.DiscardRequestFrom(k)
 	}
@@ -96,7 +81,6 @@ func StartServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persister)
 	sm := new(ShardMaster)
 	sm.me = me
 
-	labgob.Register(Op{})
 	sm.applyCh = make(chan raft.ApplyMsg)
 	sm.rf = raft.Make(servers, me, persister, sm.applyCh)
 	sm.tracker = NewRequestTracker()
@@ -142,9 +126,9 @@ func (sm *ShardMaster) LoadSnapshot(snapshot []byte) {
 	}
 }
 
-func (sm *ShardMaster) getOperationSize(operation *Op) int {
+func (sm *ShardMaster) getOperationSize(operation raft_helper.Op) int {
 	buf := new(bytes.Buffer)
 	encoder := labgob.NewEncoder(buf)
-	encoder.Encode(*operation)
+	encoder.Encode(operation)
 	return len(buf.Bytes())
 }

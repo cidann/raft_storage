@@ -66,7 +66,7 @@ func (ck *Clerk) Get(key string) string {
 		target_server, visited_all := ck.tracker.Next()
 		//client server index mismatch Debug(dClient, "S%d <- C%d try to Get Serial: %d Key:%s", target_server, ck.id, args.Serial, args.Key)
 		result_chan := GetChanForFunc[bool](func() { ck.servers[target_server].Call("KVServer.Get", &args, &reply) })
-		timeout_chan := GetChanForTime[bool](raft.GetSendTime())
+		timeout_chan := GetChanForTime[bool](raft.GetSendTime() * 10)
 		select {
 		case <-result_chan:
 			if reply.Success {
@@ -113,7 +113,7 @@ func (ck *Clerk) PutAppend(key string, value string, op OperationType) {
 		target_server, visited_all := ck.tracker.Next()
 		//client server index mismatch Debug(dClient, "S%d <- C%d try to PutAppend Serial: %d Key:%s", target_server, ck.id, args.Serial, args.Key)
 		result_chan := GetChanForFunc[bool](func() { ck.servers[target_server].Call("KVServer.PutAppend", &args, &reply) })
-		timeout_chan := GetChanForTime[bool](raft.GetSendTime())
+		timeout_chan := GetChanForTime[bool](raft.GetSendTime() * 10)
 		select {
 		case <-result_chan:
 			if reply.Success {
