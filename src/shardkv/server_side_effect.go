@@ -6,6 +6,31 @@ type SideEffect interface {
 	ApplySideEffect(kv *ShardKV)
 }
 
+type StartConfigProposal struct {
+	config     shardmaster.Config
+	source_gid int
+}
+
+type SendParticipantConfigDecision struct {
+	commit       bool
+	config_num   int
+	owned_shards []int
+	source_gid   int
+	target_gid   int
+}
+
+type SendCoordinatorConfigDecision struct {
+	commit             bool
+	config             shardmaster.Config
+	new_created_shards map[int][]int
+	source_gid         int
+}
+
+type SendConfigAck struct {
+	config_num int
+	source_gid int
+}
+
 type SendTransferDecision struct {
 	config     shardmaster.Config
 	source_gid int
@@ -55,6 +80,39 @@ func NewSendTransferShard(gid_shards map[int][]Shard, config shardmaster.Config,
 	return &SendTransferShards{
 		gid_shards: gid_shards,
 		config:     config,
+		source_gid: source_gid,
+	}
+}
+
+func NewStartConfigProposal(config shardmaster.Config, source_gid int) *StartConfigProposal {
+	return &StartConfigProposal{
+		config:     config,
+		source_gid: source_gid,
+	}
+}
+
+func NewSendParticipantConfigDecision(commit bool, config_num int, owned_shards []int, target_gid, source_gid int) *SendParticipantConfigDecision {
+	return &SendParticipantConfigDecision{
+		commit:       commit,
+		config_num:   config_num,
+		owned_shards: owned_shards,
+		source_gid:   source_gid,
+		target_gid:   target_gid,
+	}
+}
+
+func NewSendCoordinatorConfigDecision(commit bool, config shardmaster.Config, new_created_shards map[int][]int, source_gid int) *SendCoordinatorConfigDecision {
+	return &SendCoordinatorConfigDecision{
+		commit:             commit,
+		config:             config,
+		new_created_shards: new_created_shards,
+		source_gid:         source_gid,
+	}
+}
+
+func NewSendConfigAck(config_num int, source_gid int) *SendConfigAck {
+	return &SendConfigAck{
+		config_num: config_num,
 		source_gid: source_gid,
 	}
 }

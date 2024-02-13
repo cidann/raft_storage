@@ -1,6 +1,7 @@
 package shardkv
 
 import (
+	"dsys/labgob"
 	"dsys/raft_helper"
 	"dsys/shardmaster"
 )
@@ -37,33 +38,6 @@ const (
 	TRANSFERSHARDDECISION
 )
 
-type TransactionIdPair struct {
-	Gid int
-	Tid int
-}
-type Transaction struct {
-	raft_helper.Op
-	TransactionIdPair
-}
-
-func (txn *Transaction) Get_id_pair() TransactionIdPair {
-	return txn.TransactionIdPair
-}
-
-func NewTransactionIdPair(gid, tid int) *TransactionIdPair {
-	return &TransactionIdPair{
-		Gid: gid,
-		Tid: tid,
-	}
-}
-
-func NewTransaction(gid, tid int, op raft_helper.Op) *Transaction {
-	return &Transaction{
-		Op:                op,
-		TransactionIdPair: *NewTransactionIdPair(gid, tid),
-	}
-}
-
 // Put or Append
 type PutAppendArgs struct {
 	raft_helper.Op
@@ -94,7 +68,43 @@ type NewConfigArgs struct {
 }
 
 type NewConfigReply struct {
-	raft_helper.ReplyBase
+	raft_helper.Reply
+}
+type PrepareConfigArgs struct {
+	raft_helper.Op
+	Config shardmaster.Config
+}
+
+type PrepareConfigReply struct {
+	raft_helper.Reply
+}
+
+type ParticipantDecisionConfigArgs struct {
+	raft_helper.Op
+	Config       shardmaster.Config
+	Owned_shards []int
+	Commit       bool
+}
+type ParticipantDecisionConfigReply struct {
+	raft_helper.Reply
+}
+
+type CoordinatorDecisionConfigArgs struct {
+	raft_helper.Op
+	Config    shardmaster.Config
+	NewShards []int
+	Commit    bool
+}
+type CoordinatorDecisionConfigReply struct {
+	raft_helper.Reply
+}
+
+type AckConfigArgs struct {
+	raft_helper.Op
+	Config shardmaster.Config
+}
+type AckConfigReply struct {
+	raft_helper.Reply
 }
 
 type TransferShardArgs struct {
@@ -105,7 +115,7 @@ type TransferShardArgs struct {
 }
 
 type TransferShardReply struct {
-	raft_helper.ReplyBase
+	raft_helper.Reply
 }
 
 type TransferShardDecisionArgs struct {
@@ -115,7 +125,7 @@ type TransferShardDecisionArgs struct {
 }
 
 type TransferShardDecisionReply struct {
-	raft_helper.ReplyBase
+	raft_helper.Reply
 }
 
 func GetKeyVal(operation raft_helper.Op) (string, string) {
@@ -132,4 +142,27 @@ func GetKeyVal(operation raft_helper.Op) (string, string) {
 	}
 
 	return key, val
+}
+
+func init() {
+	labgob.Register(&raft_helper.OpBase{})
+	labgob.Register(&raft_helper.ReplyBase{})
+	labgob.Register(&GetArgs{})
+	labgob.Register(&GetReply{})
+	labgob.Register(&PutAppendArgs{})
+	labgob.Register(&PutAppendReply{})
+	labgob.Register(&NewConfigArgs{})
+	labgob.Register(&NewConfigReply{})
+	labgob.Register(&PrepareConfigArgs{})
+	labgob.Register(&PrepareConfigReply{})
+	labgob.Register(&ParticipantDecisionConfigArgs{})
+	labgob.Register(&ParticipantDecisionConfigReply{})
+	labgob.Register(&CoordinatorDecisionConfigArgs{})
+	labgob.Register(&CoordinatorDecisionConfigReply{})
+	labgob.Register(&AckConfigArgs{})
+	labgob.Register(&AckConfigReply{})
+	labgob.Register(&TransferShardArgs{})
+	labgob.Register(&TransferShardReply{})
+	labgob.Register(&TransferShardDecisionArgs{})
+	labgob.Register(&TransferShardDecisionReply{})
 }

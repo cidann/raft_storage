@@ -34,6 +34,7 @@ const (
 
 // A configuration -- an assignment of shards to groups.
 // Please don't change this.
+//Invariant: 0 is invalid Gid
 type Config struct {
 	Num    int              // config number
 	Shards [NShards]int     // shard -> gid

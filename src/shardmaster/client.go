@@ -10,16 +10,26 @@ import (
 	"dsys/raft"
 	"dsys/raft_helper"
 	"math/big"
+	"sync"
 	"time"
 )
 
 var id_counter int = 0
+var id_counter_lock = sync.Mutex{}
+
+func get_id() int {
+	id_counter_lock.Lock()
+	defer id_counter_lock.Unlock()
+	id := id_counter
+	id_counter += 1
+
+	return id
+}
 
 type Clerk struct {
 	servers []*labrpc.ClientEnd
-	// Your data here.
-	id     int
-	serial int
+	id      int
+	serial  int
 }
 
 func nrand() int64 {
@@ -30,13 +40,11 @@ func nrand() int64 {
 }
 
 func MakeClerk(servers []*labrpc.ClientEnd) *Clerk {
-	ck := new(Clerk)
-	ck.servers = servers
-	ck.serial = 0
-	ck.id = id_counter
-
-	id_counter++
-	return ck
+	return &Clerk{
+		servers: servers,
+		id:      get_id(),
+		serial:  0,
+	}
 }
 
 func (ck *Clerk) Query(num int) Config {
@@ -51,7 +59,7 @@ func (ck *Clerk) Query(num int) Config {
 		// try each known server.
 		for _, srv := range ck.servers {
 			var reply QueryReply
-			if raft_helper.Send_for(srv, "ShardMaster.Query", &args, &reply, raft.GetSendTime()*10) {
+			if raft_helper.Send_for(srv, "ShardMaster.Query", &args, &reply, raft.GetSendTime()*20) {
 				return reply.Config
 			}
 		}
@@ -73,7 +81,7 @@ func (ck *Clerk) Join(servers map[int][]string) {
 		// try each known server.
 		for _, srv := range ck.servers {
 			var reply JoinReply
-			if raft_helper.Send_for(srv, "ShardMaster.Join", &args, &reply, raft.GetSendTime()*10) {
+			if raft_helper.Send_for(srv, "ShardMaster.Join", &args, &reply, raft.GetSendTime()*20) {
 				return
 			}
 		}
@@ -95,7 +103,7 @@ func (ck *Clerk) Leave(gids []int) {
 		// try each known server.
 		for _, srv := range ck.servers {
 			var reply LeaveReply
-			if raft_helper.Send_for(srv, "ShardMaster.Leave", &args, &reply, raft.GetSendTime()*10) {
+			if raft_helper.Send_for(srv, "ShardMaster.Leave", &args, &reply, raft.GetSendTime()*20) {
 				return
 			}
 		}
@@ -118,7 +126,7 @@ func (ck *Clerk) Move(shard int, gid int) {
 		// try each known server.
 		for _, srv := range ck.servers {
 			var reply MoveReply
-			if raft_helper.Send_for(srv, "ShardMaster.Move", &args, &reply, raft.GetSendTime()*10) {
+			if raft_helper.Send_for(srv, "ShardMaster.Move", &args, &reply, raft.GetSendTime()*20) {
 				return
 			}
 		}

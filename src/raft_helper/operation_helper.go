@@ -17,6 +17,21 @@ type Op interface {
 	Set_type(OperationType)
 }
 
+type ReplyBase struct {
+	Success    bool
+	LeaderHint int
+	OutDated   bool //this is needed since a outdated request might close the channel of more up to date request
+}
+
+type Reply interface {
+	Get_success() bool
+	Get_leaderHint() int
+	Get_outDated() bool
+	Set_success(bool)
+	Set_leaderHint(int)
+	Set_outDated(bool)
+}
+
 func NewOpBase(serial, id int, op_type OperationType) *OpBase {
 	return &OpBase{
 		Serial: serial,
@@ -47,4 +62,32 @@ func (op *OpBase) Set_sid(sid int) {
 
 func (op *OpBase) Set_type(opType OperationType) {
 	op.Type = opType
+}
+
+func NewReplyBase() *ReplyBase {
+	return &ReplyBase{}
+}
+
+func (r *ReplyBase) Get_success() bool {
+	return r.Success
+}
+
+func (r *ReplyBase) Get_leaderHint() int {
+	return r.LeaderHint
+}
+
+func (r *ReplyBase) Get_outDated() bool {
+	return r.OutDated
+}
+
+func (r *ReplyBase) Set_success(success bool) {
+	r.Success = success
+}
+
+func (r *ReplyBase) Set_leaderHint(leaderHint int) {
+	r.LeaderHint = leaderHint
+}
+
+func (r *ReplyBase) Set_outDated(outDated bool) {
+	r.OutDated = outDated
 }

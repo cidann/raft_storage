@@ -14,8 +14,12 @@ func (kv *ShardKV) Get(args *GetArgs, reply *GetReply) {
 		reply.LeaderHint = leader
 		return
 	}
+	if !kv.state.OwnShard(key2shard(args.Key)) {
+		reply.Success = false
+		return
+	}
 
-	Debug(dClient, "S%d <- C%d Received Get Serial:%d Key:%s as Leader true#%d", kv.me, args.Sid, args.Serial, args.Key, cur_serial)
+	Debug(dClient, "S%d <- C%d Received Get Serial:%d Key:%s as Leader true#%d", kv.me, args.Get_sid(), args.Get_serial(), args.Key, cur_serial)
 
 	operation := args
 	result_chan := make(chan any, 1)
@@ -34,6 +38,6 @@ func (kv *ShardKV) Get(args *GetArgs, reply *GetReply) {
 	}
 	UnlockUntilChanReceive(kv, GetChanForFunc[any](start_and_wait))
 	reply.Success = true
-	Debug(dClient, "S%d <- C%d Get Serial:%d Key/Val:{%s:%s} done true#%d Outdated:%t", kv.me, args.Sid, args.Serial, args.Key, reply.Value, cur_serial, reply.OutDated)
+	Debug(dClient, "S%d <- C%d Get Serial:%d Key/Val:{%s:%s} done true#%d Outdated:%t", kv.me, args.Get_sid(), args.Get_serial(), args.Key, reply.Value, cur_serial, reply.OutDated)
 
 }

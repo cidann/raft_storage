@@ -11,6 +11,7 @@ package shardkv
 import (
 	"crypto/rand"
 	"math/big"
+	"sync"
 	"time"
 
 	"dsys/labrpc"
@@ -23,12 +24,20 @@ type Clerk struct {
 	sm       *shardmaster.Clerk
 	config   shardmaster.Config
 	make_end func(string) *labrpc.ClientEnd
-	// You will have to modify this struct.
-	id     int
-	serial int
+	id       int
+	serial   int
 }
 
 var id_counter int = 0
+var id_counter_lock = sync.Mutex{}
+
+func get_id() int {
+	id_counter_lock.Lock()
+	defer id_counter_lock.Unlock()
+	id := id_counter
+	id_counter += 1
+	return id
+}
 
 //
 // which shard is a key in?
@@ -61,11 +70,14 @@ func nrand() int64 {
 // send RPCs.
 //
 func MakeClerk(masters []*labrpc.ClientEnd, make_end func(string) *labrpc.ClientEnd) *Clerk {
-	ck := new(Clerk)
-	ck.sm = shardmaster.MakeClerk(masters)
-	ck.make_end = make_end
 	// You'll have to add code here.
-	return ck
+	return &Clerk{
+		sm:       shardmaster.MakeClerk(masters),
+		config:   shardmaster.Config{},
+		make_end: make_end,
+		id:       get_id(),
+		serial:   0,
+	}
 }
 
 //
@@ -89,12 +101,13 @@ func (ck *Clerk) Get(key string) string {
 			for si := 0; si < len(servers); si++ {
 				var reply GetReply
 				srv := ck.make_end(servers[si])
-				if raft_helper.Send_for(srv, "ShardKV.Get", &args, &reply, raft.GetSendTime()) {
+				if raft_helper.Send_for(srv, "ShardKV.Get", &args, &reply, raft.GetSendTime()*10) {
 					return reply.Value
 				} else if reply.Err == ErrWrongGroup {
 					break
 				}
 				// ... not ok, or ErrWrongLeader
+				Debug(dError, "C%d failed get serial: %d success/outdated: %t/%t", ck.id, ck.serial, reply.Success, reply.OutDated)
 			}
 		}
 		time.Sleep(100 * time.Millisecond)
@@ -102,7 +115,6 @@ func (ck *Clerk) Get(key string) string {
 		ck.config = ck.sm.Query(-1)
 	}
 
-	return ""
 }
 
 //
@@ -125,12 +137,13 @@ func (ck *Clerk) PutAppend(key string, value string, op_type raft_helper.Operati
 			for si := 0; si < len(servers); si++ {
 				srv := ck.make_end(servers[si])
 				var reply PutAppendReply
-				if raft_helper.Send_for(srv, "ShardKV.PutAppend", &args, &reply, raft.GetSendTime()) {
+				if raft_helper.Send_for(srv, "ShardKV.PutAppend", &args, &reply, raft.GetSendTime()*10) {
 					return
 				} else if reply.Err == ErrWrongGroup {
 					break
 				}
 				// ... not ok, or ErrWrongLeader
+				Debug(dError, "C%d failed put serial: %d success/outdated: %t/%t", ck.id, ck.serial, reply.Success, reply.OutDated)
 			}
 		}
 		time.Sleep(100 * time.Millisecond)
@@ -151,10 +164,11 @@ func (ck *Clerk) NewConfig(gid int, config shardmaster.Config) {
 			for si := 0; si < len(servers); si++ {
 				srv := ck.make_end(servers[si])
 				var reply NewConfigReply
-				if raft_helper.Send_for(srv, "ShardKV.NewConfig", &args, &reply, raft.GetSendTime()) {
+				if raft_helper.Send_for(srv, "ShardKV.NewConfig", &args, &reply, raft.GetSendTime()*10) {
 					return
 				}
 				// ... not ok, or ErrWrongLeader
+				Debug(dError, "C%d failed new config serial: %d success/outdated: %t/%t", ck.id, ck.serial, reply.Success, reply.OutDated)
 			}
 		}
 		time.Sleep(100 * time.Millisecond)
@@ -178,10 +192,11 @@ func (ck *Clerk) TransferShards(target_gid, source_gid int, config shardmaster.C
 			for si := 0; si < len(servers); si++ {
 				srv := ck.make_end(servers[si])
 				var reply TransferShardReply
-				if raft_helper.Send_for(srv, "ShardKV.TransferShard", &args, &reply, raft.GetSendTime()) {
+				if raft_helper.Send_for(srv, "ShardKV.TransferShard", &args, &reply, raft.GetSendTime()*10) {
 					return
 				}
 				// ... not ok, or ErrWrongLeader
+				Debug(dError, "C%d failed transfer shard serial: %d success/outdated: %t/%t", ck.id, ck.serial, reply.Success, reply.OutDated)
 			}
 		}
 		time.Sleep(100 * time.Millisecond)
@@ -204,10 +219,11 @@ func (ck *Clerk) TransferShardsDecision(target_gid, source_gid int, config shard
 			for si := 0; si < len(servers); si++ {
 				srv := ck.make_end(servers[si])
 				var reply TransferShardDecisionReply
-				if raft_helper.Send_for(srv, "ShardKV.TransferShard", &args, &reply, raft.GetSendTime()) {
+				if raft_helper.Send_for(srv, "ShardKV.TransferShard", &args, &reply, raft.GetSendTime()*10) {
 					return
 				}
 				// ... not ok, or ErrWrongLeader
+				Debug(dError, "C%d failed transfer shard decision serial: %d success/outdated: %t/%t", ck.id, ck.serial, reply.Success, reply.OutDated)
 			}
 		}
 		time.Sleep(100 * time.Millisecond)

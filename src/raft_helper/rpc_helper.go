@@ -6,12 +6,6 @@ import (
 	"time"
 )
 
-type ReplyBase struct {
-	Success    bool
-	LeaderHint int
-	OutDated   bool //this is needed since a outdated request might close the channel of more up to date request
-}
-
 type ClerkReply interface {
 	Is_valid() bool
 }

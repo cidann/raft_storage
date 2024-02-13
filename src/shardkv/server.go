@@ -6,6 +6,7 @@ import (
 	"dsys/labgob"
 	"dsys/raft_helper"
 	"dsys/shardmaster"
+	"dsys/sync_helper"
 	"fmt"
 	"sync"
 	"sync/atomic"
@@ -134,6 +135,26 @@ func (kv *ShardKV) Unlock() {
 
 func (kv *ShardKV) Identity() string {
 	return fmt.Sprintf("KV server: [%d]", kv.me)
+}
+
+func (kv *ShardKV) StartSetOp(args raft_helper.Op, reply raft_helper.Reply) bool {
+	success := true
+
+	result_chan := make(chan any, 1)
+	kv.state.RecordRequestGeneral(args, result_chan)
+	start_and_wait := func() {
+		kv.rf.Start(args)
+		var _, received = sync_helper.WaitUntilChanReceive(result_chan)
+		reply.Set_outDated(!received)
+		success = received
+	}
+	sync_helper.UnlockUntilChanReceive(kv, sync_helper.GetChanForFunc[any](start_and_wait))
+
+	return success
+}
+
+func (kv *ShardKV) GetId() int {
+	return kv.me
 }
 
 func (kv *ShardKV) CreateSnapshot() []byte {
