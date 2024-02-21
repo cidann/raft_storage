@@ -72,7 +72,8 @@ type NewConfigReply struct {
 }
 type PrepareConfigArgs struct {
 	raft_helper.Op
-	Config shardmaster.Config
+	Config          shardmaster.Config
+	Coordinator_gid int
 }
 
 type PrepareConfigReply struct {
@@ -81,9 +82,10 @@ type PrepareConfigReply struct {
 
 type ParticipantDecisionConfigArgs struct {
 	raft_helper.Op
-	Config       shardmaster.Config
-	Owned_shards []int
-	Commit       bool
+	Config          shardmaster.Config
+	Owned_shards    []int
+	Participant_gid int
+	Commit          bool
 }
 type ParticipantDecisionConfigReply struct {
 	raft_helper.Reply
@@ -91,9 +93,10 @@ type ParticipantDecisionConfigReply struct {
 
 type CoordinatorDecisionConfigArgs struct {
 	raft_helper.Op
-	Config    shardmaster.Config
-	NewShards []int
-	Commit    bool
+	Config          shardmaster.Config
+	NewShards       []int
+	Coordinator_gid int
+	Commit          bool
 }
 type CoordinatorDecisionConfigReply struct {
 	raft_helper.Reply
@@ -101,9 +104,19 @@ type CoordinatorDecisionConfigReply struct {
 
 type AckConfigArgs struct {
 	raft_helper.Op
-	Config shardmaster.Config
+	Participant_gid int
+	Config          shardmaster.Config
 }
 type AckConfigReply struct {
+	raft_helper.Reply
+}
+
+type AckDoneArgs struct {
+	raft_helper.Op
+	Config shardmaster.Config
+}
+
+type AckDoneReply struct {
 	raft_helper.Reply
 }
 

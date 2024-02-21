@@ -15,47 +15,19 @@ type Shard struct {
 	Ownership    ShardOwnership
 }
 
-//Maybe this can be replaced with general transaction
-type ConfigManager struct {
-	LatestConfig shardmaster.Config
-	StagedConfig shardmaster.Config
-	Participants map[int]bool //if participants can commit
-	Coordinator  int          //coordinator gid
-}
-
 type ServerState struct {
 	Shards         map[int]*Shard
 	GeneralTracker RequestTracker
 	LastIndex      int
 	LastTerm       int
 	Gid            int
-	Config_manager ConfigManager
+	Config_manager *ConfigManager
 }
 
 const (
 	OWN ShardOwnership = iota
 	DONT_OWN
 )
-
-func NewConfigManager() *ConfigManager {
-	return &ConfigManager{}
-}
-
-func (config_manager *ConfigManager) GetCommitedConfig() shardmaster.Config {
-	return config_manager.LatestConfig
-}
-
-func (config_manager *ConfigManager) GetStagedConfig() shardmaster.Config {
-	return config_manager.StagedConfig
-}
-
-func (config_manager *ConfigManager) SetLatestConfig(config shardmaster.Config) {
-	config_manager.LatestConfig = config
-}
-
-func (config_manager *ConfigManager) SetStagedConfig(config shardmaster.Config) {
-	config_manager.StagedConfig = config
-}
 
 func NewServerState(gid int) *ServerState {
 	return &ServerState{
@@ -64,7 +36,7 @@ func NewServerState(gid int) *ServerState {
 		LastIndex:      0,
 		LastTerm:       0,
 		Gid:            gid,
-		Config_manager: *NewConfigManager(),
+		Config_manager: NewConfigManager(),
 	}
 }
 
@@ -93,44 +65,6 @@ func (ss *ServerState) DispatchOp(operation raft_helper.Op) SideEffect {
 	default:
 		panic("Unknown operation type")
 	}
-}
-
-func (ss *ServerState) HandleNewConfig(operation *NewConfigArgs) SideEffect {
-	var side_effect SideEffect = NewNoSideEffect()
-	if operation.Config.Num >= ss.Config_manager.GetStagedConfig().Num {
-		ss.Config_manager.SetStagedConfig(operation.Config)
-		side_effect = NewStartConfigProposal(operation.Config, ss.Gid)
-	} else {
-
-	}
-	return side_effect
-}
-
-func (ss *ServerState) HandlePrepareConfig(operation *PrepareConfigArgs) SideEffect {
-	var side_effect SideEffect = NewNoSideEffect()
-	commit := false
-	if operation.Config.Num >= ss.Config_manager.GetStagedConfig().Num {
-		ss.Config_manager.SetStagedConfig(operation.Config)
-		commit = true
-	} else {
-		commit = false
-	}
-	side_effect = NewSendParticipantConfigDecision(commit, operation.Config.Num, ss.GetOwnedShards(), ss.Config_manager.Coordinator, ss.Gid)
-
-	return side_effect
-}
-
-func (ss *ServerState) HandleParticipantDecisionConfig(operation *ParticipantDecisionConfigArgs) SideEffect {
-	var side_effect SideEffect = NewNoSideEffect()
-	if operation.Config.Num == ss.Config_manager.GetStagedConfig().Num {
-
-	} else if operation.Config.Num < ss.Config_manager.GetStagedConfig().Num {
-
-	} else {
-
-	}
-
-	return side_effect
 }
 
 func (ss *ServerState) ApplyKVState(operation raft_helper.Op) SideEffect {
@@ -259,12 +193,12 @@ func (ss *ServerState) ProcessRequest(op raft_helper.Op, op_result any) {
 
 func (ss *ServerState) HaveShard(shardNum int) bool {
 	shard, ok := ss.Shards[shardNum]
-	return ok && shard.Ownership == OWN && ss.Config_manager.GetCommitedConfig().Shards[shardNum] == ss.Gid
+	return ok && shard.Ownership == OWN && ss.LatestConfig.Shards[shardNum] == ss.Gid
 }
 
 func (ss *ServerState) GetOwnedShards() []int {
 	owned_shard_nums := []int{}
-	for shard_num, gid := range ss.Config_manager.LatestConfig.Shards {
+	for shard_num, gid := range ss.LatestConfig.Shards {
 		if ss.Gid == gid {
 			owned_shard_nums = append(owned_shard_nums, shard_num)
 		}

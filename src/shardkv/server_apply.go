@@ -28,9 +28,7 @@ func (kv *ShardKV) ApplyDaemon() {
 func (kv *ShardKV) handleOperation(msg *raft.ApplyMsg) {
 	operation := msg.Command.(raft_helper.Op)
 	var side_effect SideEffect = NewNoSideEffect()
-	if !kv.state.IsAlreadyProcessed(operation) || operation.Get_type() == GET {
-		side_effect = kv.state.DispatchOp(operation)
-	}
+	kv.state.DispatchOp(operation)
 	kv.state.SetLatest(msg.Index(), msg.Term())
 	side_effect.ApplySideEffect(kv)
 

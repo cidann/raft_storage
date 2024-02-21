@@ -11,6 +11,7 @@ var true_serial_prepare_config int64 = 0
 var true_serial_participant_decision_config int64 = 0
 var true_serial_coordinator_decision_config int64 = 0
 var true_serial_ack_config int64 = 0
+var true_serial_ack_done int64 = 0
 
 func (kv *ShardKV) NewConfig(args *NewConfigArgs, reply *NewConfigReply) {
 	cur_serial := atomic.AddInt64(&true_serial_new_config, 1)
@@ -56,6 +57,15 @@ func (kv *ShardKV) AckConfig(args *AckConfigArgs, reply *AckConfigReply) {
 	raft_helper.HandleStateChangeRPC(kv, "AckConfig", args, reply)
 
 	Debug(dClient, "S%d <- C%d AckConfig Config  Serial:%d done true#%d Outdated:%t", kv.me, args.Get_sid(), args.Get_serial(), cur_serial, reply.Get_outDated())
+}
+
+func (kv *ShardKV) AckDone(args *AckDoneArgs, reply *AckDoneReply) {
+	cur_serial := atomic.AddInt64(&true_serial_ack_done, 1)
+
+	Debug(dClient, "S%d <- C%d Received AckDone Serial:%d as Leader true#%d", kv.me, args.Get_sid(), args.Get_serial(), cur_serial)
+	raft_helper.HandleStateChangeRPC(kv, "AckDone", args, reply)
+
+	Debug(dClient, "S%d <- C%d AckDone Config  Serial:%d done true#%d Outdated:%t", kv.me, args.Get_sid(), args.Get_serial(), cur_serial, reply.Get_outDated())
 }
 
 func (kv *ShardKV) ConfigPullDaemon() {
