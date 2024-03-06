@@ -37,12 +37,10 @@ type ShardKV struct {
 	dead              int32 // set by Kill()
 }
 
-//
 // the tester calls Kill() when a ShardKV instance won't
 // be needed again. you are not required to do anything
 // in Kill(), but it might be convenient to (for example)
 // turn off debug output from this instance.
-//
 func (kv *ShardKV) Kill() {
 	Debug(dDrop, "S%d kill kv", kv.me)
 	kv.rf.Kill()
@@ -58,7 +56,6 @@ func (kv *ShardKV) killed() bool {
 	return z == 1
 }
 
-//
 // servers[] contains the ports of the servers in this group.
 //
 // me is the index of the current server in servers[].
@@ -85,7 +82,6 @@ func (kv *ShardKV) killed() bool {
 //
 // StartServer() must return quickly, so it should start goroutines
 // for any long-running work.
-//
 func StartServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persister, maxraftstate int, gid int, masters []*labrpc.ClientEnd, make_end func(string) *labrpc.ClientEnd) *ShardKV {
 	// call labgob.Register on structures you want
 	// Go's RPC library to marshall/unmarshall.
@@ -105,14 +101,22 @@ func StartServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persister,
 	kv.non_snapshot_size = 0
 	kv.applyCh = make(chan raft.ApplyMsg, 100)
 	kv.rf = raft.Make(servers, me, persister, kv.applyCh)
+
 	kv.state = NewServerState(kv.gid)
 	kv.num_raft = len(servers)
 	kv.LoadSnapshot(persister.ReadSnapshot())
+	Debug(dInit, "G%d server created", gid)
 
-	go kv.ApplyDaemon()
-	go kv.ConfigPullDaemon()
+	go kv.InitDaemon()
 
 	return kv
+}
+
+func (kv *ShardKV) InitDaemon() {
+	kv.InitConfig()
+	go kv.ApplyDaemon()
+	go kv.ConfigPullDaemon()
+	go kv.PersistNetDaemon()
 }
 
 func (kv *ShardKV) GetLeader() (int, bool) {
@@ -155,6 +159,10 @@ func (kv *ShardKV) StartSetOp(args raft_helper.Op, reply raft_helper.Reply) bool
 
 func (kv *ShardKV) GetId() int {
 	return kv.me
+}
+
+func (kv *ShardKV) Initialized() bool {
+	return kv.state != nil && kv.state.LatestConfig != nil && kv.state.LatestConfig.Num != 0
 }
 
 func (kv *ShardKV) CreateSnapshot() []byte {

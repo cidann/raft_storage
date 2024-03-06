@@ -331,6 +331,8 @@ func (cfg *config) leavem(gis []int) {
 	for _, g := range gis {
 		gids = append(gids, cfg.groups[g].gid)
 	}
+
+	fmt.Printf(" ========================================== leave gids:%v \n", gids)
 	cfg.mck.Leave(gids)
 }
 

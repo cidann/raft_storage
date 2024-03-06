@@ -58,6 +58,14 @@ func (tracker *RequestTracker) DiscardAll() {
 	}
 }
 
+func (tracker *RequestTracker) Copy() *RequestTracker {
+	return &RequestTracker{
+		Latest_applied: CopyMap[int, int](tracker.Latest_applied),
+		Request_serial: CopyMap[int, int](tracker.Request_serial),
+		request_chan:   CopyMap[int, chan any](tracker.request_chan),
+	}
+}
+
 /*
 func (tracker *RequestTracker) Lock() {
 	tracker.mu.Lock()

@@ -30,6 +30,11 @@ func UnlockUntilChanSend[T any](obj Lockable, c chan T, val T) T {
 	return WaitUntilChanSend(c, val)
 }
 
+func UnlockUntilFunc(obj Lockable, f func()) {
+	result_chan := GetChanForFunc[any](f)
+	UnlockUntilChanReceive(obj, result_chan)
+}
+
 func GetChanForFunc[T any](f func()) chan T {
 	c := make(chan T, 1)
 	go func() {

@@ -2,6 +2,7 @@ package raft_helper
 
 import (
 	"dsys/sync_helper"
+	"time"
 )
 
 type StateMachine interface {
@@ -9,12 +10,16 @@ type StateMachine interface {
 	GetLeader() (int, bool)
 	GetId() int
 	StartSetOp(Op, Reply) bool
+	Initialized() bool
 }
 
 func HandleStateChangeRPC(machine StateMachine, name string, args Op, reply Reply) {
 	sync_helper.Lock(machine, lock_trace, name)
 	defer sync_helper.Unlock(machine, lock_trace, name)
-
+	if !machine.Initialized() {
+		sync_helper.UnlockAndSleepFor(machine, time.Millisecond*100)
+		return
+	}
 	if leader, isLeader := machine.GetLeader(); !isLeader {
 		reply.Set_success(false)
 		reply.Set_leaderHint(leader)

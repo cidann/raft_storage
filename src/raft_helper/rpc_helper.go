@@ -6,31 +6,18 @@ import (
 	"time"
 )
 
-type ClerkReply interface {
-	Is_valid() bool
+func Is_valid(reply Reply) bool {
+	return reply.Get_success() && !reply.Get_outDated()
 }
 
-type ClerkReplyGet[T any] interface {
-	get_result() T
-	ClerkReply
-}
-
-type ClerkReplyPut interface {
-	ClerkReply
-}
-
-func (reply *ReplyBase) Is_valid() bool {
-	return reply.Success && !reply.OutDated
-}
-
-func Send_for(server *labrpc.ClientEnd, rpc_name string, args Op, reply ClerkReply, timeout time.Duration) bool {
+func Send_for(server *labrpc.ClientEnd, rpc_name string, args Op, reply Reply, timeout time.Duration) bool {
 	result_chan := sync_helper.GetChanForFunc[bool](func() { server.Call(rpc_name, args, reply) })
 	timeout_chan := sync_helper.GetChanForTime[bool](timeout)
 	var res bool = false
 
 	select {
 	case <-result_chan:
-		if reply.Is_valid() {
+		if Is_valid(reply) {
 			res = true
 		}
 	case <-timeout_chan:

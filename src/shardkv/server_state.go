@@ -6,13 +6,13 @@ import (
 	"dsys/shardmaster"
 )
 
-type ShardOwnership int
+type ShardStatus int
 
 type Shard struct {
 	ShardNum     int
 	KvState      map[string]string
 	ShardTracker RequestTracker
-	Ownership    ShardOwnership
+	Status       ShardStatus
 }
 
 type ServerState struct {
@@ -21,23 +21,62 @@ type ServerState struct {
 	LastIndex      int
 	LastTerm       int
 	Gid            int
-	Config_manager *ConfigManager
+	LatestConfig   *shardmaster.Config
 }
 
 const (
-	OWN ShardOwnership = iota
+	INVALID_SHARD_STATUS ShardStatus = iota
+	OWN
+	PULLING
+	PUSHING
 	DONT_OWN
 )
 
+func NewShard(num int, status ShardStatus) *Shard {
+	return &Shard{
+		ShardNum:     num,
+		KvState:      map[string]string{},
+		ShardTracker: *NewRequestTracker(),
+		Status:       status,
+	}
+}
+
+func (shard *Shard) Copy() *Shard {
+	return &Shard{
+		ShardNum:     shard.ShardNum,
+		KvState:      CopyMap[string, string](shard.KvState),
+		ShardTracker: *shard.ShardTracker.Copy(),
+		Status:       shard.Status,
+	}
+}
+
+func (shard *Shard) IsStable() bool {
+	return shard.Status == OWN || shard.Status == DONT_OWN
+}
+
 func NewServerState(gid int) *ServerState {
-	return &ServerState{
+	state := &ServerState{
 		Shards:         make(map[int]*Shard),
 		GeneralTracker: *NewRequestTracker(),
 		LastIndex:      0,
 		LastTerm:       0,
 		Gid:            gid,
-		Config_manager: NewConfigManager(),
+		LatestConfig:   &shardmaster.Config{},
 	}
+
+	return state
+}
+
+func (ss *ServerState) InitConfig(init_config *shardmaster.Config) {
+	Assert(init_config.Num == 1, "Init config should start at num 1")
+	for shard, owner_gid := range init_config.Shards {
+		if owner_gid == ss.Gid {
+			ss.Shards[shard] = NewShard(shard, OWN)
+		} else {
+			ss.Shards[shard] = NewShard(shard, DONT_OWN)
+		}
+	}
+	ss.LatestConfig = init_config
 }
 
 func (ss *ServerState) Put(shard int, k, v string) {
@@ -52,7 +91,10 @@ func (ss *ServerState) Get(shard int, k string) string {
 	return ss.Shards[shard].KvState[k]
 }
 
-func (ss *ServerState) DispatchOp(operation raft_helper.Op) SideEffect {
+func (ss *ServerState) DispatchOp(operation raft_helper.Op) NetworkMessage {
+	if ss.LatestConfig.Num == 0 {
+		return nil
+	}
 	switch operation := operation.(type) {
 	case *GetArgs:
 		return ss.ApplyKVState(operation)
@@ -60,14 +102,16 @@ func (ss *ServerState) DispatchOp(operation raft_helper.Op) SideEffect {
 		return ss.ApplyKVState(operation)
 	case *NewConfigArgs:
 		return ss.HandleNewConfig(operation)
-	case *PrepareConfigArgs:
-		return ss.HandlePrepareConfig(operation)
+	case *TransferShardArgs:
+		return ss.HandleTransferShard(operation)
+	case *ShardReceivedArgs:
+		return ss.HandleShardReceived(operation)
 	default:
 		panic("Unknown operation type")
 	}
 }
 
-func (ss *ServerState) ApplyKVState(operation raft_helper.Op) SideEffect {
+func (ss *ServerState) ApplyKVState(operation raft_helper.Op) NetworkMessage {
 	key, val := GetKeyVal(operation)
 	shardNum := key2shard(key)
 	if ss.HaveShard(shardNum) {
@@ -82,53 +126,103 @@ func (ss *ServerState) ApplyKVState(operation raft_helper.Op) SideEffect {
 		}
 		ss.ProcessRequest(operation, result)
 	} else {
-
+		Debug(dError, "G%d don't have shard %d config %v", ss.Gid, shardNum, ss.LatestConfig)
 	}
-	return NewNoSideEffect()
+	return nil
+}
+
+func (ss *ServerState) HandleNewConfig(operation *NewConfigArgs) NetworkMessage {
+	var net_msg NetworkMessage = nil
+	if operation.Config.Num > ss.LatestConfig.Num {
+		Assert(ss.AreShardsStable(), "Expected new config when cur config is stable")
+		old_config := ss.LatestConfig
+		transfer_shards := ss.installNewConfig(operation.Config)
+		Debug(dTrace, "G%d old config %v new config %v transfer %v", ss.Gid, old_config, ss.LatestConfig, TransformMap(transfer_shards, func(val []Shard) []int {
+			return Transform(val, func(val_shard Shard) int {
+				return val_shard.ShardNum
+			})
+		}))
+		net_msg = NewSendTransferShard(transfer_shards, *ss.LatestConfig, ss.Gid)
+	}
+	ss.ProcessRequest(operation, struct{}{})
+	return net_msg
+}
+func (ss *ServerState) HandleTransferShard(operation *TransferShardArgs) NetworkMessage {
+	var net_msg NetworkMessage = nil
+	if operation.Config.Num == ss.LatestConfig.Num {
+		net_msg = NewSendTransferDecision(operation.Config, operation.Gid, ss.Gid)
+		for _, shard := range operation.Shards {
+			if ss.Shards[shard.ShardNum].Status == OWN {
+				continue
+			}
+			Debug(dTrace, "G%d install shard %d kv %v", ss.Gid, shard.ShardNum, shard.KvState)
+			ss.Shards[shard.ShardNum] = shard.Copy()
+			ss.Shards[shard.ShardNum].ShardTracker.request_chan = make(map[int]chan any)
+			ss.Shards[shard.ShardNum].Status = OWN
+		}
+	}
+	if operation.Config.Num <= ss.LatestConfig.Num {
+		ss.ProcessRequest(operation, struct{}{})
+	}
+	return net_msg
+}
+
+func (ss *ServerState) HandleShardReceived(operation *ShardReceivedArgs) NetworkMessage {
+	var net_msg NetworkMessage = nil
+	if operation.Config.Num == ss.LatestConfig.Num {
+		ss.discardShardForGroup(operation.Gid)
+	}
+	if operation.Config.Num <= ss.LatestConfig.Num {
+		ss.ProcessRequest(operation, struct{}{})
+	}
+	return net_msg
 }
 
 func (ss *ServerState) installNewConfig(config shardmaster.Config) map[int][]Shard {
+	Assert(ss.LatestConfig.Num < config.Num, "Installing a older config bug")
 	to_transfer := map[int][]Shard{}
 
-	for shardNum, shard := range ss.Shards {
-		gid := config.Shards[shardNum]
-		if gid != ss.Gid && shard.Ownership == OWN {
+	for num, shard := range ss.Shards {
+		Assert(shard.Status != PUSHING && shard.Status != PULLING, "Expected shards to be stable when changing config")
+		gid := config.Shards[num]
+		if gid != ss.Gid && shard.Status == OWN {
+			shard.Status = PUSHING
 			to_transfer[gid] = append(to_transfer[gid], *shard)
-			shard.Config_num = config.Num
-			shard.Ownership = DONT_OWN
+		} else if gid == ss.Gid && shard.Status != OWN {
+			shard.Status = PULLING
 		}
 	}
+	ss.LatestConfig = &config
 
 	return to_transfer
 }
 
-func (ss *ServerState) transferShards(shards []Shard) {
-	for _, shard := range shards {
-		cur_shard, ok := ss.Shards[shard.ShardNum]
-		if ok {
-			if cur_shard.Config_num > shard.Config_num {
-				panic("shard's applied config num should be <= overall config num")
+/*
+	func (ss *ServerState) transferShards(shards []Shard) {
+		for _, shard := range shards {
+			cur_shard, ok := ss.Shards[shard.ShardNum]
+			if ok {
+				if cur_shard.Config_num > shard.Config_num {
+					panic("shard's applied config num should be <= overall config num")
+				}
+				if cur_shard.Status == OWN && cur_shard.Config_num != shard.Config_num {
+					panic("Double ownership")
+				}
+			} else {
+				ss.Shards[shard.ShardNum] = &shard
+				cur_shard = &shard
 			}
-			if cur_shard.Ownership == OWN && cur_shard.Config_num != shard.Config_num {
-				panic("Double ownership")
-			}
-		} else {
-			ss.Shards[shard.ShardNum] = &shard
-			cur_shard = &shard
+			cur_shard.Status = OWN
+			cur_shard.Config_num = shard.Config_num
 		}
-		cur_shard.Ownership = OWN
-		cur_shard.Config_num = shard.Config_num
 	}
-}
+*/
+func (ss *ServerState) discardShardForGroup(gid int) {
 
-func (ss *ServerState) deleteShardsForGroup(gid int) {
-	for shardNum, shard_gid := range ss.LatestConfig.Shards {
+	for shard_num, shard_gid := range ss.LatestConfig.Shards {
 		if shard_gid == gid {
-			shard, ok := ss.Shards[shardNum]
-			if ok && shard.Ownership != DONT_OWN {
-				panic("Trying to delete owned shard")
-			}
-			delete(ss.Shards, shardNum)
+			ss.Shards[shard_num].Status = DONT_OWN
+			ss.Shards[shard_num].KvState = make(map[string]string)
 		}
 	}
 
@@ -166,7 +260,7 @@ func (ss *ServerState) IsAlreadyProcessed(op raft_helper.Op) bool {
 		return ss.GeneralTracker.AlreadyProcessed(op)
 	case *TransferShardArgs:
 		return ss.GeneralTracker.AlreadyProcessed(op)
-	case *TransferShardDecisionArgs:
+	case *ShardReceivedArgs:
 		return ss.GeneralTracker.AlreadyProcessed(op)
 	}
 	panic("Other type not implemented")
@@ -184,7 +278,7 @@ func (ss *ServerState) ProcessRequest(op raft_helper.Op, op_result any) {
 		ss.GeneralTracker.ProcessRequest(op, op_result)
 	case *TransferShardArgs:
 		ss.GeneralTracker.ProcessRequest(op, op_result)
-	case *TransferShardDecisionArgs:
+	case *ShardReceivedArgs:
 		ss.GeneralTracker.ProcessRequest(op, op_result)
 	default:
 		panic("Other type not implemented")
@@ -193,7 +287,7 @@ func (ss *ServerState) ProcessRequest(op raft_helper.Op, op_result any) {
 
 func (ss *ServerState) HaveShard(shardNum int) bool {
 	shard, ok := ss.Shards[shardNum]
-	return ok && shard.Ownership == OWN && ss.LatestConfig.Shards[shardNum] == ss.Gid
+	return ok && shard.Status == OWN && ss.LatestConfig.Shards[shardNum] == ss.Gid
 }
 
 func (ss *ServerState) GetOwnedShards() []int {
@@ -204,6 +298,24 @@ func (ss *ServerState) GetOwnedShards() []int {
 		}
 	}
 	return owned_shard_nums
+}
+
+func (ss *ServerState) AreShardsStable() bool {
+	for _, shard := range ss.Shards {
+		if shard.Status != OWN && shard.Status != DONT_OWN {
+			return false
+		}
+	}
+	return true
+}
+
+func (ss *ServerState) GetShardsStatus() []ShardStatus {
+	status := make([]ShardStatus, 10)
+	for _, shard := range ss.Shards {
+		Assert(shard != nil, "unitialized shard")
+		status[shard.ShardNum] = shard.Status
+	}
+	return status
 }
 
 func (ss *ServerState) EncodeData(encoder labgob.LabEncoder) {

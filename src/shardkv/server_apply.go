@@ -9,6 +9,7 @@ import (
 func (kv *ShardKV) ApplyDaemon() {
 	Lock(kv, lock_trace, "ApplyDaemon")
 	defer Unlock(kv, lock_trace, "ApplyDaemon")
+	Assert(kv.state.LatestConfig.Num > 0, "Uninitialized config")
 
 	for !kv.killed() {
 		msg := UnlockUntilChanReceive(kv, kv.applyCh)
@@ -27,10 +28,11 @@ func (kv *ShardKV) ApplyDaemon() {
 
 func (kv *ShardKV) handleOperation(msg *raft.ApplyMsg) {
 	operation := msg.Command.(raft_helper.Op)
-	var side_effect SideEffect = NewNoSideEffect()
-	kv.state.DispatchOp(operation)
+	var net_msg NetworkMessage = kv.state.DispatchOp(operation)
 	kv.state.SetLatest(msg.Index(), msg.Term())
-	side_effect.ApplySideEffect(kv)
+	if net_msg != nil {
+		net_msg.SendNetworkMessage(kv)
+	}
 
 	//Debug(dCommit, "S%d replicated and applied C%d Serial:%d entry %s %s", kv.me, operation.Sid, operation.Serial, typeMap[operation.Type], operation.Key)
 	kv.snapshotCheck(operation)

@@ -14,12 +14,17 @@ func (kv *ShardKV) Get(args *GetArgs, reply *GetReply) {
 		reply.LeaderHint = leader
 		return
 	}
-	if !kv.state.OwnShard(key2shard(args.Key)) {
+	Debug(dClient, "G%d <- C%d Received Get Serial:%d Key:%s as Leader true#%d", kv.gid, args.Get_sid(), args.Get_serial(), args.Key, cur_serial)
+	if kv.state.LatestConfig.Num == 0 || !kv.state.HaveShard(key2shard(args.Key)) {
 		reply.Success = false
+		if kv.state.LatestConfig.Num != 0 {
+			shard_status := kv.state.GetShardsStatus()
+			Debug(dInfo, "G%d %v %v dont have shard %d from %v config %v", kv.gid, kv.state.Shards[key2shard(args.Key)].Status == OWN, kv.state.LatestConfig.Shards[key2shard(args.Key)] == kv.gid, key2shard(args.Key), shard_status, kv.state.LatestConfig)
+		} else {
+			Debug(dInfo, "G%d unitialized config", kv.gid)
+		}
 		return
 	}
-
-	Debug(dClient, "S%d <- C%d Received Get Serial:%d Key:%s as Leader true#%d", kv.me, args.Get_sid(), args.Get_serial(), args.Key, cur_serial)
 
 	operation := args
 	result_chan := make(chan any, 1)
@@ -36,8 +41,13 @@ func (kv *ShardKV) Get(args *GetArgs, reply *GetReply) {
 			reply.OutDated = false
 		}
 	}
+	if reply.Value == "" {
+		Debug(dError, "G%d maybe error dump shards %v", kv.gid, TransformMap(kv.state.Shards, func(ptr *Shard) Shard {
+			return *ptr
+		}))
+	}
 	UnlockUntilChanReceive(kv, GetChanForFunc[any](start_and_wait))
 	reply.Success = true
-	Debug(dClient, "S%d <- C%d Get Serial:%d Key/Val:{%s:%s} done true#%d Outdated:%t", kv.me, args.Get_sid(), args.Get_serial(), args.Key, reply.Value, cur_serial, reply.OutDated)
+	Debug(dClient, "G%d <- C%d Get Serial:%d Key/Val:{%s:%s} done true#%d Outdated:%t", kv.gid, args.Get_sid(), args.Get_serial(), args.Key, reply.Value, cur_serial, reply.OutDated)
 
 }

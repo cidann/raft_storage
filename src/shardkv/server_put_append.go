@@ -14,12 +14,17 @@ func (kv *ShardKV) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 		reply.LeaderHint = leader
 		return
 	}
-	if !kv.state.OwnShard(key2shard(args.Key)) {
+	Debug(dClient, "G%d <- C%d Received PutAppend Serial:%d Key/Val:{%s:%s} as Leader true#%d", kv.gid, args.Get_sid(), args.Get_serial(), args.Key, args.Value, cur_serial)
+	if kv.state.LatestConfig.Num == 0 || !kv.state.HaveShard(key2shard(args.Key)) {
 		reply.Success = false
+		if kv.state.LatestConfig.Num != 0 {
+			shard_status := kv.state.GetShardsStatus()
+			Debug(dInfo, "G%d %v %v %d dont have shard %d from %v config %v", kv.gid, kv.state.Shards[key2shard(args.Key)].Status == OWN, kv.state.LatestConfig.Shards[key2shard(args.Key)] == kv.gid, kv.gid, key2shard(args.Key), shard_status, kv.state.LatestConfig)
+		} else {
+			Debug(dInfo, "G%d unitialized config", kv.gid)
+		}
 		return
 	}
-
-	Debug(dClient, "S%d <- C%d Received PutAppend Serial:%d Key/Val:{%s:%s} as Leader true#%d", kv.me, args.Get_sid(), args.Get_serial(), args.Key, args.Value, cur_serial)
 
 	operation := args
 
@@ -33,5 +38,5 @@ func (kv *ShardKV) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 	}
 	UnlockUntilChanReceive(kv, GetChanForFunc[any](start_and_wait))
 	reply.Success = true
-	Debug(dClient, "S%d <- C%d PutAppend Serial:%d Key:%s done true#%d Outdated:%t", kv.me, args.Get_sid(), args.Get_serial(), args.Key, cur_serial, reply.OutDated)
+	Debug(dClient, "G%d <- C%d PutAppend Serial:%d Key:%s done true#%d Outdated:%t", kv.gid, args.Get_sid(), args.Get_serial(), args.Key, cur_serial, reply.OutDated)
 }

@@ -68,56 +68,7 @@ type NewConfigArgs struct {
 }
 
 type NewConfigReply struct {
-	raft_helper.Reply
-}
-type PrepareConfigArgs struct {
-	raft_helper.Op
-	Config          shardmaster.Config
-	Coordinator_gid int
-}
-
-type PrepareConfigReply struct {
-	raft_helper.Reply
-}
-
-type ParticipantDecisionConfigArgs struct {
-	raft_helper.Op
-	Config          shardmaster.Config
-	Owned_shards    []int
-	Participant_gid int
-	Commit          bool
-}
-type ParticipantDecisionConfigReply struct {
-	raft_helper.Reply
-}
-
-type CoordinatorDecisionConfigArgs struct {
-	raft_helper.Op
-	Config          shardmaster.Config
-	NewShards       []int
-	Coordinator_gid int
-	Commit          bool
-}
-type CoordinatorDecisionConfigReply struct {
-	raft_helper.Reply
-}
-
-type AckConfigArgs struct {
-	raft_helper.Op
-	Participant_gid int
-	Config          shardmaster.Config
-}
-type AckConfigReply struct {
-	raft_helper.Reply
-}
-
-type AckDoneArgs struct {
-	raft_helper.Op
-	Config shardmaster.Config
-}
-
-type AckDoneReply struct {
-	raft_helper.Reply
+	raft_helper.ReplyBase
 }
 
 type TransferShardArgs struct {
@@ -128,17 +79,17 @@ type TransferShardArgs struct {
 }
 
 type TransferShardReply struct {
-	raft_helper.Reply
+	raft_helper.ReplyBase
 }
 
-type TransferShardDecisionArgs struct {
+type ShardReceivedArgs struct {
 	raft_helper.Op
 	Config shardmaster.Config
 	Gid    int
 }
 
-type TransferShardDecisionReply struct {
-	raft_helper.Reply
+type ShardReceivedReply struct {
+	raft_helper.ReplyBase
 }
 
 func GetKeyVal(operation raft_helper.Op) (string, string) {
@@ -166,16 +117,8 @@ func init() {
 	labgob.Register(&PutAppendReply{})
 	labgob.Register(&NewConfigArgs{})
 	labgob.Register(&NewConfigReply{})
-	labgob.Register(&PrepareConfigArgs{})
-	labgob.Register(&PrepareConfigReply{})
-	labgob.Register(&ParticipantDecisionConfigArgs{})
-	labgob.Register(&ParticipantDecisionConfigReply{})
-	labgob.Register(&CoordinatorDecisionConfigArgs{})
-	labgob.Register(&CoordinatorDecisionConfigReply{})
-	labgob.Register(&AckConfigArgs{})
-	labgob.Register(&AckConfigReply{})
 	labgob.Register(&TransferShardArgs{})
 	labgob.Register(&TransferShardReply{})
-	labgob.Register(&TransferShardDecisionArgs{})
-	labgob.Register(&TransferShardDecisionReply{})
+	labgob.Register(&ShardReceivedArgs{})
+	labgob.Register(&ShardReceivedReply{})
 }
