@@ -176,7 +176,7 @@ func (kv *ShardKV) LoadSnapshot(snapshot []byte) {
 	buf := bytes.NewBuffer(snapshot)
 	decoder := labgob.NewDecoder(buf)
 	decoder.Decode(kv.state)
-	kv.state.DiscardAllRequest()
+	kv.state.Recover()
 }
 
 func (kv *ShardKV) getOperationSize(operation raft_helper.Op) int {

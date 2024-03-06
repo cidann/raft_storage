@@ -10,6 +10,8 @@ import (
 var true_serial_new_config int64 = 0
 
 func (kv *ShardKV) NewConfig(args *NewConfigArgs, reply *NewConfigReply) {
+	Lock(kv, lock_trace, "NewConfig")
+	defer Unlock(kv, lock_trace, "NewConfig")
 	cur_serial := atomic.AddInt64(&true_serial_new_config, 1)
 
 	Debug(dClient, "G%d <- C%d Received New Config Serial:%d as Leader true#%d", kv.gid, args.Get_sid(), args.Get_serial(), cur_serial)
@@ -77,6 +79,10 @@ func (kv *ShardKV) ConfigPullDaemon() {
 func (kv *ShardKV) InitConfig() {
 	Lock(kv, lock_trace, "ConfigPullDaemon")
 	defer Unlock(kv, lock_trace, "ConfigPullDaemon")
+	if kv.state.LatestConfig.Num >= 1 {
+		return
+	}
+
 	var config shardmaster.Config
 	for !(config.Num > 0) {
 		config = kv.mck.Query(1)

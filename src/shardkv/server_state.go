@@ -92,7 +92,7 @@ func (ss *ServerState) Get(shard int, k string) string {
 }
 
 func (ss *ServerState) DispatchOp(operation raft_helper.Op) NetworkMessage {
-	if ss.LatestConfig.Num == 0 {
+	if ss.LatestConfig.Num == 0 || ss.IsAlreadyProcessed(operation) {
 		return nil
 	}
 	switch operation := operation.(type) {
@@ -192,7 +192,12 @@ func (ss *ServerState) installNewConfig(config shardmaster.Config) map[int][]Sha
 			shard.Status = PULLING
 		}
 	}
-	ss.LatestConfig = &config
+	new_config := shardmaster.Config{
+		Num:    config.Num,
+		Shards: config.Shards,
+		Groups: CopyMap(config.Groups),
+	}
+	ss.LatestConfig = &new_config
 
 	return to_transfer
 }
@@ -251,8 +256,7 @@ func (ss *ServerState) RecordRequestShard(shard int, op raft_helper.Op, req_chan
 func (ss *ServerState) IsAlreadyProcessed(op raft_helper.Op) bool {
 	switch op := op.(type) {
 	case *GetArgs:
-		shard_num := key2shard(op.Key)
-		return ss.Shards[shard_num].ShardTracker.AlreadyProcessed(op)
+		return false
 	case *PutAppendArgs:
 		shard_num := key2shard(op.Key)
 		return ss.Shards[shard_num].ShardTracker.AlreadyProcessed(op)
@@ -261,7 +265,7 @@ func (ss *ServerState) IsAlreadyProcessed(op raft_helper.Op) bool {
 	case *TransferShardArgs:
 		return ss.GeneralTracker.AlreadyProcessed(op)
 	case *ShardReceivedArgs:
-		return ss.GeneralTracker.AlreadyProcessed(op)
+		return false
 	}
 	panic("Other type not implemented")
 }
@@ -320,4 +324,11 @@ func (ss *ServerState) GetShardsStatus() []ShardStatus {
 
 func (ss *ServerState) EncodeData(encoder labgob.LabEncoder) {
 	encoder.Encode(*ss)
+}
+
+func (ss *ServerState) Recover() {
+	for _, shard := range ss.Shards {
+		shard.ShardTracker.request_chan = map[int]chan any{}
+	}
+	ss.DiscardAllRequest()
 }

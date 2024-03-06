@@ -53,6 +53,7 @@ func (tracker *RequestTracker) DiscardRequestFrom(sid int) {
 }
 
 func (tracker *RequestTracker) DiscardAll() {
+	Assert(tracker.request_chan != nil, "Discard nil chan")
 	for k := range tracker.request_chan {
 		tracker.DiscardRequestFrom(k)
 	}

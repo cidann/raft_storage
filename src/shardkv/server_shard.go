@@ -9,6 +9,9 @@ var true_serial_shard_transfer int64 = 0
 var true_serial_shard_transfer_decision int64 = 0
 
 func (kv *ShardKV) TransferShard(args *TransferShardArgs, reply *TransferShardReply) {
+	Lock(kv, lock_trace, "TransferShard")
+	defer Unlock(kv, lock_trace, "TransferShard")
+
 	cur_serial := atomic.AddInt64(&true_serial_shard_transfer, 1)
 
 	Debug(dClient, "G%d <- C%d Received Transfer Shard Serial:%d as Leader true#%d", kv.gid, args.Get_sid(), args.Get_serial(), cur_serial)
@@ -19,6 +22,9 @@ func (kv *ShardKV) TransferShard(args *TransferShardArgs, reply *TransferShardRe
 }
 
 func (kv *ShardKV) TransferShardDecision(args *ShardReceivedArgs, reply *ShardReceivedReply) {
+	Lock(kv, lock_trace, "TransferShardDecision")
+	defer Unlock(kv, lock_trace, "TransferShardDecision")
+
 	cur_serial := atomic.AddInt64(&true_serial_shard_transfer_decision, 1)
 
 	Debug(dClient, "G%d <- C%d Received Transfer Shard Decision Serial:%d as Leader true#%d", kv.gid, args.Get_sid(), args.Get_serial(), cur_serial)

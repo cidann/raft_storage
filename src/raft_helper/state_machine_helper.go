@@ -14,8 +14,6 @@ type StateMachine interface {
 }
 
 func HandleStateChangeRPC(machine StateMachine, name string, args Op, reply Reply) {
-	sync_helper.Lock(machine, lock_trace, name)
-	defer sync_helper.Unlock(machine, lock_trace, name)
 	if !machine.Initialized() {
 		sync_helper.UnlockAndSleepFor(machine, time.Millisecond*100)
 		return

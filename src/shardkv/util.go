@@ -73,7 +73,7 @@ func Assert(is_valid bool, format string, a ...interface{}) {
 	}
 }
 
-func CopyMap[K, V comparable](src map[K]V) map[K]V {
+func CopyMap[K comparable, V any](src map[K]V) map[K]V {
 	dst := map[K]V{}
 	for k, v := range src {
 		dst[k] = v

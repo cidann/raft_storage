@@ -167,10 +167,14 @@ func TestSnapshot(t *testing.T) {
 	for i := 0; i < n; i++ {
 		check(t, ck, ka[i], va[i])
 	}
+	fmt.Printf(" ========================================== joined 0 and put\n")
 
 	cfg.join(1)
+	fmt.Printf(" ========================================== join 1\n")
 	cfg.join(2)
+	fmt.Printf(" ========================================== join 2\n")
 	cfg.leave(0)
+	fmt.Printf(" ========================================== leave 0\n")
 
 	for i := 0; i < n; i++ {
 		check(t, ck, ka[i], va[i])
@@ -178,9 +182,12 @@ func TestSnapshot(t *testing.T) {
 		ck.Append(ka[i], x)
 		va[i] += x
 	}
+	fmt.Printf(" ========================================== appended\n")
 
 	cfg.leave(1)
+	fmt.Printf(" ========================================== leave 1\n")
 	cfg.join(0)
+	fmt.Printf(" ========================================== join 0\n")
 
 	for i := 0; i < n; i++ {
 		check(t, ck, ka[i], va[i])
@@ -188,24 +195,30 @@ func TestSnapshot(t *testing.T) {
 		ck.Append(ka[i], x)
 		va[i] += x
 	}
+	fmt.Printf(" ========================================== append\n")
 
 	time.Sleep(1 * time.Second)
+	fmt.Printf(" ========================================== sleeped\n")
 
 	for i := 0; i < n; i++ {
 		check(t, ck, ka[i], va[i])
 	}
 
 	time.Sleep(1 * time.Second)
+	fmt.Printf(" ========================================== sleeped\n")
 
 	cfg.checklogs()
 
 	cfg.ShutdownGroup(0)
 	cfg.ShutdownGroup(1)
 	cfg.ShutdownGroup(2)
+	fmt.Printf(" ========================================== shutdown\n")
 
 	cfg.StartGroup(0)
 	cfg.StartGroup(1)
 	cfg.StartGroup(2)
+
+	fmt.Printf(" ========================================== restart\n")
 
 	for i := 0; i < n; i++ {
 		check(t, ck, ka[i], va[i])
