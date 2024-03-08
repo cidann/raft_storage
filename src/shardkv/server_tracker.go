@@ -20,6 +20,7 @@ func NewRequestTracker() *RequestTracker {
 }
 
 func (tracker *RequestTracker) RecordRequest(operation raft_helper.Op, req_chan chan any) {
+	Debug(dWarn, "DiscardRequestFrom sid:%d serial:%d", operation.Get_sid(), operation.Get_serial())
 	tracker.DiscardRequestFrom(operation.Get_sid())
 	tracker.Request_serial[operation.Get_sid()] = operation.Get_serial()
 	tracker.request_chan[operation.Get_sid()] = req_chan
@@ -29,6 +30,7 @@ func (tracker *RequestTracker) AlreadyProcessed(operation raft_helper.Op) bool {
 	already_processed := false
 	if serial, ok := tracker.Latest_applied[operation.Get_sid()]; ok && serial >= operation.Get_serial() {
 		already_processed = true
+		Debug(dWarn, "AlreadyProcessed! sid:%d serial:%d old latest serial: %d", operation.Get_sid(), operation.Get_serial(), serial)
 	}
 	return already_processed
 }
@@ -40,6 +42,7 @@ func (tracker *RequestTracker) ProcessRequest(operation raft_helper.Op, result a
 
 	if tracker.request_chan[operation.Get_sid()] != nil && operation.Get_serial() == tracker.Request_serial[operation.Get_sid()] {
 		tracker.request_chan[operation.Get_sid()] <- result
+		Debug(dWarn, "DiscardRequestFrom sid:%d serial:%d", operation.Get_sid(), operation.Get_serial())
 		tracker.DiscardRequestFrom(operation.Get_sid())
 	}
 }
@@ -54,6 +57,7 @@ func (tracker *RequestTracker) DiscardRequestFrom(sid int) {
 
 func (tracker *RequestTracker) DiscardAll() {
 	Assert(tracker.request_chan != nil, "Discard nil chan")
+	Debug(dWarn, "Discard All")
 	for k := range tracker.request_chan {
 		tracker.DiscardRequestFrom(k)
 	}

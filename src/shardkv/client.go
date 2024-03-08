@@ -81,11 +81,11 @@ func MakeClerk(masters []*labrpc.ClientEnd, make_end func(string) *labrpc.Client
 // keeps trying forever in the face of all other errors.
 // You will have to modify this function.
 func (ck *Clerk) Get(key string) string {
+	ck.serial += 1
 	args := GetArgs{
 		Op:  raft_helper.NewOpBase(ck.serial, ck.id, GET),
 		Key: key,
 	}
-	ck.serial += 1
 
 	for {
 		shard := key2shard(key)
@@ -95,13 +95,13 @@ func (ck *Clerk) Get(key string) string {
 			for si := 0; si < len(servers); si++ {
 				var reply GetReply
 				srv := ck.make_end(servers[si])
-				if raft_helper.Send_for(srv, "ShardKV.Get", &args, &reply, raft.GetSendTime()*10) {
+				if raft_helper.Send_for(srv, "ShardKV.Get", &args, &reply, raft.GetSendTime()*30) {
 					return reply.Value
 				} else if reply.Err == ErrWrongGroup {
 					break
 				}
 				// ... not ok, or ErrWrongLeader
-				Debug(dError, "C%d failed get serial: %d success/outdated: %t/%t", ck.id, ck.serial, reply.Get_success(), reply.Get_outDated())
+				Debug(dError, "C%d failed get key/shard: %v/%v serial: %d config %v", ck.id, key, shard, ck.serial, ck.config)
 			}
 		}
 		time.Sleep(100 * time.Millisecond)
@@ -114,13 +114,13 @@ func (ck *Clerk) Get(key string) string {
 // shared by Put and Append.
 // You will have to modify this function.
 func (ck *Clerk) PutAppend(key string, value string, op_type raft_helper.OperationType) {
+	ck.serial += 1
 	args := PutAppendArgs{
 		Op:    raft_helper.NewOpBase(ck.serial, ck.id, op_type),
 		Key:   key,
 		Value: value,
 		Type:  op_type,
 	}
-	ck.serial += 1
 
 	for {
 		shard := key2shard(key)
@@ -129,13 +129,13 @@ func (ck *Clerk) PutAppend(key string, value string, op_type raft_helper.Operati
 			for si := 0; si < len(servers); si++ {
 				srv := ck.make_end(servers[si])
 				var reply PutAppendReply
-				if raft_helper.Send_for(srv, "ShardKV.PutAppend", &args, &reply, raft.GetSendTime()*10) {
+				if raft_helper.Send_for(srv, "ShardKV.PutAppend", &args, &reply, raft.GetSendTime()*30) {
 					return
 				} else if reply.Err == ErrWrongGroup {
 					break
 				}
 				// ... not ok, or ErrWrongLeader
-				Debug(dError, "C%d failed put serial: %d success/outdated: %t/%t", ck.id, ck.serial, reply.Get_success(), reply.Get_outDated())
+				Debug(dError, "C%d failed putappend key/shard: %v/%v serial: %d config %v", ck.id, key, shard, ck.serial, ck.config)
 			}
 		}
 		time.Sleep(100 * time.Millisecond)
@@ -145,11 +145,11 @@ func (ck *Clerk) PutAppend(key string, value string, op_type raft_helper.Operati
 }
 
 func (ck *Clerk) NewConfig(gid int, config shardmaster.Config) {
+	ck.serial += 1
 	args := NewConfigArgs{
 		Op:     raft_helper.NewOpBase(ck.serial, ck.id, NEW_CONFIG),
 		Config: config,
 	}
-	ck.serial += 1
 
 	for {
 		if servers, ok := ck.config.Groups[gid]; ok {
@@ -173,42 +173,43 @@ func (ck *Clerk) NewConfig(gid int, config shardmaster.Config) {
 }
 
 func (ck *Clerk) TransferShards(target_gid, source_gid int, config shardmaster.Config, shards []Shard) {
+	ck.serial += 1
 	args := TransferShardArgs{
 		Op:     raft_helper.NewOpBase(ck.serial, ck.id, TRANSFERSHARD),
 		Config: config,
 		Shards: shards,
 		Gid:    source_gid,
 	}
-	ck.serial += 1
 
 	for {
-		if servers, ok := ck.config.Groups[target_gid]; ok {
-			for si := 0; si < len(servers); si++ {
-				srv := ck.make_end(servers[si])
-				reply := TransferShardReply{
-					*raft_helper.NewReplyBase(),
-				}
-				if raft_helper.Send_for(srv, "ShardKV.TransferShard", &args, &reply, raft.GetSendTime()*10) {
-					return
-				}
-				// ... not ok, or ErrWrongLeader
-				Debug(dError, "C%d failed transfer shard serial: %d success/outdated: %t/%t", ck.id, ck.serial, reply.Get_success(), reply.Get_outDated())
+		servers, ok := config.Groups[target_gid]
+		Assert(ok, "Send shard to group %d not in config %v", target_gid, config)
+
+		for si := 0; si < len(servers); si++ {
+			srv := ck.make_end(servers[si])
+			reply := TransferShardReply{
+				*raft_helper.NewReplyBase(),
 			}
+			if raft_helper.Send_for(srv, "ShardKV.TransferShard", &args, &reply, raft.GetSendTime()*10) {
+				return
+			}
+			// ... not ok, or ErrWrongLeader
+			Debug(dError, "C%d failed transfer shard serial: %d success/outdated: %t/%t", ck.id, ck.serial, reply.Get_success(), reply.Get_outDated())
 		}
+
 		time.Sleep(100 * time.Millisecond)
 		// ask master for the latest configuration.
 		// this is mainly used to check the group still exist
-		ck.config = ck.sm.Query(-1)
 	}
 }
 
 func (ck *Clerk) TransferShardsDecision(target_gid, source_gid int, config shardmaster.Config) {
+	ck.serial += 1
 	args := ShardReceivedArgs{
 		Op:     raft_helper.NewOpBase(ck.serial, ck.id, TRANSFERSHARDDECISION),
 		Config: config,
 		Gid:    source_gid,
 	}
-	ck.serial += 1
 
 	servers, ok := ck.config.Groups[target_gid]
 	if !ok {

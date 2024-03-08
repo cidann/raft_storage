@@ -236,6 +236,7 @@ func TestMissChange(t *testing.T) {
 	ck := cfg.makeClient()
 
 	cfg.join(0)
+	fmt.Printf(" ========================================== join 0\n")
 
 	n := 10
 	ka := make([]string, n)
@@ -250,14 +251,21 @@ func TestMissChange(t *testing.T) {
 	}
 
 	cfg.join(1)
+	fmt.Printf(" ========================================== join 1\n")
 
 	cfg.ShutdownServer(0, 0)
+	fmt.Printf(" ========================================== shutdown G0 C0\n")
 	cfg.ShutdownServer(1, 0)
+	fmt.Printf(" ========================================== shutdown G1 C0\n")
 	cfg.ShutdownServer(2, 0)
+	fmt.Printf(" ========================================== shutdown G2 C0\n")
 
 	cfg.join(2)
+	fmt.Printf(" ========================================== join 2\n")
 	cfg.leave(1)
+	fmt.Printf(" ========================================== leave 1\n")
 	cfg.leave(0)
+	fmt.Printf(" ========================================== leave 0\n")
 
 	for i := 0; i < n; i++ {
 		check(t, ck, ka[i], va[i])
@@ -267,6 +275,7 @@ func TestMissChange(t *testing.T) {
 	}
 
 	cfg.join(1)
+	fmt.Printf(" ========================================== join 1\n")
 
 	for i := 0; i < n; i++ {
 		check(t, ck, ka[i], va[i])
@@ -276,8 +285,11 @@ func TestMissChange(t *testing.T) {
 	}
 
 	cfg.StartServer(0, 0)
+	fmt.Printf(" ========================================== start G0 C0\n")
 	cfg.StartServer(1, 0)
+	fmt.Printf(" ========================================== start G1 C0\n")
 	cfg.StartServer(2, 0)
+	fmt.Printf(" ========================================== start G2 C0\n")
 
 	for i := 0; i < n; i++ {
 		check(t, ck, ka[i], va[i])
@@ -287,13 +299,19 @@ func TestMissChange(t *testing.T) {
 	}
 
 	time.Sleep(2 * time.Second)
+	fmt.Printf(" ========================================== sleeped\n")
 
 	cfg.ShutdownServer(0, 1)
+	fmt.Printf(" ========================================== shutdown G0 C1\n")
 	cfg.ShutdownServer(1, 1)
+	fmt.Printf(" ========================================== shutdown G1 C1\n")
 	cfg.ShutdownServer(2, 1)
+	fmt.Printf(" ========================================== shutdown G2 C1\n")
 
 	cfg.join(0)
+	fmt.Printf(" ========================================== join 0\n")
 	cfg.leave(2)
+	fmt.Printf(" ========================================== leave 2\n")
 
 	for i := 0; i < n; i++ {
 		check(t, ck, ka[i], va[i])
@@ -303,8 +321,11 @@ func TestMissChange(t *testing.T) {
 	}
 
 	cfg.StartServer(0, 1)
+	fmt.Printf(" ========================================== start G0 C1\n")
 	cfg.StartServer(1, 1)
+	fmt.Printf(" ========================================== start G1 C1\n")
 	cfg.StartServer(2, 1)
+	fmt.Printf(" ========================================== start G2 C1\n")
 
 	for i := 0; i < n; i++ {
 		check(t, ck, ka[i], va[i])
@@ -322,6 +343,7 @@ func TestConcurrent1(t *testing.T) {
 	ck := cfg.makeClient()
 
 	cfg.join(0)
+	fmt.Printf(" ========================================== join G0\n")
 
 	n := 10
 	ka := make([]string, n)
@@ -352,29 +374,42 @@ func TestConcurrent1(t *testing.T) {
 
 	time.Sleep(150 * time.Millisecond)
 	cfg.join(1)
+	fmt.Printf(" ========================================== join G2\n")
 	time.Sleep(500 * time.Millisecond)
 	cfg.join(2)
+	fmt.Printf(" ========================================== join G3\n")
 	time.Sleep(500 * time.Millisecond)
 	cfg.leave(0)
+	fmt.Printf(" ========================================== leave G0\n")
 
 	cfg.ShutdownGroup(0)
+	fmt.Printf(" ========================================== shutdown G0\n")
 	time.Sleep(100 * time.Millisecond)
 	cfg.ShutdownGroup(1)
+	fmt.Printf(" ========================================== shutdown G1\n")
 	time.Sleep(100 * time.Millisecond)
 	cfg.ShutdownGroup(2)
+	fmt.Printf(" ========================================== shutdown G2\n")
 
 	cfg.leave(2)
+	fmt.Printf(" ========================================== leave G2\n")
 
 	time.Sleep(100 * time.Millisecond)
 	cfg.StartGroup(0)
+	fmt.Printf(" ========================================== start G0\n")
 	cfg.StartGroup(1)
+	fmt.Printf(" ========================================== start G1\n")
 	cfg.StartGroup(2)
+	fmt.Printf(" ========================================== start G2\n")
 
 	time.Sleep(100 * time.Millisecond)
 	cfg.join(0)
+	fmt.Printf(" ========================================== join G0\n")
 	cfg.leave(1)
+	fmt.Printf(" ========================================== leave G1\n")
 	time.Sleep(500 * time.Millisecond)
 	cfg.join(1)
+	fmt.Printf(" ========================================== join G1\n")
 
 	time.Sleep(1 * time.Second)
 

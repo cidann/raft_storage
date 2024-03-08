@@ -92,7 +92,7 @@ func (ss *ServerState) Get(shard int, k string) string {
 }
 
 func (ss *ServerState) DispatchOp(operation raft_helper.Op) NetworkMessage {
-	if ss.LatestConfig.Num == 0 || ss.IsAlreadyProcessed(operation) {
+	if ss.LatestConfig.Num == 0 {
 		return nil
 	}
 	switch operation := operation.(type) {
@@ -116,22 +116,31 @@ func (ss *ServerState) ApplyKVState(operation raft_helper.Op) NetworkMessage {
 	shardNum := key2shard(key)
 	if ss.HaveShard(shardNum) {
 		result := ""
-		switch operation.Get_type() {
-		case GET:
-			result = ss.Get(shardNum, key)
-		case PUT:
-			ss.Put(shardNum, key, val)
-		case APPEND:
-			ss.Append(shardNum, key, val)
+		if !ss.Shards[shardNum].ShardTracker.AlreadyProcessed(operation) || operation.Get_type() == GET {
+			switch operation.Get_type() {
+			case GET:
+				result = ss.Get(shardNum, key)
+			case PUT:
+				ss.Put(shardNum, key, val)
+			case APPEND:
+				ss.Append(shardNum, key, val)
+			}
 		}
 		ss.ProcessRequest(operation, result)
 	} else {
+		ss.Shards[shardNum].ShardTracker.DiscardRequestFrom(operation.Get_sid())
 		Debug(dError, "G%d don't have shard %d config %v", ss.Gid, shardNum, ss.LatestConfig)
 	}
 	return nil
 }
 
 func (ss *ServerState) HandleNewConfig(operation *NewConfigArgs) NetworkMessage {
+	Debug(dConf, "G%d already processed:%v new config %v", ss.Gid, ss.IsAlreadyProcessed(operation), operation.Config)
+	if ss.IsAlreadyProcessed(operation) {
+		ss.ProcessRequest(operation, "")
+		return nil
+	}
+
 	var net_msg NetworkMessage = nil
 	if operation.Config.Num > ss.LatestConfig.Num {
 		Assert(ss.AreShardsStable(), "Expected new config when cur config is stable")
@@ -148,6 +157,12 @@ func (ss *ServerState) HandleNewConfig(operation *NewConfigArgs) NetworkMessage 
 	return net_msg
 }
 func (ss *ServerState) HandleTransferShard(operation *TransferShardArgs) NetworkMessage {
+	Debug(dTrans, "G%d already processed:%v new transfer shards %v", ss.Gid, ss.IsAlreadyProcessed(operation), operation.Shards)
+	if ss.IsAlreadyProcessed(operation) {
+		ss.ProcessRequest(operation, "")
+		return nil
+	}
+
 	var net_msg NetworkMessage = nil
 	if operation.Config.Num == ss.LatestConfig.Num {
 		net_msg = NewSendTransferDecision(operation.Config, operation.Gid, ss.Gid)
@@ -162,12 +177,19 @@ func (ss *ServerState) HandleTransferShard(operation *TransferShardArgs) Network
 		}
 	}
 	if operation.Config.Num <= ss.LatestConfig.Num {
+		net_msg = NewSendTransferDecision(operation.Config, operation.Gid, ss.Gid)
 		ss.ProcessRequest(operation, struct{}{})
 	}
 	return net_msg
 }
 
 func (ss *ServerState) HandleShardReceived(operation *ShardReceivedArgs) NetworkMessage {
+	Debug(dDECI, "G%d already processed:%v new decision from %d conf %v", ss.Gid, ss.IsAlreadyProcessed(operation), operation.Gid, operation.Config)
+	if ss.IsAlreadyProcessed(operation) {
+		ss.ProcessRequest(operation, "")
+		return nil
+	}
+
 	var net_msg NetworkMessage = nil
 	if operation.Config.Num == ss.LatestConfig.Num {
 		ss.discardShardForGroup(operation.Gid)
@@ -330,5 +352,6 @@ func (ss *ServerState) Recover() {
 	for _, shard := range ss.Shards {
 		shard.ShardTracker.request_chan = map[int]chan any{}
 	}
+	ss.GeneralTracker.request_chan = map[int]chan any{}
 	ss.DiscardAllRequest()
 }

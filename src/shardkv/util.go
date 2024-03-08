@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"sync"
 	"time"
 )
 
@@ -34,6 +35,9 @@ const (
 	dVote    logTopic = "VOTE"
 	dWarn    logTopic = "WARN"
 	dInit    logTopic = "INIT"
+	dConf    logTopic = "CONF"
+	dTrans   logTopic = "TRAN"
+	dDECI    logTopic = "DECI"
 )
 
 func getVerbosity() int {
@@ -115,6 +119,24 @@ func FlattenMap[T any, U comparable](src map[U][]T) []T {
 		}
 	}
 	return dst
+}
+
+type AtomicMap[K comparable, V any] struct {
+	mu        *sync.Mutex
+	inner_map map[K]V
+}
+
+func NewAtomicMap[K comparable, V any]() *AtomicMap[K, V] {
+	return &AtomicMap[K, V]{
+		mu:        &sync.Mutex{},
+		inner_map: map[K]V{},
+	}
+}
+
+func (amap *AtomicMap[K, V]) Apply(f func(inner_map map[K]V) V) V {
+	amap.mu.Lock()
+	defer amap.mu.Unlock()
+	return f(amap.inner_map)
 }
 
 /*

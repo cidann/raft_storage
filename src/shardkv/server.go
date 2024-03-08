@@ -28,9 +28,10 @@ type ShardKV struct {
 	maxraftstate int // snapshot if log grows this big
 
 	// Your definitions here.
-	state      *ServerState
-	mck        *shardmaster.Clerk
-	clerk_pool *ClerkPool
+	state       *ServerState
+	mck         *shardmaster.Clerk
+	clerk_pool  *ClerkPool
+	net_sending bool
 
 	num_raft          int
 	non_snapshot_size int   //size of entries that is commited but not discarded from snapshot
@@ -43,11 +44,16 @@ type ShardKV struct {
 // turn off debug output from this instance.
 func (kv *ShardKV) Kill() {
 	Debug(dDrop, "S%d kill kv", kv.me)
+	defer Debug(dDrop, "S%d Done kill kv", kv.me)
 	kv.rf.Kill()
+	Debug(dDrop, "S%d Done kill raft", kv.me)
 	Lock(kv, false)
 	defer Unlock(kv, false)
+	Debug(dDrop, "S%d kill locked", kv.me)
 	UnlockUntilChanSend(kv, kv.applyCh, raft.ApplyMsg{Command: StopDaemon(1)})
+	Debug(dDrop, "S%d kill stopdaemon", kv.me)
 	kv.state.DiscardAllRequest()
+	Debug(dDrop, "S%d kill discard request", kv.me)
 	atomic.StoreInt32(&kv.dead, 1)
 }
 
@@ -97,6 +103,7 @@ func StartServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persister,
 
 	kv.mck = shardmaster.MakeClerk(kv.masters)
 	kv.clerk_pool = NewClerkPool(masters, make_end)
+	kv.net_sending = false
 
 	kv.non_snapshot_size = 0
 	kv.applyCh = make(chan raft.ApplyMsg, 100)

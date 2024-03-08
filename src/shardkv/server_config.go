@@ -5,6 +5,7 @@ import (
 	"dsys/raft_helper"
 	"dsys/shardmaster"
 	"sync/atomic"
+	"time"
 )
 
 var true_serial_new_config int64 = 0
@@ -14,10 +15,21 @@ func (kv *ShardKV) NewConfig(args *NewConfigArgs, reply *NewConfigReply) {
 	defer Unlock(kv, lock_trace, "NewConfig")
 	cur_serial := atomic.AddInt64(&true_serial_new_config, 1)
 
-	Debug(dClient, "G%d <- C%d Received New Config Serial:%d as Leader true#%d", kv.gid, args.Get_sid(), args.Get_serial(), cur_serial)
-	raft_helper.HandleStateChangeRPC(kv, "NewConfig", args, reply)
+	Debug(dClient, "G%d <- C%d Received New Config Serial:%d Status:%v true#%d", kv.gid, args.Get_sid(), args.Get_serial(), kv.state.GetShardsStatus(), cur_serial)
 
-	Debug(dClient, "G%d <- C%d New Config Serial:%d done true#%d Outdated:%t", kv.gid, args.Get_sid(), args.Get_serial(), cur_serial, reply.Get_outDated())
+	if !kv.Initialized() {
+		UnlockAndSleepFor(kv, time.Millisecond*100)
+		return
+	}
+	if leader, isLeader := kv.GetLeader(); !isLeader {
+		reply.Set_success(false)
+		reply.Set_leaderHint(leader)
+		return
+	}
+
+	reply.Set_success(kv.StartSetOp(args, reply))
+
+	Debug(dClient, "G%d <- C%d Done New Config Serial:%d Status:%v true#%d Outdated:%t", kv.gid, args.Get_sid(), args.Get_serial(), kv.state.GetShardsStatus(), cur_serial, reply.Get_outDated())
 
 }
 
@@ -44,6 +56,8 @@ func (kv *ShardKV) ReplicateConfig(config *shardmaster.Config) {
 func (kv *ShardKV) ConfigPullDaemon() {
 	Lock(kv, lock_trace, "ConfigPullDaemon")
 	defer Unlock(kv, lock_trace, "ConfigPullDaemon")
+
+	//Daemon from before kill Assert(daemon_count == 1, "Ignore this failure this cannot happen from true server failure")
 	Assert(kv.state.LatestConfig.Num > 0, "Uninitialized config")
 
 	for !kv.killed() {
@@ -54,8 +68,8 @@ func (kv *ShardKV) ConfigPullDaemon() {
 				config = kv.clerk_pool.AsyncQuery(cur_config_num + 1)
 			})
 
-			Assert(kv.state.LatestConfig.Num == cur_config_num, "ConfigPullDaemon is the only way to change config")
-			Debug(dTrace, "G%d Queried new config %v cur config %v stable %v", kv.gid, config, kv.state.LatestConfig, kv.state.AreShardsStable())
+			//Old config can be in log and not applied due to server failure Assert(kv.state.LatestConfig.Num == cur_config_num, "ConfigPullDaemon is the only way to change config")
+			Debug(dTrace, "G%d Queried new config %v cur config %v status %v", kv.gid, config, kv.state.LatestConfig, kv.state.GetShardsStatus())
 			if config.Num == kv.state.LatestConfig.Num+1 && kv.state.AreShardsStable() {
 				Debug(dTrace, "G%d start sending config %v", kv.gid, config)
 				UnlockUntilFunc(kv, func() {
@@ -85,7 +99,9 @@ func (kv *ShardKV) InitConfig() {
 
 	var config shardmaster.Config
 	for !(config.Num > 0) {
+		Debug(dInit, "S%d G%d try init config", kv.me, kv.gid)
 		config = kv.mck.Query(1)
+		Debug(dInit, "S%d G%d init config success %v", kv.me, kv.gid, config)
 		if !(config.Num > 0) {
 			UnlockAndSleepFor(kv, raft.GetSendTime())
 		}

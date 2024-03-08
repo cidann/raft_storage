@@ -14,7 +14,7 @@ func (kv *ShardKV) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 		reply.LeaderHint = leader
 		return
 	}
-	Debug(dClient, "G%d <- C%d Received PutAppend Serial:%d Key/Val:{%s:%s} as Leader true#%d", kv.gid, args.Get_sid(), args.Get_serial(), args.Key, args.Value, cur_serial)
+	Debug(dClient, "G%d <- C%d Received PutAppend Serial:%d Key/Val:{%s:%s} Status:%v true#%d", kv.gid, args.Get_sid(), args.Get_serial(), args.Key, args.Value, kv.state.GetShardsStatus(), cur_serial)
 	if kv.state.LatestConfig.Num == 0 || !kv.state.HaveShard(key2shard(args.Key)) {
 		reply.Success = false
 		if kv.state.LatestConfig.Num != 0 {
@@ -37,6 +37,12 @@ func (kv *ShardKV) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 		reply.OutDated = !received
 	}
 	UnlockUntilChanReceive(kv, GetChanForFunc[any](start_and_wait))
+
+	if reply.OutDated {
+		Debug(dClient, "G%d <- C%d Outdated PutAppend Serial:%d Key:%s true#%d shards: %v", kv.gid, args.Get_sid(), args.Get_serial(), args.Key, cur_serial, TransformMap(kv.state.Shards, func(ptr *Shard) Shard {
+			return *ptr
+		}))
+	}
 	reply.Success = true
-	Debug(dClient, "G%d <- C%d PutAppend Serial:%d Key:%s done true#%d Outdated:%t", kv.gid, args.Get_sid(), args.Get_serial(), args.Key, cur_serial, reply.OutDated)
+	Debug(dClient, "G%d <- C%d Done PutAppend Serial:%d Key:%s Status:%v true#%d Outdated:%t", kv.gid, args.Get_sid(), args.Get_serial(), args.Key, kv.state.GetShardsStatus(), cur_serial, reply.OutDated)
 }

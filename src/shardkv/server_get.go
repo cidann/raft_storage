@@ -14,7 +14,7 @@ func (kv *ShardKV) Get(args *GetArgs, reply *GetReply) {
 		reply.LeaderHint = leader
 		return
 	}
-	Debug(dClient, "G%d <- C%d Received Get Serial:%d Key:%s as Leader true#%d", kv.gid, args.Get_sid(), args.Get_serial(), args.Key, cur_serial)
+	Debug(dClient, "G%d <- C%d Received Get Serial:%d Key:%s Status:%v true#%d", kv.gid, args.Get_sid(), args.Get_serial(), args.Key, kv.state.GetShardsStatus(), cur_serial)
 	if kv.state.LatestConfig.Num == 0 || !kv.state.HaveShard(key2shard(args.Key)) {
 		reply.Success = false
 		if kv.state.LatestConfig.Num != 0 {
@@ -44,6 +44,6 @@ func (kv *ShardKV) Get(args *GetArgs, reply *GetReply) {
 
 	UnlockUntilChanReceive(kv, GetChanForFunc[any](start_and_wait))
 	reply.Success = true
-	Debug(dClient, "G%d <- C%d Get Serial:%d Key/Val:{%s:%s} done true#%d Outdated:%t", kv.gid, args.Get_sid(), args.Get_serial(), args.Key, reply.Value, cur_serial, reply.OutDated)
+	Debug(dClient, "G%d <- C%d Done Get Serial:%d Key/Val:{%s:%s} Status:%v true#%d Outdated:%t", kv.gid, args.Get_sid(), args.Get_serial(), args.Key, reply.Value, kv.state.GetShardsStatus(), cur_serial, reply.OutDated)
 
 }
