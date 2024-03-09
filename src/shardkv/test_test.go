@@ -436,8 +436,11 @@ func TestConcurrent2(t *testing.T) {
 	ck := cfg.makeClient()
 
 	cfg.join(1)
+	fmt.Printf(" ========================================== join 0\n")
 	cfg.join(0)
+	fmt.Printf(" ========================================== join 1\n")
 	cfg.join(2)
+	fmt.Printf(" ========================================== join 2\n")
 
 	n := 10
 	ka := make([]string, n)
@@ -467,22 +470,34 @@ func TestConcurrent2(t *testing.T) {
 	}
 
 	cfg.leave(0)
+	fmt.Printf(" ========================================== leave 0\n")
 	cfg.leave(2)
+	fmt.Printf(" ========================================== leave 2\n")
 	time.Sleep(3000 * time.Millisecond)
 	cfg.join(0)
+	fmt.Printf(" ========================================== join 0\n")
 	cfg.join(2)
+	fmt.Printf(" ========================================== join 2\n")
 	cfg.leave(1)
+	fmt.Printf(" ========================================== leave 1\n")
 	time.Sleep(3000 * time.Millisecond)
 	cfg.join(1)
+	fmt.Printf(" ========================================== join 1\n")
 	cfg.leave(0)
+	fmt.Printf(" ========================================== leave 0\n")
 	cfg.leave(2)
+	fmt.Printf(" ========================================== leave 2\n")
 	time.Sleep(3000 * time.Millisecond)
 
 	cfg.ShutdownGroup(1)
+	fmt.Printf(" ========================================== shutdown 1\n")
 	cfg.ShutdownGroup(2)
+	fmt.Printf(" ========================================== shutdown 2\n")
 	time.Sleep(1000 * time.Millisecond)
 	cfg.StartGroup(1)
+	fmt.Printf(" ========================================== start 1\n")
 	cfg.StartGroup(2)
+	fmt.Printf(" ========================================== start 2\n")
 
 	time.Sleep(2 * time.Second)
 
@@ -490,6 +505,7 @@ func TestConcurrent2(t *testing.T) {
 	for i := 0; i < n; i++ {
 		<-ch
 	}
+	fmt.Printf(" ========================================== done append\n")
 
 	for i := 0; i < n; i++ {
 		check(t, ck, ka[i], va[i])

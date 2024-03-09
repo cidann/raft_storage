@@ -59,7 +59,7 @@ func (ck *Clerk) Query(num int) Config {
 		// try each known server.
 		for _, srv := range ck.servers {
 			var reply QueryReply
-			if raft_helper.Send_for(srv, "ShardMaster.Query", &args, &reply, raft.GetSendTime()*20) {
+			if raft_helper.Send_for(srv, "ShardMaster.Query", &args, &reply, raft.GetSendTime()*30) == raft_helper.VALID {
 				return reply.Config
 			}
 		}
@@ -81,7 +81,7 @@ func (ck *Clerk) Join(servers map[int][]string) {
 		// try each known server.
 		for _, srv := range ck.servers {
 			var reply JoinReply
-			if raft_helper.Send_for(srv, "ShardMaster.Join", &args, &reply, raft.GetSendTime()*20) {
+			if raft_helper.Send_for(srv, "ShardMaster.Join", &args, &reply, raft.GetSendTime()*20) == raft_helper.VALID {
 				return
 			}
 		}
@@ -103,7 +103,7 @@ func (ck *Clerk) Leave(gids []int) {
 		// try each known server.
 		for _, srv := range ck.servers {
 			var reply LeaveReply
-			if raft_helper.Send_for(srv, "ShardMaster.Leave", &args, &reply, raft.GetSendTime()*20) {
+			if raft_helper.Send_for(srv, "ShardMaster.Leave", &args, &reply, raft.GetSendTime()*20) == raft_helper.VALID {
 				return
 			}
 		}
@@ -126,7 +126,7 @@ func (ck *Clerk) Move(shard int, gid int) {
 		// try each known server.
 		for _, srv := range ck.servers {
 			var reply MoveReply
-			if raft_helper.Send_for(srv, "ShardMaster.Move", &args, &reply, raft.GetSendTime()*20) {
+			if raft_helper.Send_for(srv, "ShardMaster.Move", &args, &reply, raft.GetSendTime()*20) == raft_helper.VALID {
 				return
 			}
 		}

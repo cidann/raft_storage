@@ -15,8 +15,6 @@ func (kv *ShardKV) NewConfig(args *NewConfigArgs, reply *NewConfigReply) {
 	defer Unlock(kv, lock_trace, "NewConfig")
 	cur_serial := atomic.AddInt64(&true_serial_new_config, 1)
 
-	Debug(dClient, "G%d <- C%d Received New Config Serial:%d Status:%v true#%d", kv.gid, args.Get_sid(), args.Get_serial(), kv.state.GetShardsStatus(), cur_serial)
-
 	if !kv.Initialized() {
 		UnlockAndSleepFor(kv, time.Millisecond*100)
 		return
@@ -26,6 +24,7 @@ func (kv *ShardKV) NewConfig(args *NewConfigArgs, reply *NewConfigReply) {
 		reply.Set_leaderHint(leader)
 		return
 	}
+	Debug(dClient, "G%d <- C%d Received New Config Serial:%d Status:%v true#%d", kv.gid, args.Get_sid(), args.Get_serial(), kv.state.GetShardsStatus(), cur_serial)
 
 	reply.Set_success(kv.StartSetOp(args, reply))
 
@@ -56,6 +55,7 @@ func (kv *ShardKV) ReplicateConfig(config *shardmaster.Config) {
 func (kv *ShardKV) ConfigPullDaemon() {
 	Lock(kv, lock_trace, "ConfigPullDaemon")
 	defer Unlock(kv, lock_trace, "ConfigPullDaemon")
+	Debug(dTrace, "G%d ConfigDaemon Start", kv.gid)
 
 	//Daemon from before kill Assert(daemon_count == 1, "Ignore this failure this cannot happen from true server failure")
 	Assert(kv.state.LatestConfig.Num > 0, "Uninitialized config")
@@ -64,9 +64,17 @@ func (kv *ShardKV) ConfigPullDaemon() {
 		if _, isLeader := kv.GetLeader(); isLeader {
 			cur_config_num := kv.state.LatestConfig.Num
 			var config shardmaster.Config
-			UnlockUntilFunc(kv, func() {
-				config = kv.clerk_pool.AsyncQuery(cur_config_num + 1)
-			})
+			UnlockPollingInterval(
+				kv,
+				func() {
+					config = kv.clerk_pool.AsyncQuery(cur_config_num + 1)
+				},
+				func() bool {
+					Debug(dTrace, "G%d Query interval incomplete", kv.gid)
+					return true
+				},
+				raft.GetSendTime()*20,
+			)
 
 			//Old config can be in log and not applied due to server failure Assert(kv.state.LatestConfig.Num == cur_config_num, "ConfigPullDaemon is the only way to change config")
 			Debug(dTrace, "G%d Queried new config %v cur config %v status %v", kv.gid, config, kv.state.LatestConfig, kv.state.GetShardsStatus())
@@ -77,17 +85,12 @@ func (kv *ShardKV) ConfigPullDaemon() {
 				})
 				Debug(dTrace, "G%d done sending config %v", kv.gid, config)
 			}
-			/*
-				go func() {
-					config := kv.mck.Query(kv.state.LatestConfig.Num + 1)
-					if config.Num == kv.state.LatestConfig.Num+1 && kv.state.AreShardsStable() {
-						go kv.clerk_pool.AsyncNewConfig(kv.gid, config)
-					}
-				}()
-			*/
+		} else {
+			Debug(dTrace, "G%dS%d did not query as its not leader", kv.gid, kv.me)
 		}
 		UnlockAndSleepFor(kv, raft.GetSendTime())
 	}
+	Debug(dTrace, "G%d ConfigDaemon Stopped", kv.gid)
 }
 
 func (kv *ShardKV) InitConfig() {

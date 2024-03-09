@@ -112,7 +112,7 @@ func StartServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persister,
 	kv.state = NewServerState(kv.gid)
 	kv.num_raft = len(servers)
 	kv.LoadSnapshot(persister.ReadSnapshot())
-	Debug(dInit, "G%d server created", gid)
+	Debug(dInit, "G%d server created initial state dump %v", gid, RecursiveToString(kv.state))
 
 	go kv.InitDaemon()
 

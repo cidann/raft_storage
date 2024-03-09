@@ -151,11 +151,13 @@ func (ss *ServerState) HandleNewConfig(operation *NewConfigArgs) NetworkMessage 
 				return val_shard.ShardNum
 			})
 		}))
-		net_msg = NewSendTransferShard(transfer_shards, *ss.LatestConfig, ss.Gid)
+		// Just let daemon handle transfer to not overwhelm network and livestock
+		//net_msg = NewSendTransferShard(transfer_shards, *ss.LatestConfig, ss.Gid)
 	}
 	ss.ProcessRequest(operation, struct{}{})
 	return net_msg
 }
+
 func (ss *ServerState) HandleTransferShard(operation *TransferShardArgs) NetworkMessage {
 	Debug(dTrans, "G%d already processed:%v new transfer shards %v", ss.Gid, ss.IsAlreadyProcessed(operation), operation.Shards)
 	if ss.IsAlreadyProcessed(operation) {
@@ -176,6 +178,8 @@ func (ss *ServerState) HandleTransferShard(operation *TransferShardArgs) Network
 			ss.Shards[shard.ShardNum].Status = OWN
 		}
 	}
+	//Can improve to hold onto the shards and when new config comes just install it and send decision
+	//This would prevent the source group from resending
 	if operation.Config.Num <= ss.LatestConfig.Num {
 		net_msg = NewSendTransferDecision(operation.Config, operation.Gid, ss.Gid)
 		ss.ProcessRequest(operation, struct{}{})
@@ -194,9 +198,9 @@ func (ss *ServerState) HandleShardReceived(operation *ShardReceivedArgs) Network
 	if operation.Config.Num == ss.LatestConfig.Num {
 		ss.discardShardForGroup(operation.Gid)
 	}
-	if operation.Config.Num <= ss.LatestConfig.Num {
-		ss.ProcessRequest(operation, struct{}{})
-	}
+
+	ss.ProcessRequest(operation, struct{}{})
+
 	return net_msg
 }
 

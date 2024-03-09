@@ -95,7 +95,7 @@ func (ck *Clerk) Get(key string) string {
 			for si := 0; si < len(servers); si++ {
 				var reply GetReply
 				srv := ck.make_end(servers[si])
-				if raft_helper.Send_for(srv, "ShardKV.Get", &args, &reply, raft.GetSendTime()*30) {
+				if raft_helper.Send_for(srv, "ShardKV.Get", &args, &reply, raft.GetSendTime()*30) == raft_helper.VALID {
 					return reply.Value
 				} else if reply.Err == ErrWrongGroup {
 					break
@@ -129,7 +129,7 @@ func (ck *Clerk) PutAppend(key string, value string, op_type raft_helper.Operati
 			for si := 0; si < len(servers); si++ {
 				srv := ck.make_end(servers[si])
 				var reply PutAppendReply
-				if raft_helper.Send_for(srv, "ShardKV.PutAppend", &args, &reply, raft.GetSendTime()*30) {
+				if raft_helper.Send_for(srv, "ShardKV.PutAppend", &args, &reply, raft.GetSendTime()*30) == raft_helper.VALID {
 					return
 				} else if reply.Err == ErrWrongGroup {
 					break
@@ -144,6 +144,7 @@ func (ck *Clerk) PutAppend(key string, value string, op_type raft_helper.Operati
 	}
 }
 
+/*Bugged because if future config does not have target group it will never finish
 func (ck *Clerk) NewConfig(gid int, config shardmaster.Config) {
 	ck.serial += 1
 	args := NewConfigArgs{
@@ -158,8 +159,12 @@ func (ck *Clerk) NewConfig(gid int, config shardmaster.Config) {
 				reply := NewConfigReply{
 					*raft_helper.NewReplyBase(),
 				}
-				if raft_helper.Send_for(srv, "ShardKV.NewConfig", &args, &reply, raft.GetSendTime()*10) {
+				result := raft_helper.Send_for(srv, "ShardKV.NewConfig", &args, &reply, raft.GetSendTime()*30)
+				if result == raft_helper.VALID {
 					return
+				}
+				if result == raft_helper.TIMEOUT {
+					continue
 				}
 				// ... not ok, or ErrWrongLeader
 				Debug(dError, "C%d failed new config serial: %d success/outdated: %t/%t", ck.id, ck.serial, reply.Get_success(), reply.Get_outDated())
@@ -170,7 +175,7 @@ func (ck *Clerk) NewConfig(gid int, config shardmaster.Config) {
 		// this is mainly used to check the group still exist
 		ck.config = ck.sm.Query(-1)
 	}
-}
+}*/
 
 func (ck *Clerk) TransferShards(target_gid, source_gid int, config shardmaster.Config, shards []Shard) {
 	ck.serial += 1
@@ -190,8 +195,12 @@ func (ck *Clerk) TransferShards(target_gid, source_gid int, config shardmaster.C
 			reply := TransferShardReply{
 				*raft_helper.NewReplyBase(),
 			}
-			if raft_helper.Send_for(srv, "ShardKV.TransferShard", &args, &reply, raft.GetSendTime()*10) {
+			result := raft_helper.Send_for(srv, "ShardKV.TransferShard", &args, &reply, raft.GetSendTime()*30)
+			if result == raft_helper.VALID {
 				return
+			}
+			if result == raft_helper.TIMEOUT {
+				continue
 			}
 			// ... not ok, or ErrWrongLeader
 			Debug(dError, "C%d failed transfer shard serial: %d success/outdated: %t/%t", ck.id, ck.serial, reply.Get_success(), reply.Get_outDated())
@@ -225,8 +234,12 @@ func (ck *Clerk) TransferShardsDecision(target_gid, source_gid int, config shard
 			reply := ShardReceivedReply{
 				*raft_helper.NewReplyBase(),
 			}
-			if raft_helper.Send_for(srv, "ShardKV.TransferShardDecision", &args, &reply, raft.GetSendTime()*10) {
+			result := raft_helper.Send_for(srv, "ShardKV.TransferShardDecision", &args, &reply, raft.GetSendTime()*30)
+			if result == raft_helper.VALID {
 				return
+			}
+			if result == raft_helper.TIMEOUT {
+				continue
 			}
 			// ... not ok, or ErrWrongLeader
 			Debug(dError, "C%d failed transfer shard decision serial: %d success/outdated: %t/%t", ck.id, ck.serial, reply.Get_success(), reply.Get_outDated())

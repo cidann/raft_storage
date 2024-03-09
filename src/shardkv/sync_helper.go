@@ -35,6 +35,25 @@ func UnlockUntilFunc(obj Lockable, f func()) {
 	UnlockUntilChanReceive(obj, result_chan)
 }
 
+func UnlockPollingInterval(obj Lockable, poll_f func(), interval_f func() bool, interval time.Duration) {
+	Unlock(obj, lock_trace, "UnlockPollingInterval")
+	defer Lock(obj, lock_trace, "UnlockPollingInterval")
+
+	func_chan := GetChanForFunc[any](poll_f)
+
+	for {
+		timeout_chan := GetChanForTime[any](interval)
+		select {
+		case <-func_chan:
+			return
+		case <-timeout_chan:
+			if !interval_f() {
+				return
+			}
+		}
+	}
+}
+
 func GetChanForFunc[T any](f func()) chan T {
 	c := make(chan T, 1)
 	go func() {

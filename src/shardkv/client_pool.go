@@ -62,11 +62,13 @@ func (cpool *ClerkPool) AsyncAppend(key string, value string) {
 	clerk.Append(key, value)
 }
 
+/*
 func (cpool *ClerkPool) AsyncNewConfig(gid int, config shardmaster.Config) {
 	clerk := cpool.GetClerk()
 	defer cpool.PutClerk(clerk)
 	clerk.NewConfig(gid, config)
 }
+*/
 
 func (cpool *ClerkPool) AsyncTransferShards(target_gid, source_gid int, config shardmaster.Config, shards []Shard) {
 	clerk := cpool.GetClerk()

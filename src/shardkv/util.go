@@ -1,6 +1,7 @@
 package shardkv
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -119,6 +120,12 @@ func FlattenMap[T any, U comparable](src map[U][]T) []T {
 		}
 	}
 	return dst
+}
+
+func RecursiveToString(data any) string {
+	res, err := json.MarshalIndent(data, "", "\t")
+	Assert(err == nil, "RecursiveToString failed")
+	return string(res)
 }
 
 type AtomicMap[K comparable, V any] struct {
