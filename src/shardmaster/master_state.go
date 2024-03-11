@@ -93,19 +93,24 @@ func RebalanceShards(new_config *Config) {
 
 	cur := 0
 	for i, gid := range new_config.Shards {
-		if cur >= len(unfilled_groups) {
-			break
-		}
 		if gid == 0 || group_shard_count[gid] > int(max_shard_per_group) {
-			group_shard_count[gid]--
-			unfilled_groups[cur].count++
-			new_config.Shards[i] = unfilled_groups[cur].gid
+			if cur < len(unfilled_groups) {
+				group_shard_count[gid]--
+				unfilled_groups[cur].count++
+				new_config.Shards[i] = unfilled_groups[cur].gid
 
-			if unfilled_groups[cur].count >= int(max_shard_per_group) {
+				if unfilled_groups[cur].count >= int(max_shard_per_group) {
+					cur++
+				}
+			} else if gid == 0 { //handoff extra shards due to round down
+				wrap_cur := cur % len(unfilled_groups)
+				unfilled_groups[wrap_cur].count++
+				new_config.Shards[i] = unfilled_groups[wrap_cur].gid
 				cur++
 			}
 		}
 	}
+
 }
 
 func getGroupShardCount(config *Config) map[int]int {

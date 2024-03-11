@@ -7,6 +7,14 @@ import (
 
 var true_serial_query int64 = 0
 
+/*
+We don't need to replicate the read if the requested config num is
+lower than the already replicated number.
+This is similar reasoning to MVCC where config num acts as timestamp
+since state in past timestamp won't change so its block/replication free
+In config terms, config of the past wont change(each configs version are immutable)
+and can only be changed through new version of config
+*/
 func (sm *ShardMaster) Query(args *QueryArgs, reply *QueryReply) {
 	sync_helper.Lock(sm, lock_trace, "Query")
 	defer sync_helper.Unlock(sm, lock_trace, "Query")
@@ -15,6 +23,11 @@ func (sm *ShardMaster) Query(args *QueryArgs, reply *QueryReply) {
 	if leader, isLeader := sm.GetLeader(); !isLeader {
 		reply.Success = false
 		reply.LeaderHint = leader
+		return
+	}
+	if sm.state.LatestConfig().Num <= args.Num {
+		reply.Config = *sm.state.LatestConfig()
+		reply.Success = true
 		return
 	}
 

@@ -816,6 +816,7 @@ func TestChallenge1Concurrent(t *testing.T) {
 	ck := cfg.makeClient()
 
 	cfg.join(0)
+	fmt.Printf(" ========================================== join 0\n")
 
 	n := 10
 	ka := make([]string, n)
@@ -845,19 +846,30 @@ func TestChallenge1Concurrent(t *testing.T) {
 
 	t0 := time.Now()
 	for time.Since(t0) < 12*time.Second {
+		fmt.Printf(" ========================================== loop start %v\n", time.Since(t0).Seconds())
 		cfg.join(2)
+		fmt.Printf(" ========================================== join 2\n")
 		cfg.join(1)
+		fmt.Printf(" ========================================== join 1\n")
 		time.Sleep(time.Duration(rand.Int()%900) * time.Millisecond)
 		cfg.ShutdownGroup(0)
+		fmt.Printf(" ========================================== shutdown 0\n")
 		cfg.ShutdownGroup(1)
+		fmt.Printf(" ========================================== shutdown 1\n")
 		cfg.ShutdownGroup(2)
+		fmt.Printf(" ========================================== shutdown 2\n")
 		cfg.StartGroup(0)
+		fmt.Printf(" ========================================== start 0\n")
 		cfg.StartGroup(1)
+		fmt.Printf(" ========================================== start 1\n")
 		cfg.StartGroup(2)
+		fmt.Printf(" ========================================== start 2\n")
 
 		time.Sleep(time.Duration(rand.Int()%900) * time.Millisecond)
 		cfg.leave(1)
+		fmt.Printf(" ========================================== leave 1\n")
 		cfg.leave(2)
+		fmt.Printf(" ========================================== leave 2\n")
 		time.Sleep(time.Duration(rand.Int()%900) * time.Millisecond)
 	}
 
@@ -888,6 +900,7 @@ func TestChallenge2Unaffected(t *testing.T) {
 
 	// JOIN 100
 	cfg.join(0)
+	fmt.Printf(" ========================================== join 0\n")
 
 	// Do a bunch of puts to keys in all shards
 	n := 10
@@ -901,6 +914,7 @@ func TestChallenge2Unaffected(t *testing.T) {
 
 	// JOIN 101
 	cfg.join(1)
+	fmt.Printf(" ========================================== join 1\n")
 
 	// QUERY to find shards now owned by 101
 	c := cfg.mck.Query(-1)
@@ -908,6 +922,7 @@ func TestChallenge2Unaffected(t *testing.T) {
 	for s, gid := range c.Shards {
 		owned[s] = gid == cfg.groups[1].gid
 	}
+	fmt.Printf(" ========================================== owned %v\n", owned)
 
 	// Wait for migration to new config to complete, and for clients to
 	// start using this updated config. Gets to any key k such that
@@ -922,10 +937,12 @@ func TestChallenge2Unaffected(t *testing.T) {
 
 	// KILL 100
 	cfg.ShutdownGroup(0)
+	fmt.Printf(" ========================================== shutdown 0\n")
 
 	// LEAVE 100
 	// 101 doesn't get a chance to migrate things previously owned by 100
 	cfg.leave(0)
+	fmt.Printf(" ========================================== leave 0\n")
 
 	// Wait to make sure clients see new config
 	<-time.After(1 * time.Second)
@@ -956,6 +973,7 @@ func TestChallenge2Partial(t *testing.T) {
 
 	// JOIN 100 + 101 + 102
 	cfg.joinm([]int{0, 1, 2})
+	fmt.Printf(" ========================================== join 0,1,2\n")
 
 	// Give the implementation some time to reconfigure
 	<-time.After(1 * time.Second)
@@ -976,14 +994,17 @@ func TestChallenge2Partial(t *testing.T) {
 	for s, gid := range c.Shards {
 		owned[s] = gid == cfg.groups[2].gid
 	}
+	fmt.Printf(" ========================================== owned 012 %v\n", owned)
 
 	// KILL 100
 	cfg.ShutdownGroup(0)
+	fmt.Printf(" ========================================== shutdown 0\n")
 
 	// LEAVE 100 + 102
 	// 101 can get old shards from 102, but not from 100. 101 should start
 	// serving shards that used to belong to 102 as soon as possible
 	cfg.leavem([]int{0, 2})
+	fmt.Printf(" ========================================== leave 0,2\n")
 
 	// Give the implementation some time to start reconfiguration
 	// And to migrate 102 -> 101

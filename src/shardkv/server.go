@@ -45,16 +45,24 @@ type ShardKV struct {
 func (kv *ShardKV) Kill() {
 	Debug(dDrop, "S%d kill kv", kv.me)
 	defer Debug(dDrop, "S%d Done kill kv", kv.me)
+
 	kv.rf.Kill()
 	Debug(dDrop, "S%d Done kill raft", kv.me)
-	Lock(kv, false)
-	defer Unlock(kv, false)
-	Debug(dDrop, "S%d kill locked", kv.me)
+
+	/* For some reason go's mutex leads to starvation here
+	Lock(kv, lock_trace)
+	defer Unlock(kv, lock_trace)
+
+
 	UnlockUntilChanSend(kv, kv.applyCh, raft.ApplyMsg{Command: StopDaemon(1)})
 	Debug(dDrop, "S%d kill stopdaemon", kv.me)
+
 	kv.state.DiscardAllRequest()
 	Debug(dDrop, "S%d kill discard request", kv.me)
+	*/
+
 	atomic.StoreInt32(&kv.dead, 1)
+	kv.applyCh <- raft.ApplyMsg{Command: StopDaemon(1)}
 }
 
 func (kv *ShardKV) killed() bool {
@@ -123,7 +131,7 @@ func (kv *ShardKV) InitDaemon() {
 	kv.InitConfig()
 	go kv.ApplyDaemon()
 	go kv.ConfigPullDaemon()
-	go kv.PersistNetDaemon()
+	go kv.ShardTransferDaemon()
 }
 
 func (kv *ShardKV) GetLeader() (int, bool) {

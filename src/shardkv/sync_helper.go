@@ -39,6 +39,10 @@ func UnlockPollingInterval(obj Lockable, poll_f func(), interval_f func() bool, 
 	Unlock(obj, lock_trace, "UnlockPollingInterval")
 	defer Lock(obj, lock_trace, "UnlockPollingInterval")
 
+	PollingInterval(poll_f, interval_f, interval)
+}
+
+func PollingInterval(poll_f func(), interval_f func() bool, interval time.Duration) {
 	func_chan := GetChanForFunc[any](poll_f)
 
 	for {

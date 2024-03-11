@@ -15,6 +15,7 @@ const lock_trace = false
 
 var debugStart time.Time
 var debugVerbosity int
+var debugShardOnly bool = false
 
 type logTopic string
 
@@ -64,11 +65,13 @@ func init() {
 // time logged is 1/10th of a milisecond
 func Debug(topic logTopic, format string, a ...interface{}) {
 	if debugVerbosity >= 1 {
-		time := time.Since(debugStart).Microseconds()
-		time /= 100
-		prefix := fmt.Sprintf("%06d %v ", time, string(topic))
-		format = prefix + format
-		log.Printf(format, a...)
+		if !debugShardOnly || (topic == dConf || topic == dTrans || topic == dDECI) {
+			time := time.Since(debugStart).Microseconds()
+			time /= 100
+			prefix := fmt.Sprintf("%06d %v ", time, string(topic))
+			format = prefix + format
+			log.Printf(format, a...)
+		}
 	}
 }
 

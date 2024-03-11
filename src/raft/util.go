@@ -46,7 +46,7 @@ func getVerbosity() int {
 	return level
 }
 
-//set verbosity from upper layer
+// set verbosity from upper layer
 func SetRaftMute(rf *Raft, mute bool) {
 	rf.mu.Lock()
 	defer rf.mu.Unlock()

@@ -34,7 +34,7 @@ func (rf *Raft) startWaitForResponse() {
 		}
 		election_time := GetElectionTime()
 		if rf.lastRecord.HasElapsed(election_time) {
-			DPrintf("[%d term %d] Goroutine awake and election timed out", rf.me, rf.getTerm())
+			Debug(rf, dLeader, "S%d term %d Goroutine awake and election time out", rf.me, rf.getTerm())
 			rf.startElection()
 		}
 		rf.UnlockAndSleepFor(election_time)

@@ -38,11 +38,6 @@ func (kv *ShardKV) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 	}
 	UnlockUntilChanReceive(kv, GetChanForFunc[any](start_and_wait))
 
-	if reply.OutDated {
-		Debug(dClient, "G%d <- C%d Outdated PutAppend Serial:%d Key:%s true#%d shards: %v", kv.gid, args.Get_sid(), args.Get_serial(), args.Key, cur_serial, TransformMap(kv.state.Shards, func(ptr *Shard) Shard {
-			return *ptr
-		}))
-	}
 	reply.Success = true
 	Debug(dClient, "G%d <- C%d Done PutAppend Config:%d Serial:%d Key:%s Status:%v true#%d Outdated:%t", kv.gid, args.Get_sid(), kv.state.LatestConfig.Num, args.Get_serial(), args.Key, kv.state.GetShardsStatus(), cur_serial, reply.OutDated)
 }

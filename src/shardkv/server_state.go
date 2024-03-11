@@ -91,27 +91,27 @@ func (ss *ServerState) Get(shard int, k string) string {
 	return ss.Shards[shard].KvState[k]
 }
 
-func (ss *ServerState) DispatchOp(operation raft_helper.Op) NetworkMessage {
+func (ss *ServerState) DispatchOp(operation raft_helper.Op) {
 	if ss.LatestConfig.Num == 0 {
-		return nil
+		return
 	}
 	switch operation := operation.(type) {
 	case *GetArgs:
-		return ss.ApplyKVState(operation)
+		ss.ApplyKVState(operation)
 	case *PutAppendArgs:
-		return ss.ApplyKVState(operation)
+		ss.ApplyKVState(operation)
 	case *NewConfigArgs:
-		return ss.HandleNewConfig(operation)
+		ss.HandleNewConfig(operation)
 	case *TransferShardArgs:
-		return ss.HandleTransferShard(operation)
+		ss.HandleTransferShard(operation)
 	case *ShardReceivedArgs:
-		return ss.HandleShardReceived(operation)
+		ss.HandleShardReceived(operation)
 	default:
 		panic("Unknown operation type")
 	}
 }
 
-func (ss *ServerState) ApplyKVState(operation raft_helper.Op) NetworkMessage {
+func (ss *ServerState) ApplyKVState(operation raft_helper.Op) {
 	key, val := GetKeyVal(operation)
 	shardNum := key2shard(key)
 	if ss.HaveShard(shardNum) {
@@ -131,17 +131,16 @@ func (ss *ServerState) ApplyKVState(operation raft_helper.Op) NetworkMessage {
 		ss.Shards[shardNum].ShardTracker.DiscardRequestFrom(operation.Get_sid())
 		Debug(dError, "G%d don't have shard %d config %v", ss.Gid, shardNum, ss.LatestConfig)
 	}
-	return nil
+
 }
 
-func (ss *ServerState) HandleNewConfig(operation *NewConfigArgs) NetworkMessage {
+func (ss *ServerState) HandleNewConfig(operation *NewConfigArgs) {
 	Debug(dConf, "G%d already processed:%v new config %v", ss.Gid, ss.IsAlreadyProcessed(operation), operation.Config)
 	if ss.IsAlreadyProcessed(operation) {
 		ss.ProcessRequest(operation, "")
-		return nil
+		return
 	}
 
-	var net_msg NetworkMessage = nil
 	if operation.Config.Num > ss.LatestConfig.Num {
 		Assert(ss.AreShardsStable(), "Expected new config when cur config is stable")
 		old_config := ss.LatestConfig
@@ -155,53 +154,47 @@ func (ss *ServerState) HandleNewConfig(operation *NewConfigArgs) NetworkMessage 
 		//net_msg = NewSendTransferShard(transfer_shards, *ss.LatestConfig, ss.Gid)
 	}
 	ss.ProcessRequest(operation, struct{}{})
-	return net_msg
+
 }
 
-func (ss *ServerState) HandleTransferShard(operation *TransferShardArgs) NetworkMessage {
+func (ss *ServerState) HandleTransferShard(operation *TransferShardArgs) {
 	Debug(dTrans, "G%d already processed:%v new transfer shards %v", ss.Gid, ss.IsAlreadyProcessed(operation), operation.Shards)
 	if ss.IsAlreadyProcessed(operation) {
 		ss.ProcessRequest(operation, "")
-		return nil
+		return
 	}
 
-	var net_msg NetworkMessage = nil
 	if operation.Config.Num == ss.LatestConfig.Num {
-		net_msg = NewSendTransferDecision(operation.Config, operation.Gid, ss.Gid)
 		for _, shard := range operation.Shards {
 			if ss.Shards[shard.ShardNum].Status == OWN {
 				continue
 			}
-			Debug(dTrace, "G%d install shard %d kv %v", ss.Gid, shard.ShardNum, shard.KvState)
 			ss.Shards[shard.ShardNum] = shard.Copy()
 			ss.Shards[shard.ShardNum].ShardTracker.request_chan = make(map[int]chan any)
 			ss.Shards[shard.ShardNum].Status = OWN
+			Debug(dTrace, "G%d installed shard %d kv %v", ss.Gid, shard.ShardNum, shard.KvState)
 		}
 	}
 	//Can improve to hold onto the shards and when new config comes just install it and send decision
 	//This would prevent the source group from resending
 	if operation.Config.Num <= ss.LatestConfig.Num {
-		net_msg = NewSendTransferDecision(operation.Config, operation.Gid, ss.Gid)
 		ss.ProcessRequest(operation, struct{}{})
 	}
-	return net_msg
+
 }
 
-func (ss *ServerState) HandleShardReceived(operation *ShardReceivedArgs) NetworkMessage {
-	Debug(dDECI, "G%d already processed:%v new decision from %d conf %v", ss.Gid, ss.IsAlreadyProcessed(operation), operation.Gid, operation.Config)
+func (ss *ServerState) HandleShardReceived(operation *ShardReceivedArgs) {
+	Debug(dDECI, "G%d already processed:%v new decision from %d conf %v", ss.Gid, ss.IsAlreadyProcessed(operation), operation.Receiver_Gid, operation.Config)
 	if ss.IsAlreadyProcessed(operation) {
 		ss.ProcessRequest(operation, "")
-		return nil
+		return
 	}
 
-	var net_msg NetworkMessage = nil
 	if operation.Config.Num == ss.LatestConfig.Num {
-		ss.discardShardForGroup(operation.Gid)
+		ss.discardShardForGroup(operation.Receiver_Gid)
 	}
 
 	ss.ProcessRequest(operation, struct{}{})
-
-	return net_msg
 }
 
 func (ss *ServerState) installNewConfig(config shardmaster.Config) map[int][]Shard {

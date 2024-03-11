@@ -10,6 +10,7 @@ import (
 	"dsys/raft"
 	"dsys/raft_helper"
 	"math/big"
+	mrand "math/rand"
 	"sync"
 	"time"
 )
@@ -55,18 +56,35 @@ func (ck *Clerk) Query(num int) Config {
 		Num: num,
 		Op:  raft_helper.NewOpBase(ck.serial, ck.id, QUERY),
 	}
+	shuffle := mrand.Perm(len(ck.servers))
 	for {
 		// try each known server.
-		for _, srv := range ck.servers {
+		for _, server_index := range shuffle {
+			srv := ck.servers[server_index]
 			var reply QueryReply
-			if raft_helper.Send_for(srv, "ShardMaster.Query", &args, &reply, raft.GetSendTime()*30) == raft_helper.VALID {
+			if raft_helper.Send_for(srv, "ShardMaster.Query", &args, &reply, raft.GetSendTime()*20) == raft_helper.VALID {
 				return reply.Config
 			}
 		}
 		Debug(dError, "C%d failed Query serial: %d", ck.id, ck.serial)
-		time.Sleep(raft.GetMaxElectionTime())
+		time.Sleep(100 * time.Millisecond)
 	}
 }
+
+/*
+
+func (ck *Clerk) query_indexes(args QueryArgs, server_indexes []int) *Config {
+	for _, server_index := range server_indexes {
+		srv := ck.servers[server_index]
+		var reply QueryReply
+		if raft_helper.Send_for(srv, "ShardMaster.Query", &args, &reply, raft.GetSendTime()*20) == raft_helper.VALID {
+			return &reply.Config
+		}
+	}
+	Debug(dError, "C%d failed Query serial: %d", ck.id, ck.serial)
+	return nil
+}
+*/
 
 func (ck *Clerk) Join(servers map[int][]string) {
 	defer func() {
@@ -86,7 +104,7 @@ func (ck *Clerk) Join(servers map[int][]string) {
 			}
 		}
 		Debug(dError, "C%d failed Join serial: %d", ck.id, ck.serial)
-		time.Sleep(raft.GetMaxElectionTime())
+		time.Sleep(100 * time.Millisecond)
 	}
 }
 
@@ -108,7 +126,7 @@ func (ck *Clerk) Leave(gids []int) {
 			}
 		}
 		Debug(dError, "C%d failed Leave serial: %d", ck.id, ck.serial)
-		time.Sleep(raft.GetMaxElectionTime())
+		time.Sleep(100 * time.Millisecond)
 	}
 }
 
@@ -131,6 +149,6 @@ func (ck *Clerk) Move(shard int, gid int) {
 			}
 		}
 		Debug(dError, "C%d failed Move serial: %d", ck.id, ck.serial)
-		time.Sleep(raft.GetMaxElectionTime())
+		time.Sleep(100 * time.Millisecond)
 	}
 }

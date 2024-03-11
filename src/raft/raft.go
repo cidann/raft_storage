@@ -54,7 +54,6 @@ func (rf_state RaftState) String() string {
 	return s
 }
 
-//
 // as each Raft peer becomes aware that successive log entries are
 // committed, the peer should send an ApplyMsg to the service (or
 // tester) on the same server, via the applyCh passed to Make(). set
@@ -64,7 +63,6 @@ func (rf_state RaftState) String() string {
 // in Lab 3 you'll want to send other kinds of messages (e.g.,
 // snapshots) on the applyCh; at that point you can add fields to
 // ApplyMsg, but set CommandValid to false for these other uses.
-//
 type ApplyMsg struct {
 	CommandValid bool
 	Command      interface{}
@@ -72,9 +70,7 @@ type ApplyMsg struct {
 	CommandTerm  int
 }
 
-//
 // A Go object implementing a single Raft peer.
-//
 type Raft struct {
 	mu        sync.Mutex          // Lock to protect shared access to this peer's state
 	peers     []*labrpc.ClientEnd // RPC end points of all peers
@@ -140,11 +136,9 @@ func (rf *Raft) GetStateAndLeader() (int, int, bool) {
 	return term, leader, isleader
 }
 
-//
 // save Raft's persistent state to stable storage,
 // where it can later be retrieved after a crash and restart.
 // see paper's Figure 2 for a description of what should be persistent.
-//
 func (rf *Raft) getRaftPersistState() []byte {
 	w := new(bytes.Buffer)
 	e := labgob.NewEncoder(w)
@@ -160,9 +154,7 @@ func (rf *Raft) persist() {
 	rf.persister.SaveRaftState(rf.getRaftPersistState())
 }
 
-//
 // restore previously persisted state.
-//
 func (rf *Raft) readPersist(data []byte) (int, int) {
 	snapshot_index, snapshot_term := 0, 0
 	if data == nil || len(data) < 1 { // bootstrap without any state?
@@ -180,7 +172,6 @@ func (rf *Raft) readPersist(data []byte) (int, int) {
 	return snapshot_index, snapshot_term
 }
 
-//
 // the service using Raft (e.g. a k/v server) wants to start
 // agreement on the next command to be appended to Raft's log. if this
 // server isn't the leader, returns false. otherwise start the
@@ -193,7 +184,6 @@ func (rf *Raft) readPersist(data []byte) (int, int) {
 // if it's ever committed. the second return value is the current
 // term. the third return value is true if this server believes it is
 // the leader.
-//
 func (rf *Raft) Start(command interface{}) (int, int, bool) {
 	Lock(rf, lock_trace, "Start")
 	defer Unlock(rf, lock_trace, "Start")
@@ -222,7 +212,6 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 	return index, term, isLeader
 }
 
-//
 // the tester doesn't halt goroutines created by Raft after each test,
 // but it does call the Kill() method. your code can use killed() to
 // check whether Kill() has been called. the use of atomic avoids the
@@ -232,7 +221,6 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 // up CPU time, perhaps causing later tests to fail and generating
 // confusing debug output. any goroutine with a long-running loop
 // should call killed() to check whether it should stop.
-//
 func (rf *Raft) Kill() {
 	atomic.StoreInt32(&rf.dead, 1)
 	// Your code here, if desired.

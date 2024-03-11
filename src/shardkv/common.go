@@ -84,8 +84,8 @@ type TransferShardReply struct {
 
 type ShardReceivedArgs struct {
 	raft_helper.Op
-	Config shardmaster.Config
-	Gid    int
+	Config       shardmaster.Config
+	Receiver_Gid int
 }
 
 type ShardReceivedReply struct {

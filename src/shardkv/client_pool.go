@@ -76,11 +76,13 @@ func (cpool *ClerkPool) AsyncTransferShards(target_gid, source_gid int, config s
 	clerk.TransferShards(target_gid, source_gid, config, shards)
 }
 
+/*
 func (cpool *ClerkPool) AsyncTransferShardsDecision(target_gid, source_gid int, config shardmaster.Config) {
 	clerk := cpool.GetClerk()
 	defer cpool.PutClerk(clerk)
 	clerk.TransferShardsDecision(target_gid, source_gid, config)
 }
+*/
 
 func (cpool *ClerkPool) AsyncQuery(config_num int) shardmaster.Config {
 	clerk := cpool.GetClerk()

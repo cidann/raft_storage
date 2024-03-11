@@ -61,7 +61,7 @@ func (kv *ShardKV) ConfigPullDaemon() {
 	Assert(kv.state.LatestConfig.Num > 0, "Uninitialized config")
 
 	for !kv.killed() {
-		if _, isLeader := kv.GetLeader(); isLeader {
+		if _, isLeader := kv.GetLeader(); isLeader && kv.state.AreShardsStable() {
 			cur_config_num := kv.state.LatestConfig.Num
 			var config shardmaster.Config
 			UnlockPollingInterval(
@@ -85,9 +85,8 @@ func (kv *ShardKV) ConfigPullDaemon() {
 				})
 				Debug(dTrace, "G%d done sending config %v", kv.gid, config)
 			}
-		} else {
-			Debug(dTrace, "G%dS%d did not query as its not leader", kv.gid, kv.me)
 		}
+
 		UnlockAndSleepFor(kv, raft.GetSendTime())
 	}
 	Debug(dTrace, "G%d ConfigDaemon Stopped", kv.gid)
@@ -104,10 +103,10 @@ func (kv *ShardKV) InitConfig() {
 	for !(config.Num > 0) {
 		Debug(dInit, "S%d G%d try init config", kv.me, kv.gid)
 		config = kv.mck.Query(1)
-		Debug(dInit, "S%d G%d init config success %v", kv.me, kv.gid, config)
 		if !(config.Num > 0) {
 			UnlockAndSleepFor(kv, raft.GetSendTime())
 		}
+		Debug(dInit, "S%d G%d init config success %v", kv.me, kv.gid, config)
 	}
 	Assert(config.Num == 1, "Expect config num to be 1")
 	kv.state.InitConfig(&config)

@@ -28,12 +28,9 @@ func (kv *ShardKV) ApplyDaemon() {
 
 func (kv *ShardKV) handleOperation(msg *raft.ApplyMsg) {
 	operation := msg.Command.(raft_helper.Op)
-	Debug(dTrace, "G%d got new raft entry sid:%d serial:%d", kv.gid, operation.Get_sid(), operation.Get_serial())
-	var net_msg NetworkMessage = kv.state.DispatchOp(operation)
+	Debug(dTrace, "G%d got new raft entry type:%v sid:%d serial:%d", kv.gid, operation.Get_type(), operation.Get_sid(), operation.Get_serial())
+	kv.state.DispatchOp(operation)
 	kv.state.SetLatest(msg.Index(), msg.Term())
-	if net_msg != nil {
-		net_msg.SendNetworkMessage(kv)
-	}
 
 	//Debug(dCommit, "S%d replicated and applied C%d Serial:%d entry %s %s", kv.me, operation.Sid, operation.Serial, typeMap[operation.Type], operation.Key)
 	kv.snapshotCheck(operation)

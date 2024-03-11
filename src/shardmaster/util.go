@@ -78,3 +78,9 @@ func Debug(topic logTopic, format string, a ...interface{}) {
 		log.Printf(format, a...)
 	}
 }
+
+func Assert(is_valid bool, format string, a ...interface{}) {
+	if !is_valid {
+		panic(fmt.Sprintf(format, a...))
+	}
+}

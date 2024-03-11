@@ -212,6 +212,7 @@ func (ck *Clerk) TransferShards(target_gid, source_gid int, config shardmaster.C
 	}
 }
 
+/*Better performance is to just make group replicate the decision on its own when transfer succeed from clerk
 func (ck *Clerk) TransferShardsDecision(target_gid, source_gid int, config shardmaster.Config) {
 	ck.serial += 1
 	args := ShardReceivedArgs{
@@ -247,6 +248,7 @@ func (ck *Clerk) TransferShardsDecision(target_gid, source_gid int, config shard
 		time.Sleep(100 * time.Millisecond)
 	}
 }
+*/
 
 func (ck *Clerk) Put(key string, value string) {
 	ck.PutAppend(key, value, PUT)
