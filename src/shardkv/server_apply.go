@@ -4,6 +4,7 @@ import (
 	"dsys/raft"
 	"dsys/raft_helper"
 	"fmt"
+	"sync/atomic"
 )
 
 func (kv *ShardKV) ApplyDaemon() {
@@ -15,6 +16,7 @@ func (kv *ShardKV) ApplyDaemon() {
 		msg := UnlockUntilChanReceive(kv, kv.applyCh)
 		switch msg.Command.(type) {
 		case raft_helper.Op:
+			atomic.StoreInt64(&kv.operation_started, 1)
 			kv.handleOperation(&msg)
 		case raft.SnapshotData:
 			kv.handleSnapshot(&msg)
@@ -28,7 +30,7 @@ func (kv *ShardKV) ApplyDaemon() {
 
 func (kv *ShardKV) handleOperation(msg *raft.ApplyMsg) {
 	operation := msg.Command.(raft_helper.Op)
-	Debug(dTrace, "G%d got new raft entry type:%v sid:%d serial:%d", kv.gid, operation.Get_type(), operation.Get_sid(), operation.Get_serial())
+	Debug(dTrace, "G%d got new raft entry type:%v index:%d term:%d sid:%d serial:%d", kv.gid, operation.Get_type(), msg.CommandIndex, msg.Term(), operation.Get_sid(), operation.Get_serial())
 	kv.state.DispatchOp(operation)
 	kv.state.SetLatest(msg.Index(), msg.Term())
 

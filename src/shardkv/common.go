@@ -36,6 +36,7 @@ const (
 	NEW_CONFIG
 	TRANSFERSHARD
 	TRANSFERSHARDDECISION
+	NO_OP
 )
 
 // Put or Append
@@ -92,6 +93,13 @@ type ShardReceivedReply struct {
 	raft_helper.ReplyBase
 }
 
+type NoOpArgs struct {
+	raft_helper.Op
+}
+type NoOpReply struct {
+	raft_helper.ReplyBase
+}
+
 func GetKeyVal(operation raft_helper.Op) (string, string) {
 	var key, val string
 	switch operation.Get_type() {
@@ -121,4 +129,6 @@ func init() {
 	labgob.Register(&TransferShardReply{})
 	labgob.Register(&ShardReceivedArgs{})
 	labgob.Register(&ShardReceivedReply{})
+	labgob.Register(&NoOpArgs{})
+	labgob.Register(&NoOpReply{})
 }

@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"sync"
 	"sync/atomic"
+	"time"
 
 	"dsys/labrpc"
 	"dsys/raft"
@@ -28,10 +29,10 @@ type ShardKV struct {
 	maxraftstate int // snapshot if log grows this big
 
 	// Your definitions here.
-	state       *ServerState
-	mck         *shardmaster.Clerk
-	clerk_pool  *ClerkPool
-	net_sending bool
+	state             *ServerState
+	mck               *shardmaster.Clerk
+	clerk_pool        *ClerkPool
+	operation_started int64
 
 	num_raft          int
 	non_snapshot_size int   //size of entries that is commited but not discarded from snapshot
@@ -111,7 +112,7 @@ func StartServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persister,
 
 	kv.mck = shardmaster.MakeClerk(kv.masters)
 	kv.clerk_pool = NewClerkPool(masters, make_end)
-	kv.net_sending = false
+	kv.operation_started = 0
 
 	kv.non_snapshot_size = 0
 	kv.applyCh = make(chan raft.ApplyMsg, 100)
@@ -128,10 +129,35 @@ func StartServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persister,
 }
 
 func (kv *ShardKV) InitDaemon() {
-	kv.InitConfig()
+	kv.InitConfig() //wait for init config of 1
 	go kv.ApplyDaemon()
 	go kv.ConfigPullDaemon()
 	go kv.ShardTransferDaemon()
+	kv.SendNoOp() //To signal to raft to send any commited entries up to shardkv
+}
+
+func (kv *ShardKV) SendNoOp() {
+	clerk := kv.clerk_pool.GetClerk()
+	defer kv.clerk_pool.PutClerk(clerk)
+
+	clerk.serial += 1
+	args := NoOpArgs{
+		Op: raft_helper.NewOpBase(clerk.serial, clerk.id, NO_OP),
+	}
+	for {
+		if kv.IsLeader() {
+			reply := NoOpReply{
+				*raft_helper.NewReplyBase(),
+			}
+			kv.NoOp(&args, &reply)
+			if raft_helper.Is_valid(&reply) {
+				return
+			}
+		} else if atomic.LoadInt64(&kv.operation_started) != 0 {
+			return
+		}
+		time.Sleep(100 * time.Millisecond)
+	}
 }
 
 func (kv *ShardKV) GetLeader() (int, bool) {

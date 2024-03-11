@@ -106,6 +106,8 @@ func (ss *ServerState) DispatchOp(operation raft_helper.Op) {
 		ss.HandleTransferShard(operation)
 	case *ShardReceivedArgs:
 		ss.HandleShardReceived(operation)
+	case *NoOpArgs:
+		ss.ProcessRequest(operation, struct{}{})
 	default:
 		panic("Unknown operation type")
 	}
@@ -285,6 +287,8 @@ func (ss *ServerState) IsAlreadyProcessed(op raft_helper.Op) bool {
 		return ss.GeneralTracker.AlreadyProcessed(op)
 	case *ShardReceivedArgs:
 		return false
+	case *NoOpArgs:
+		return false
 	}
 	panic("Other type not implemented")
 }
@@ -302,6 +306,8 @@ func (ss *ServerState) ProcessRequest(op raft_helper.Op, op_result any) {
 	case *TransferShardArgs:
 		ss.GeneralTracker.ProcessRequest(op, op_result)
 	case *ShardReceivedArgs:
+		ss.GeneralTracker.ProcessRequest(op, op_result)
+	case *NoOpArgs:
 		ss.GeneralTracker.ProcessRequest(op, op_result)
 	default:
 		panic("Other type not implemented")
